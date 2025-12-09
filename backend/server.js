@@ -15,6 +15,9 @@ app.use(cors());
 app.use(helmet()); // middleware that sets various HTTP headers to protect your app from common web vulnerabilities
 app.use(morgan("dev")); // log the requests
 
+app.get('/', (req, res) => {
+  res.json({ info: 'Node.js, Express, and Postgres API' })
+})
 
 app.listen(PORT, () =>{
     console.log("Server is running on " + PORT);
