@@ -1,0 +1,57 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ZPI-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - internal
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ZPI-backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/appdb?schema=public
+    depends_on:
+      - postgres
+    networks:
+      - internal
+
+  postgres:
+    image: postgres:16
+    container_name: ZPI-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=appdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  postgres_data:
+
+# docker-compose up --build
+
+# docker exec -it ZPI-backend npx prisma migrate dev - dodać, aby migracja odbywała się automatycznie przy starcie dockera
