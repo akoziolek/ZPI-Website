@@ -14,6 +14,21 @@ services:
     networks:
       - internal
 
+  postgres:
+    image: postgres:16
+    container_name: ZPI-postgres
+    restart: always
+    environment:
+    - POSTGRES_USER=${POSTGRES_USER}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+
   backend:
     build:
       context: ./backend
@@ -21,28 +36,14 @@ services:
     container_name: ZPI-backend
     ports:
       - "3001:3001"
+      - "51212:51212"
     volumes:
       - ./backend:/app
       - /app/node_modules
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/appdb?schema=public
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - postgres
-    networks:
-      - internal
-
-  postgres:
-    image: postgres:16
-    container_name: ZPI-postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=appdb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     networks:
       - internal
 

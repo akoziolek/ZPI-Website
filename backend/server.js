@@ -4,19 +4,24 @@ import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
+import userRoutes from "./routes/test.js"  // import routera
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+
 app.use(express.json()); // parse HTTP body
 app.use(cors()); 
 app.use(helmet()); // middleware that sets various HTTP headers to protect your app from common web vulnerabilities
 app.use(morgan("dev")); // log the requests
 
+// podłączenie routera
+app.use("/usersy", userRoutes)
+
 app.get('/', (req, res) => {
-  res.json({ info: 'Node.js, Express, and Postgres API' })
+  res.json({ info: 'Node .js, Express, and Postgres API' })
 })
 
 app.listen(PORT, () =>{

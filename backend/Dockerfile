@@ -2,16 +2,15 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json ./
 
-RUN npm install && npm install -g nodemon
+RUN npm install
 
 COPY . .
 
 EXPOSE 3001
 
-CMD ["nodemon", "--legacy-watch", "server.js"]
-
+CMD ["npm", "run", "dev"]
 
 # docker build -t backend-test .                              
 # docker run -d -p 3001:3001 backend-test                     

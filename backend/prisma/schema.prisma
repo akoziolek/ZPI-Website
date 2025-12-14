@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client-js" // using java script files for compability with node.js
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Role {
+  role_id   Int    @id @default(autoincrement())
+  role_name String @unique @db.VarChar(50)
+  users     User[]
+}
+
+model Status {
+  status_id   Int    @id @default(autoincrement())
+  status_name String @unique @db.VarChar(100)
+  topics      Topic[]
+}
+
+model User {
+  user_id    Int      @id @default(autoincrement())
+  uuid       String   @db.Uuid @default(uuid())
+  name       String   @db.VarChar(50)
+  surname    String   @db.VarChar(50)
+  mail       String   @unique @db.VarChar(255)
+  last_login DateTime?
+  logged_in  Boolean  @default(false)
+
+  role_id Int
+  role    Role @relation(fields: [role_id], references: [role_id], onDelete: Restrict)
+
+  academicEmployees AcademicEmployee[]
+  students          Student[]
+  signatures        Signature[]
+
+  @@index([role_id])
+}
+
+model AcademicEmployee {
+  user_id Int @id
+  user    User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  opinions Opinion[]
+  topics   Topic[]
+}
+
+model Student {
+  user_id Int @id
+  user    User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  index        String @db.Char(6)
+  ects_deficit Int
+
+  topic_id Int?
+  topic    Topic? @relation(fields: [topic_id], references: [topic_id], onDelete: Restrict)
+
+  @@index([topic_id])
+}
+
+model Topic {
+  topic_id  Int    @id @default(autoincrement())
+  uuid      String @db.Uuid @default(uuid())
+  name      String @db.VarChar(1000)
+  description String
+
+  status_id Int
+  status    Status @relation(fields: [status_id], references: [status_id], onDelete: Restrict)
+
+  employee_id Int?
+  employee    AcademicEmployee? @relation(fields: [employee_id], references: [user_id], onDelete: Restrict)
+
+  declaration_id Int?
+  declaration    Declaration? @relation(fields: [declaration_id], references: [declaration_id], onDelete: Cascade)
+
+  opinion Opinion?
+
+  students Student[]
+
+  @@index([status_id])
+  @@index([employee_id])
+  @@index([declaration_id])
+}
+
+model Opinion {
+  opinion_id    Int    @id @default(autoincrement())
+  argumentation String
+
+  employee_id Int
+  employee    AcademicEmployee @relation(fields: [employee_id], references: [user_id], onDelete: Restrict)
+
+  topic_id Int @unique
+  topic    Topic @relation(fields: [topic_id], references: [topic_id], onDelete: Cascade)
+
+  @@index([employee_id])
+}
+
+model Declaration {
+  declaration_id Int @id @default(autoincrement())
+  topics         Topic[]
+  signatures     Signature[]
+}
+
+model Signature {
+  user_id        Int
+  declaration_id Int
+
+  user        User        @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  declaration Declaration @relation(fields: [declaration_id], references: [declaration_id], onDelete: Cascade)
+
+  @@id([user_id, declaration_id])
+  @@index([declaration_id])
+}
