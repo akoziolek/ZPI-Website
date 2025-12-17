@@ -1,22 +1,49 @@
-import { use } from 'react';
 import prisma from '../lib/db.js'
-import { connect } from 'http2';
 
-const ROLES_TO_SEED = [
-  { js_key: 'KPK_MEMBER', role_name: 'Członek KPK' },
-  { js_key: 'TEAM_LEADER', role_name: 'Opiekun zespołu' },
-  { js_key: 'TEACHING_SUPERVISOR', role_name: 'Opiekun dydaktyki' },
-  { js_key: 'STUDENTS_SUPERVISOR', role_name: 'Opiekun studentów' },
-  { js_key: 'STUDENT', role_name: 'Student' },
-];
+const ROLES = Object.freeze({
+  KPK_MEMBER: 'KPK_MEMBER',
+  TEAM_LEADER: 'TEAM_LEADER',
+  TEACHING_SUPERVISOR: 'TEACHING_SUPERVISOR',
+  STUDENTS_SUPERVISOR: 'STUDENTS_SUPERVISOR',
+  STUDENT: 'STUDENT'
+});
 
-const STATUSES_TO_SEED = [
-  { js_key: 'OPEN', status_name: 'Otwarty' },
-  { js_key: 'PREPARING', status_name: 'W przygotowaniu do złożenia wniosku' },
-  { js_key: 'SUBMITTED', status_name: 'Złożony' },
-  { js_key: 'REJECTED', status_name: 'Odrzucony' },
-  { js_key: 'APPROVED', status_name: 'Zatwierdzony' },
-];
+const ROLES_LABELS = Object.freeze({
+  [ROLES.KPK_MEMBER]: 'Członek KPK',
+  [ROLES.TEAM_LEADER]: 'Opiekun zespołu',
+  [ROLES.TEACHING_SUPERVISOR]: 'Opiekun dydaktyki',
+  [ROLES.STUDENTS_SUPERVISOR]: 'Opiekun studentów',
+  [ROLES.STUDENT]: 'Student',
+});
+
+const STATUS = Object.freeze({
+  OPEN: 'OPEN',
+  PREPARING: 'PREPARING',
+  SUBMITTED: 'SUBMITTED',
+  REJECTED: 'REJECTED',
+  APPROVED: 'APPROVED',
+});
+
+const STATUS_LABELS = Object.freeze({
+  [STATUS.OPEN]: 'Otwarty',
+  [STATUS.PREPARING]: 'W przygotowaniu do złożenia wniosku',
+  [STATUS.SUBMITTED]: 'Złożony',
+  [STATUS.REJECTED]: 'Odrzucony',
+  [STATUS.APPROVED]: 'Zatwierdzony',
+});
+
+const DECLARATION_STATUSES = new Set([
+  STATUS.PREPARING,
+  STATUS.SUBMITTED,
+  STATUS.APPROVED,
+  STATUS.REJECTED,
+]);
+
+const SIGNATURE_STATUSES = new Set([
+  STATUS.SUBMITTED,
+  STATUS.APPROVED,
+  STATUS.REJECTED,
+]);
 
 const STUDENTS_DATA = [
   { name: 'Anna', surname: 'Nowak', index: '234567', ects: 5 },
@@ -66,49 +93,85 @@ const KPK_MEMBER_DATA = [
   { name: 'Adam', surname: 'Kot' },
 ];
 
+const TOPICS_TO_GENERATE = [
+  {
+    name: 'Wpływ AI na procesy rekrutacyjne',
+    status: STATUS.OPEN,
+    studentCount: 0,
+  },
+  {
+    name: 'Architektura mikroserwisów w chmurze',
+    status: STATUS.PREPARING, 
+    studentCount: 3,
+  },
+  {
+    name: 'Modelowanie danych w NoSQL',
+    status: STATUS.SUBMITTED,
+    studentCount: 4,
+  },
+  {
+    name: 'Machine Learning dla detekcji oszustw',
+    status: STATUS.APPROVED,
+    studentCount: 5,
+    opinion: ''
+  },
+  {
+    name: 'Zastosowanie blockchain w logistyce',
+    status: STATUS.REJECTED,
+    studentCount: 3,
+    opinion: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.'
+  }
+];
+
 const createEmail = (name, surname) =>
   `${name.toLowerCase()}.${surname.toLowerCase()}@pwr.edu.pl`;
 
+async function seedByKeyMap(valuesMap, upsertFunction) {
+  const mappedDbEntries = await Promise.all(
+    Object.entries(valuesMap).map(async ([key, value]) => {
+      const row = await upsertFunction(value);
+      return [key, row];
+    })
+  );
+  return Object.fromEntries(mappedDbEntries);
+}
+
+
 async function main() {
   console.log('Seeding started...');
-
   console.log('1. Seeding Roles...');
-  const seededRoles = {};
 
-  for (const role of ROLES_TO_SEED) {
-    const upsertedRole = await prisma.role.upsert({
-      where: { role_name: role.role_name },
+  const seededRoles = await seedByKeyMap(ROLES_LABELS, (role_name) =>
+    prisma.role.upsert({
+      where: { role_name },
       update: {},
-      create: { role_name: role.role_name },
-    });
-
-    seededRoles[role.js_key] = upsertedRole;
-  }
+      create: { role_name },
+    })
+  );
 
   console.log('Seeded %d roles', Object.keys(seededRoles).length);
-
   console.log('\n2. Seeding statuses...');
-  const seededStatuses = {};
 
-  for (const status of STATUSES_TO_SEED) {
-    const upsertedStatus = await prisma.status.upsert({
-      where: { status_name: status.status_name },
+  const seededStatuses = await seedByKeyMap(STATUS_LABELS, (status_name) =>
+    prisma.status.upsert({
+      where: { status_name },
       update: {},
-      create: { status_name: status.status_name },
-    });
-    seededStatuses[status.js_key] = upsertedStatus;
-  }
+      create: { status_name },
+    })
+  );
 
   console.log('Seeded %d statuses', Object.keys(seededStatuses).length);
 
   // czy usuwamy ?, czy tak jak wczesniej z upsert
-  await prisma.student.deleteMany();
-  await prisma.opinion.deleteMany();
-  await prisma.signature.deleteMany();
-  await prisma.topic.deleteMany();
-  await prisma.declaration.deleteMany();
-  await prisma.academicEmployee.deleteMany();
-  await prisma.user.deleteMany();
+  await prisma.$transaction([
+    prisma.opinion.deleteMany(),
+    prisma.signature.deleteMany(),
+    prisma.student.deleteMany(),
+    prisma.topic.deleteMany(),
+    prisma.declaration.deleteMany(),
+    prisma.academicEmployee.deleteMany(),
+    prisma.user.deleteMany(),
+  ]);
 
   console.log('\n3. Seeding students...');
 
@@ -123,7 +186,7 @@ async function main() {
       },
     });
 
-    const student = await prisma.student.create({
+    await prisma.student.create({
       data: {
         index: data.index,
         ects_deficit: data.ects,
@@ -132,9 +195,11 @@ async function main() {
     });
     seededStudents.push(user);
   }
+    
+  const studentsPool = [...seededStudents];
+  const getStudents = (count) => studentsPool.splice(0, count);
 
   console.log('Seeded %d students', seededStudents.length);
-
   console.log('\n4. Seeding other users...');
 
   async function seedWorkersByRole(userDataArray, roleKey) {
@@ -155,7 +220,7 @@ async function main() {
         },
       });
 
-      const worker = await prisma.academicEmployee.create({
+      await prisma.academicEmployee.create({
         data: {
           user: { connect: { user_id: user.user_id } }
         }
@@ -167,148 +232,66 @@ async function main() {
     return seededUsers;
   }
 
-  const teamLeaders = await seedWorkersByRole(TEAM_LEADERS_DATA, 'TEAM_LEADER');
-  const teachingSupervisors = await seedWorkersByRole(TEACHING_SUPERVISORS_DATA, 'TEACHING_SUPERVISOR');
-  const studentsSupervisors = await seedWorkersByRole(STUDENTS_SUPERVISORS_DATA, 'STUDENTS_SUPERVISOR');
-  const kpkMembers = await seedWorkersByRole(KPK_MEMBER_DATA, 'KPK_MEMBER');
-  const seededTopics = []
+  const teamLeaders = await seedWorkersByRole(TEAM_LEADERS_DATA, ROLES.TEAM_LEADER);
+  const teachingSupervisors = await seedWorkersByRole(TEACHING_SUPERVISORS_DATA, ROLES.TEACHING_SUPERVISOR);
+  const studentsSupervisors = await seedWorkersByRole(STUDENTS_SUPERVISORS_DATA, ROLES.STUDENTS_SUPERVISOR);
+  const kpkMembers = await seedWorkersByRole(KPK_MEMBER_DATA, ROLES.KPK_MEMBER);
+  const teamLeadersPool = [...teamLeaders];
+  const getTeamLeader = () => teamLeadersPool.shift();
 
   console.log('\n5. Seeding different Topics...');
 
-  // open topic, without students, declarations, leader
-  const topicA = await prisma.topic.create({
-    data: {
-      name: 'Wpływ AI na procesy rekrutacyjne',
-      description: 'Analiza wykorzystania sztucznej inteligencji...',
-      status: {
-        connect: {
-          status_id: seededStatuses.OPEN.status_id
-        }
+  const seededTopics = []
+  for (const config of TOPICS_TO_GENERATE) {
+    const students = getStudents(config.studentCount);
+    const leader = config.status !== STATUS.OPEN ? getTeamLeader() : null;
+    const needsDeclaration = DECLARATION_STATUSES.has(config.status);
+    const needsSignatures = SIGNATURE_STATUSES.has(config.status);
+
+    const topic = await prisma.topic.create({
+      data: {
+        name: config.name,
+        description: `${config.name}`,
+        status: { connect: { status_id: seededStatuses[config.status].status_id } },
+        ...(leader && { employee: { connect: { user_id: leader.user_id } } }),
+        
+        students: { connect: students.map(s => ({ user_id: s.user_id })) },
+
+        ...(needsDeclaration && {
+          declaration: {
+            create: {
+              ...(needsSignatures && {
+                signatures: {
+                  create: [leader, ...students]
+                    .filter(Boolean)
+                    .map(u => ({ user: { connect: { user_id: u.user_id } } }))
+                }
+              })
+            }
+          }
+        }),
+
+        ...(config.opinion && {
+          opinion: {
+            create: {
+              argumentation: config.opinion,
+              employee: { connect: { user_id: kpkMembers[0].user_id } } 
+            }
+          }
+        })
       }
-    },
-  });
-  seededTopics.push(topicA);
+    });
+    seededTopics.push(topic);
+  }
 
-  // In preparation topic, with a declaration, students, leader, but no signatures
-  const studentsToConnect = seededStudents.slice(0, 3);
-  const teamLeader = teamLeaders[0];
-
-  const topicB = await prisma.topic.create({
-    data: {
-      name: 'Architektura mikroserwisów w chmurze (Zespołowy)',
-      description: 'Projekt i implementacja aplikacji opartej na mikroserwisach...',
-      status: { connect: { status_id: seededStatuses.PREPARING.status_id } },
-      employee: { connect: { user_id: teamLeader.user_id } },
-      declaration: { create: {} },
-      students: { connect: studentsToConnect.map(s => ({ user_id: s.user_id })) }
-    },
-    include: { declaration: true }
-  });
-
-  seededTopics.push(topicB);
-
-  // submitted with signatures
-  const studentsToConnect2 = seededStudents.slice(4, 8);
-  const topicC = await prisma.topic.create({
-    data: {
-      name: 'Modelowanie danych w NoSQL',
-      description: 'Badanie wydajności baz danych NoSQL...',
-      status: { connect: { status_id: seededStatuses.SUBMITTED.status_id } },
-      employee: { connect: { user_id: teamLeaders[0].user_id } },
-      declaration: { create: {} },
-      students: { connect: studentsToConnect2.map(s => ({ user_id: s.user_id })) }
-    },
-    include: { declaration: true }
-  });
-
-  await prisma.signature.createMany({
-    data: [teamLeader, ...studentsToConnect2].map(user => ({
-      user_id: user.user_id,
-      declaration_id: topicC.declaration.declaration_id,
-    }))
-  });
-
-  seededTopics.push(topicC);
-
-  // rejected
-  const studentsToConnect3 = seededStudents.slice(8, 10);
-  const teamLeader1 = teamLeaders[1];
-
-  const topicD = await prisma.topic.create({
-    data: {
-      name: 'Zastosowanie blockchain w logistyce',
-      description: 'Koncepcja i analiza technologii rozproszonego rejestru...',
-      status: { connect: { status_id: seededStatuses.REJECTED.status_id } },
-      employee: { connect: { user_id: teamLeader1.user_id } },
-      declaration: { create: {} },
-      students: {
-        connect: studentsToConnect3.map(s => ({ user_id: s.user_id }))
-      }
-    },
-    include: { declaration: true }
-  });
-
-  await prisma.signature.createMany({
-    data: [teamLeader1, ...studentsToConnect3].map(u => ({
-      user_id: u.user_id,
-      declaration_id: topicD.declaration.declaration_id,
-    }))
-  });
-
-  await prisma.opinion.create({
-    data: {
-      argumentation: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.',
-      employee_id: kpkMembers[0].user_id,
-      topic_id: topicD.topic_id,
-    }
-  });
-
-  seededTopics.push(topicD);
-
-  // approved
-  const studentsToConnect4 = seededStudents.slice(10, 15);
-
-  const topicE = await prisma.topic.create({
-    data: {
-      name: 'Machine Learning dla detekcji oszustw',
-      description: 'Implementacja algorytmów uczenia maszynowego...',
-      status: { connect: { status_id: seededStatuses.APPROVED.status_id } },
-      employee: { connect: { user_id: teamLeader1.user_id } },
-      declaration: { create: {} },
-      students: {
-        connect: studentsToConnect4.map(s => ({ user_id: s.user_id }))
-      }
-    },
-    include: { declaration: true }
-  });
-
-  await prisma.signature.createMany({
-    data: [teamLeader1, ...studentsToConnect4].map(u => ({
-      user_id: u.user_id,
-      declaration_id: topicE.declaration.declaration_id,
-    }))
-  });
-
-  await prisma.opinion.create({
-    data: {
-      argumentation: '',
-      employee_id: kpkMembers[1].user_id,
-      topic_id: topicE.topic_id,
-    }
-  });
-
-  seededTopics.push(topicE);
-
-  console.log('Seeded %d topics', seededTopics.length);
-
+    console.log('Seeded %d topics', seededTopics.length);
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error('Błąd podczas seedowania:', e);
-    await prisma.$disconnect();
+  .catch((e) => {
+    console.error(e);
     process.exit(1);
-  });
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  }); 
