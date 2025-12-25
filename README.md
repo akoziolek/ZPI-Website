@@ -1,4 +1,39 @@
-Ctr+Shift+V                                                 - pretty .md file preview
+## Running the Application
+
+### With Docker (Full Stack)
+```bash
+docker-compose up --build
+```
+
+### Manual Setup
+1. **Backend** (Terminal 1):
+   ```bash
+   cd backend
+   npm install
+   npm run dev
+   ```
+
+2. **Frontend** (Terminal 2):
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+3. **Database** (if not using Docker):
+   - Make sure PostgreSQL is running
+   - Run migrations: `npx prisma migrate dev --name init`
+   - Generate client: `npx prisma generate`
+   - Seed database: `npx prisma db seed`
+
+### Access Points
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:3001
+- Database GUI: http://localhost:51212 (Prisma Studio)
+
+---
+
+## Docker Commands
 
 **docker-compose up --build**                               - start docker frontend, backend, postgres [docker has to be opened]
 

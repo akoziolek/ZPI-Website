@@ -16,9 +16,12 @@ b)	[GET /employee/:uuid] Jako Opiekun Studentów chcę mieć możliwość wyszuk
 */
 
 import { Router } from "express";
-import { getAllAcademicEmployeesController, getAcademicEmployeeController } from "../src/controllers/academicEmployeesController.js";
+import { getAllAcademicEmployeesController, getAcademicEmployeeController } from "../controllers/academicEmployeesController.js";
 
 const academicEmployeesRoutes = Router();
+
+//academicEmployeesRoutes.get("/", authenticateToken, requireRole(['Student', 'Opiekun Studentów']), getAllAcademicEmployees);
+//academicEmployeesRoutes.get("/:uuid", authenticateToken, requireRole(['Student', 'Opiekun Studentów']), getAcademicEmployee);
 
 academicEmployeesRoutes.get("/", getAllAcademicEmployeesController);
 academicEmployeesRoutes.get("/:uuid", getAcademicEmployeeController);

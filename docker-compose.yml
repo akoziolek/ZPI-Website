@@ -52,7 +52,3 @@ networks:
 
 volumes:
   postgres_data:
-
-# docker-compose up --build
-
-# docker exec -it ZPI-backend npx prisma migrate dev - dodać, aby migracja odbywała się automatycznie przy starcie dockera

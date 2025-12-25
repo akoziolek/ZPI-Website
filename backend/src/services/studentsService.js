@@ -1,0 +1,58 @@
+import prisma from "../lib/db.js";
+import { NotFoundError } from "../utils/errors.js";
+
+function mapStudentToDto(student) {
+    return {
+        id: student.user.uuid,
+        name: student.user.name,
+        surname: student.user.surname,
+        email: student.user.mail,
+        indexNumber: student.index,
+        ects: student.ects_deficit
+    };
+}
+
+export async function getAllStudents() {
+    const students = await prisma.student.findMany({
+        select: {
+            index: true,
+            ects_deficit: true,
+            user: {
+                select: {
+                    uuid: true,
+                    name: true,
+                    surname: true,
+                    mail: true
+                }
+            }
+        }
+    });
+
+    return students.map(mapStudentToDto);
+}
+
+export async function getStudent(userUuid) {
+    const student = await prisma.student.findFirst({
+        where: {
+            user: { uuid: userUuid }
+        },
+        select: {
+            index: true,
+            ects_deficit: true,
+            user: {
+                select: {
+                    uuid: true,
+                    name: true,
+                    surname: true,
+                    mail: true
+                }
+            }
+        }
+    });
+
+    if (!student) {
+        throw new NotFoundError("Student");
+    }
+
+    return mapStudentToDto(student);
+}

@@ -1,8 +1,4 @@
 /*
-??? co z tym
-dodac reszte api
-dodac sequilize strukture do bazy
-
 Wymagania poczty
 1.	Wysyłanie wiadomości przez serwer pocztowy
 a)	Jako poczta chcę mieć możliwość połączenia się z serwerem, aby wysłać powiadomienia do studentów oraz pracowników.
@@ -73,31 +69,31 @@ b)	Jako Opiekun Studentów chcę mieć możliwość usunięcia studenta z tematu
 
 import { Router } from "express";
 import {
-    getAllTopics,
+    getAllTopicsController,
     getTopicController,
-    createTopic,
-    updateTopic,
-    deleteTopic,
-    joinTopic,
-    leaveTopic,
-    assignSupervisor,
-    unassignSupervisor,
-    addStudentToTopic,
-    removeStudentFromTopic
-} from "../src/controllers/topicsController.js";
+} from "../controllers/topicsController.js";
 
 const topicRoutes = Router();
 
-topicRoutes.get("/", getAllTopics);
+/**
+topicRoutes.get("/", authenticateToken, getAllTopicsController);
+topicRoutes.get("/:uuid", authenticateToken, getTopic);
+
+topicRoutes.post("/", authenticateToken, requireRole(['Opiekun']), validateRequest(createTopicSchema), createTopicController);
+topicRoutes.put("/:uuid", authenticateToken, requireRole(['Opiekun']), validateRequest(updateTopicSchema), updateTopicController);
+topicRoutes.delete("/:uuid", authenticateToken, requireRole(['Opiekun']), deleteTopicController);
+topicRoutes.post("/:uuid/assign", authenticateToken, requireRole(['Opiekun']), assignSupervisorController);
+topicRoutes.delete("/:uuid/unassign", authenticateToken, requireRole(['Opiekun']), unassignSupervisorController);
+
+topicRoutes.post("/:uuid/join", authenticateToken, requireRole(['Student']), joinTopicController);
+topicRoutes.delete("/:uuid/leave", authenticateToken, requireRole(['Student']), leaveTopicController);
+
+topicRoutes.post("/:uuid/students", authenticateToken, requireRole(['Opiekun', 'Opiekun Studentów']), addStudentToTopicController);
+topicRoutes.delete("/:uuid/students/:studentId", authenticateToken, requireRole(['Opiekun', 'Opiekun Studentów']), removeStudentFromTopicController);
+*/
+
+topicRoutes.get("/", getAllTopicsController);
 topicRoutes.get("/:uuid", getTopicController);
-topicRoutes.post("/", createTopic);
-topicRoutes.put("/:uuid", updateTopic);
-topicRoutes.delete("/:uuid", deleteTopic);
-topicRoutes.post("/:uuid/join", joinTopic);
-topicRoutes.delete("/:uuid/leave", leaveTopic);
-topicRoutes.post("/:uuid/assign", assignSupervisor);
-topicRoutes.delete("/:uuid/unassign", unassignSupervisor);
-topicRoutes.post("/:uuid/students", addStudentToTopic);
-topicRoutes.delete("/:uuid/students/:studentId", removeStudentFromTopic);
+
 
 export default topicRoutes;

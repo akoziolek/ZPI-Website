@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install",
-    "dev": "nodemon --legacy-watch server.js && npx prisma generate && prisma migrate deploy",
+    "dev": "nodemon --legacy-watch src/server.js && npx prisma generate && prisma migrate deploy",
     "start": "node server.js",
     "seed": "node prisma/seed.js"
   },
@@ -17,15 +17,20 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.1.0",
     "@prisma/client": "^7.1.0",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "nodemon": "^3.1.11",
     "pg": "^8.16.3",
-    "tsx": "^4.21.0"
+    "react-router-dom": "^7.11.0",
+    "tsx": "^4.21.0",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^25.0.2",
     "dotenv": "^17.2.3",
     "prisma": "^7.1.0",

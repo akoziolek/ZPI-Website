@@ -113,7 +113,7 @@ const TOPICS_TO_GENERATE = [
     name: 'Machine Learning dla detekcji oszustw',
     status: STATUS.APPROVED,
     studentCount: 5,
-    opinion: ''
+    opinion: ' '
   },
   {
     name: 'Zastosowanie blockchain w logistyce',
