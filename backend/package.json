@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install",
     "dev": "nodemon --legacy-watch src/server.js && npx prisma generate && prisma migrate deploy",
-    "start": "node server.js",
+    "start": "node src/server.js",
     "seed": "node prisma/seed.js"
   },
   "keywords": [],

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import HomePage from './components/HomePage';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Sprawdź czy użytkownik jest już zalogowany przy starcie aplikacji
+  // check if there is a valid token
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem('token');
@@ -17,7 +17,6 @@ function App() {
           setUser(JSON.parse(userData));
         } catch (error) {
           console.error('Error parsing user data:', error);
-          // Wyczyść nieprawidłowe dane
           localStorage.removeItem('token');
           localStorage.removeItem('user');
         }
@@ -34,6 +33,8 @@ function App() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
   };
 
@@ -48,7 +49,7 @@ function App() {
   return (
     <>
       {user ? (
-        <Dashboard user={user} onLogout={handleLogout} />
+        <HomePage user={user} onLogout={handleLogout} />
       ) : (
         <Login onLogin={handleLogin} />
       )}

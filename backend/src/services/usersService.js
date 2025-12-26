@@ -1,7 +1,6 @@
 import prisma from "../lib/db.js";
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { AuthenticationError } from "../utils/errors.js";
+
 
 function mapUser(user) {
     return {
@@ -31,29 +30,19 @@ export const getAllUsers = async () => {
     return users.map(mapUser);
 };
 
-export const authenticateUser = async (mail, password) => {
-    const user = await prisma.user.findUnique({
-        where: { mail },
-        include: { role: true }
-    });
-
-    if (!user) {
-        throw new AuthenticationError("Invalid credentials");
-    }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
-        throw new AuthenticationError("Invalid credentials");
-    }
-
-    return user;
-};
 
 export const generateToken = (user) => {
     return jwt.sign(
         { userId: user.user_id, uuid: user.uuid },
         process.env.JWT_SECRET,
-        { expiresIn: '24h' }
+        { expiresIn: '1h' }
     );
+};
+
+export const updateUserLogin = async (userId) => {
+    await prisma.user.update({
+        where: { user_id: userId },
+        data: { last_login: new Date() }
+    });
 };
 

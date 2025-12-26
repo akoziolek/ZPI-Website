@@ -2,7 +2,7 @@ import { PrismaClient } from "../../generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 import dotenv from "dotenv";
 
-dotenv.config({ path: "../.env" });
+dotenv.config({ path: "../../.env" });
 
 // config to use only one prisma client/connection to the database 
 

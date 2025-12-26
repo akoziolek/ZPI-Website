@@ -9,6 +9,7 @@ import topicRoutes from "./routes/topics.js";
 import academicEmployeesRoutes from "./routes/academicEmployees.js";
 import opinionsRoutes from "./routes/opinions.js";
 import usersRoutes from "./routes/user.js";
+import authRoutes from "./routes/auth.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use('/topics', opinionsRoutes);
 app.use('/academicEmployees', academicEmployeesRoutes);
 //app.use('/declarations', declarationsRoutes);
 app.use('/users', usersRoutes);
+app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.json({ info: 'Node .js, Express, and Postgres API' });

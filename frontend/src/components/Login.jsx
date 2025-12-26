@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,6 @@ const Login = () => {
   
   const handleLogin = async (e) => {
     e.preventDefault();
-    /*
     if (!selectedUser) return;
 
     try {
@@ -40,10 +39,10 @@ const Login = () => {
       setError("");
 
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const res = await fetch(`${backendUrl}/login`, {
+      const res = await fetch(`${backendUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: selectedUser.id }),
+        body: JSON.stringify({ mail: selectedUser.email }),
       });
 
       const json = await res.json();
@@ -51,17 +50,17 @@ const Login = () => {
 
       // Zapis JWT w localStorage
       localStorage.setItem("token", json.token);
+      localStorage.setItem("user", JSON.stringify(json.user));
       console.log("Logged in successfully as:", selectedUser.name);
 
-      // Przekierowanie np. do dashboard
-      // navigate("/dashboard"); // jeśli używasz react-router
+      // Wywołaj callback onLogin z danymi użytkownika
+      onLogin(json.user);
 
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-      */
   };
   
 
@@ -82,7 +81,7 @@ const Login = () => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             {loading && (
-              <div className="text-center text-gray-500">Loading users...</div>
+              <div className="text-center text-gray-500">Ładowanie użytkowników...</div>
             )}
 
             {error && (
