@@ -8,4 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  // for hot reloads in docker env
+  server: {
+    host: true,
+    watch: {
+      usePolling: true,
+      interval: 100
+    }
+  }
 })
