@@ -13,14 +13,14 @@ export async function apiFetch(url, options = {}) {
   return res;
 }
 
-export async function apiFetchWithAuth(url, options = {}, onLogout = null) {
+export async function apiFetchWithAuth(url, options = {}, onTokenExpired = null) {
   const res = await apiFetch(url, options);
 
   if (res.status === 401 || res.status === 403) {
-    if (onLogout) {
-      onLogout();
+    if (onTokenExpired) {
+      onTokenExpired();
     }
-    throw new Error("Session has ended");
+    throw new Error("Sesja wygasła");
   }
 
   return res;

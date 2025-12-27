@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { apiFetchWithAuth } from "../api/apiFetch";
 
-const TopicsPage = ({ user, onLogout }) => {
+const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,7 +11,7 @@ const TopicsPage = ({ user, onLogout }) => {
     const loadTopics = async () => {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const res = await apiFetchWithAuth(`${backendUrl}/topics`, {}, onLogout);
+        const res = await apiFetchWithAuth(`${backendUrl}/topics`, {}, onTokenExpired);
         if (!res.ok) throw new Error(`Network error: ${res.status}`);
 
         const json = await res.json();
@@ -26,7 +26,7 @@ const TopicsPage = ({ user, onLogout }) => {
     };
 
     loadTopics();
-  }, [onLogout]);
+  }, [onTokenExpired]);
 
   const topicsLength = topics.length;
 
