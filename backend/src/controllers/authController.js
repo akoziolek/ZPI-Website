@@ -10,7 +10,6 @@ export async function authenticateUser(req, res) {
             throw new ValidationError("Email is required");
         }
 
-        // Find user by email only (no password check)
         const user = await prisma.user.findUnique({
             where: { mail },
             include: { role: true }
@@ -35,11 +34,27 @@ export async function authenticateUser(req, res) {
                 name: user.name,
                 surname: user.surname,
                 mail: user.mail,
-                role: user.role
+                role: user.role.role_name
             }
         });
 
     } catch (error) {
         throw error;
     }
+}
+
+export async function verifyToken(req, res) {
+    // The authenticateToken middleware already verified the token
+    // and attached the user to req.user
+    res.json({
+        success: true,
+        user: {
+            user_id: req.user.user_id,
+            uuid: req.user.uuid,
+            name: req.user.name,
+            surname: req.user.surname,
+            mail: req.user.mail,
+            role: req.user.role.role_name
+        }
+    });
 }

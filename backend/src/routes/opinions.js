@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { approveTopicController, rejectTopicController } from "../controllers/opinionsController.js";
-
+import { authenticateToken } from "../middleware/auth.js";
 const opinionsRoutes = Router();
 
 /**
@@ -9,8 +9,8 @@ opinionsRoutes.post("/topics/:uuid/reject", authenticateToken, requireRole(['Cz≈
 opinionsRoutes.get("/topics/:uuid/opinion", authenticateToken, getOpinion);
 */
 
-opinionsRoutes.post("/:uuid/approve", approveTopicController);
-opinionsRoutes.post("/:uuid/reject", rejectTopicController);
+opinionsRoutes.post("/:uuid/approve", authenticateToken, approveTopicController);
+opinionsRoutes.post("/:uuid/reject", authenticateToken, rejectTopicController);
 
 
 export default opinionsRoutes;

@@ -3,7 +3,7 @@ import {
     rejectTopic, 
 } from "../services/opinionsService.js";
 
-
+// sprawdzac role uzytkownika oraz status!, część już była w middleware?
 export async function approveTopicController(req, res) {
     const { uuid } = req.params;
     const { argumentation } = req.body;

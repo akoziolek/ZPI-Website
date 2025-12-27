@@ -17,11 +17,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// konfiguracja corsa, aby akcpetowal jedynie zapytania z frontendu !!!
+
 // is this visible in requests? X-Powered-By ?? make it not
 
 app.use(express.json()); // parse HTTP body
-app.use(cors()); 
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // Pozwala na przesyłanie ciasteczek/tokenów jeśli ich używasz
+};
+app.use(cors(corsOptions)); 
 app.use(helmet()); // middleware that sets various HTTP headers to protect your app from common web vulnerabilities
 app.use(morgan("dev")); // log the requests
 
@@ -34,8 +39,7 @@ app.use('/users', usersRoutes);
 app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
-  res.json({ info: 'Node .js, Express, and Postgres API' });
-  // TO DO ADD DEFAULT RESPONSE
+  res.json({ info: '' });
 });
 
 // Error handling middleware (must be last)

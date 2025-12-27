@@ -72,6 +72,7 @@ import {
     getAllTopicsController,
     getTopicController,
 } from "../controllers/topicsController.js";
+import { authenticateToken } from "../middleware/auth.js";
 
 const topicRoutes = Router();
 
@@ -92,8 +93,8 @@ topicRoutes.post("/:uuid/students", authenticateToken, requireRole(['Opiekun', '
 topicRoutes.delete("/:uuid/students/:studentId", authenticateToken, requireRole(['Opiekun', 'Opiekun Studentów']), removeStudentFromTopicController);
 */
 
-topicRoutes.get("/", getAllTopicsController);
-topicRoutes.get("/:uuid", getTopicController);
+topicRoutes.get("/", authenticateToken, getAllTopicsController);
+topicRoutes.get("/:uuid", authenticateToken, getTopicController);
 
 
 export default topicRoutes;

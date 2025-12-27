@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Login from './components/Login';
-import HomePage from './components/HomePage';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { LoginPage, UserPage, ZPIPage, TopicsPage } from './pages';
+import ProtectedRoute from './components/ProtectedRoute';
+import { verifyToken } from './api/apiFetch';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -8,15 +10,16 @@ function App() {
 
   // check if there is a valid token
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       const token = localStorage.getItem('token');
-      const userData = localStorage.getItem('user');
 
-      if (token && userData) {
-        try {
-          setUser(JSON.parse(userData));
-        } catch (error) {
-          console.error('Error parsing user data:', error);
+      if (token) {
+        // Verify token with backend
+        const verifiedUser = await verifyToken();
+        if (verifiedUser) {
+          setUser(verifiedUser);
+        } else {
+          // Token is invalid, clear localStorage
           localStorage.removeItem('token');
           localStorage.removeItem('user');
         }
@@ -47,13 +50,46 @@ function App() {
   }
 
   return (
-    <>
-      {user ? (
-        <HomePage user={user} onLogout={handleLogout} />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </>
+    <Routes>
+      <Route
+        path="/login"
+        element={
+          user ? <Navigate to="/topics" replace /> : <LoginPage onLogin={handleLogin} />
+        }
+      />
+      <Route
+        path="/user"
+        element={
+          <ProtectedRoute user={user}>
+            <UserPage user={user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/zpi"
+        element={
+          <ProtectedRoute user={user}>
+            <ZPIPage user={user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/topics"
+        element={
+          <ProtectedRoute user={user}>
+            <TopicsPage user={user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute user={user}>
+            <ZPIPage user={user} onLogout={handleLogout} />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
 

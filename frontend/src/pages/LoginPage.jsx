@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
-const Login = ({ onLogin }) => {
+const LoginPage = ({ onLogin }) => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [loggingIn, setLoggingIn] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -12,30 +15,27 @@ const Login = ({ onLogin }) => {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const res = await fetch(`${backendUrl}/users`);
-        if (!res.ok) throw new Error(`Network error: ${res.status}`);
-
         const json = await res.json();
-        if (!json.success) throw new Error("API returned error");
-
         setUsers(json.data);
       } catch (err) {
-        setError(`Cannot load users: ${err.message}`);
+        setError(err.message);
       } finally {
-        setLoading(false);
+        setLoadingUsers(false);
       }
     };
 
     loadUsers();
   }, []);
 
+
   // Obsługa logowania
-  
+    
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!selectedUser) return;
 
     try {
-      setLoading(true);
+      setLoggingIn(true);
       setError("");
 
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -46,22 +46,20 @@ const Login = ({ onLogin }) => {
       });
 
       const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.message || "Login failed");
+      if (!json.success) throw new Error(json.message);
 
-      // Zapis JWT w localStorage
       localStorage.setItem("token", json.token);
       localStorage.setItem("user", JSON.stringify(json.user));
-      console.log("Logged in successfully as:", selectedUser.name);
 
-      // Wywołaj callback onLogin z danymi użytkownika
       onLogin(json.user);
-
+      navigate("/topics");
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      setLoggingIn(false);
     }
   };
+
   
 
   return (
@@ -80,7 +78,7 @@ const Login = ({ onLogin }) => {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            {loading && (
+            {loadingUsers && (
               <div className="text-center text-gray-500">Ładowanie użytkowników...</div>
             )}
 
@@ -88,9 +86,9 @@ const Login = ({ onLogin }) => {
               <div className="text-center text-red-600 mb-4">{error}</div>
             )}
 
-            {!loading && !error && (
+            {!error && (  
               <div className="grid grid-cols-1 gap-3 overflow-y-scroll h-96">
-                {users.map((user) => (
+                {! loadingUsers && users.map((user) => (
                   <button
                     key={user.id}
                     onClick={() => setSelectedUser(user)}
@@ -106,16 +104,17 @@ const Login = ({ onLogin }) => {
                     <div className="text-sm text-gray-500">{user.email}</div>
                   </button>
                 ))}
+
               </div>
             )}
 
             <form onSubmit={handleLogin} className="space-y-6 mt-4">
               <button
                 type="submit"
-                disabled={loading || !selectedUser}
+                disabled={loggingIn || !selectedUser}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? "logowanie..." : `Zaloguj`}
+                {loggingIn ? "logowanie..." : `Zaloguj`}
               </button>
             </form>
 
@@ -126,4 +125,4 @@ const Login = ({ onLogin }) => {
   );
 };
 
-export default Login;
+export default LoginPage;

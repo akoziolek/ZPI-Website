@@ -33,9 +33,9 @@ export const getAllUsers = async () => {
 
 export const generateToken = (user) => {
     return jwt.sign(
-        { userId: user.user_id, uuid: user.uuid },
+        { userId: user.user_id, uuid: user.uuid, role: user.role.role_name },
         process.env.JWT_SECRET,
-        { expiresIn: '1h' }
+        { expiresIn: '30min' }
     );
 };
 
