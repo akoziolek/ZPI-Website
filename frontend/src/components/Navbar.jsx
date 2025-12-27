@@ -14,12 +14,10 @@ const Navbar = ({ user, onLogout }) => {
   return (
   <nav className="bg-gray-300 shadow-md">
     <div className="relative flex items-center h-16 px-4 py-10">
-      {/* logo */}
       <div className="flex-shrink-0 hidden md:block">
         <img src={pwrLogo} alt="PWR Logo" className="h-10 w-auto" />
       </div>
 
-      {/* tytuł */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="text-2xl font-bold text-zinc-800 whitespace-nowrap">
           System wspomagania ZPI

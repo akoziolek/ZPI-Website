@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { NotificationContext } from '../hooks/useNotification';
 
 export const NotificationProvider = ({ children }) => {
@@ -28,16 +28,18 @@ export const NotificationProvider = ({ children }) => {
   const showWarning = useCallback((message, duration) => addNotification(message, 'warning', duration), [addNotification]);
   const showInfo = useCallback((message, duration) => addNotification(message, 'info', duration), [addNotification]);
 
+  const contextValue = useMemo(() => ({
+    notifications,
+    addNotification,
+    removeNotification,
+    showSuccess,
+    showError,
+    showWarning,
+    showInfo
+  }), [notifications, addNotification, removeNotification, showSuccess, showError, showWarning, showInfo]);
+
   return (
-    <NotificationContext.Provider value={{
-      notifications,
-      addNotification,
-      removeNotification,
-      showSuccess,
-      showError,
-      showWarning,
-      showInfo
-    }}>
+    <NotificationContext.Provider value={contextValue}>
       {children}
     </NotificationContext.Provider>
   );
