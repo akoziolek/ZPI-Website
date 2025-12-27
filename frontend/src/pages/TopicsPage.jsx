@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { apiFetchWithAuth } from "../api/apiFetch";
+import { ACADEMIC_YEAR } from "../config";
 
 const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
   const [topics, setTopics] = useState([]);
@@ -36,7 +37,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
       <div className="flex flex-col py-6 sm:px-6 lg:px-8 flex-1">
         <div className="sm:mx-auto sm:w-full sm:max-w-5xl pl-4">
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Tematy ZPI (data z wstepnych ustaleń)
+            Tematy ZPI {ACADEMIC_YEAR}
           </h2>
           <p className="mt-2 text-gray-600">
             ({topicsLength} {topicsLength === 1
@@ -64,6 +65,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                   <div>Status</div>
                   <div>Opiekun (tytuł naukowy)</div>
                   <div>Liczebność zespołu</div>
+                  <div>Filtrowanie??</div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-3 mb-6">
@@ -77,7 +79,8 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                       <div className="text-sm text-gray-500 border-r border-gray-800 px-2 py-1 text-center">{topic.status_name}</div>
                       <div className="font-medium border-r border-gray-800 px-2 py-1">{topic.supervisor ? topic.supervisor.name + " " + topic.supervisor.surname : " "}</div>
                       <div className="font-medium border-r border-gray-800 px-2 py-1 text-center">{topic.students ? topic.students.length : 0}</div>
-                      <button className="border border-gray-800">Wyświetl</button>
+                      <button className="border border-gray-800 my-4 mx-3 rounded-lg shadow-md hover:bg-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Wyświetl</button>
+                                       
                     </div>
 
                   ))}
