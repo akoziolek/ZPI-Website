@@ -9,7 +9,6 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [sortConfig, setSortConfig] = useState([
-    { key: 'status_name', direction: 'asc' },
     { key: 'name', direction: 'asc' }
   ]);
   
@@ -36,21 +35,20 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
 
   const handleSort = (key) => {
     setSortConfig(prevConfig => {
-      const existingIndex = prevConfig.findIndex(config => config.key === key);
+      const existingConfig = prevConfig.find(config => config.key === key);
       
-      if (existingIndex !== -1) {
-        // If column is already in sort config, toggle direction
-        const newConfig = [...prevConfig];
-        newConfig[existingIndex] = {
-          ...newConfig[existingIndex],
-          direction: newConfig[existingIndex].direction === 'asc' ? 'desc' : 'asc'
-        };
-        // Move this column to the front (primary sort)
-        const [primary] = newConfig.splice(existingIndex, 1);
-        return [primary, ...newConfig];
+      if (existingConfig) {
+        if (existingConfig.direction === 'asc') {
+          return prevConfig.map(config => 
+            config.key === key 
+              ? { ...config, direction: 'desc' }
+              : config
+          );
+        } else {
+          return prevConfig.filter(config => config.key !== key);
+        }
       } else {
-        // Add new column to sort config as primary
-        return [{ key, direction: 'asc' }, ...prevConfig];
+        return [{ key, direction: 'asc' }];
       }
     });
   };
@@ -97,15 +95,16 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
 
   const getSortIcon = (key) => {
     const config = sortConfig.find(c => c.key === key);
-    if (!config) return null;
     
-    const isPrimary = sortConfig[0].key === key;
-    const Icon = config.direction === 'asc' ? ChevronUp : ChevronDown;
+    if (config) {
+      const Icon = config.direction === 'asc' ? ChevronUp : ChevronDown;
+      return (
+        <Icon className="w-4 h-4 inline ml-1 text-blue-600" />
+      );
+    }
     
     return (
-      <Icon 
-        className={`w-4 h-4 inline ml-1 ${isPrimary ? 'text-blue-600' : 'text-gray-400'}`} 
-      />
+      <ChevronDown className="w-4 h-4 inline ml-1 text-gray-300 opacity-50" />
     );
   };
 
