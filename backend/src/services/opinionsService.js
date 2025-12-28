@@ -1,5 +1,6 @@
 import prisma from "../lib/db.js";
 import { NotFoundError, ValidationError } from "../utils/errors.js";
+import { STATUSES } from "../config.js";
 
 export async function approveTopic(topicUuid, argumentation, userId) {
     const topic = await prisma.topic.findFirst({
@@ -11,7 +12,7 @@ export async function approveTopic(topicUuid, argumentation, userId) {
         throw new NotFoundError("Topic not found");
     }
 
-    if (topic.status.status_name !== "Złożony") {
+    if (topic.status.status_name !== STATUSES.SUBMITTED) {
         throw new ValidationError("Topic must be in 'Złożony' status to be approved");
     }
 
@@ -27,7 +28,7 @@ export async function approveTopic(topicUuid, argumentation, userId) {
     });
 
     // Update status to approved
-    const approvedStatus = await prisma.status.findUnique({ where: { status_name: "Zatwierdzony" } });
+    const approvedStatus = await prisma.status.findUnique({ where: { status_name: STATUSES.APPROVED } });
     if (approvedStatus) {
         await prisma.topic.update({
             where: { uuid: topicUuid },
@@ -46,7 +47,7 @@ export async function rejectTopic(topicUuid, argumentation, userId) {
         throw new NotFoundError("Topic not found");
     }
 
-    if (topic.status.status_name !== "Złożony") {
+    if (topic.status.status_name !== STATUSES.SUBMITTED) {
         throw new ValidationError("Topic must be in 'Złożony' status to be rejected");
     }
 
@@ -60,7 +61,7 @@ export async function rejectTopic(topicUuid, argumentation, userId) {
     });
 
     // Update status to rejected
-    const rejectedStatus = await prisma.status.findUnique({ where: { status_name: "Odrzucony" } });
+    const rejectedStatus = await prisma.status.findUnique({ where: { status_name: STATUSES.REJECTED } });
     if (rejectedStatus) {
         await prisma.topic.update({
             where: { uuid: topicUuid },

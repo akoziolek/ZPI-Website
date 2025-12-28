@@ -1,28 +1,18 @@
 import prisma from "../lib/db.js";
-import { generateToken, updateUserLogin } from "../services/usersService.js";
+import { generateToken, updateUserLogin, findUserByMail } from "../services/usersService.js";
 import { NotFoundError, ValidationError } from "../utils/errors.js";
 
 export async function authenticateUser(req, res) {
     try {
         const { mail } = req.body;
 
-        if (!mail) {
-            throw new ValidationError("Email is required");
-        }
-
-        const user = await prisma.user.findUnique({
-            where: { mail },
-            include: { role: true }
-        });
-
-        if (!user) {
-            throw new NotFoundError("User not found");
-        }
-
-        // Generate JWT token
+        if (!mail) throw new ValidationError("Email is required");
+    
+        const user = await findUserByMail(mail);
+        
+        if (!user) throw new NotFoundError("User not found");
+        
         const token = generateToken(user);
-
-        // Update last login
         await updateUserLogin(user.user_id);
 
         res.json({

@@ -46,3 +46,10 @@ export const updateUserLogin = async (userId) => {
     });
 };
 
+export const findUserByMail = async (mail) => {
+    const user = await prisma.user.findUnique({
+        where: { mail },
+        include: { role: true }
+    });
+    return user;
+};

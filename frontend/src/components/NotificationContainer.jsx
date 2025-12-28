@@ -2,6 +2,7 @@ import React from 'react';
 import { useNotification } from '../hooks/useNotification';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react';
 
+
 const NotificationItem = ({ notification, onRemove }) => {
   const getIcon = (type) => {
     switch (type) {

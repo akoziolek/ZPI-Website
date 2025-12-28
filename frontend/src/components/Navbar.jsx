@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import pwrLogo from "../public/pwr-logo-horizontal.png";
-import { IoSearchSharp } from "react-icons/io5";
+import { Search } from "lucide-react";
+import { ROLES } from '../config.js'
 
 // poprawic wysrodkowanie i co gdy przegladarka sie zwęża
 const Navbar = ({ user, onLogout }) => {
@@ -36,7 +37,7 @@ const Navbar = ({ user, onLogout }) => {
              ${isActive ? "bg-gray-300 font-bold" : "hover:bg-gray-50"}`
           }
         >
-          {user.role.role_name === "Członek KPK" ? "Moje opinie" : "Moje ZPI"}
+          {user.role.role_name === ROLES.KPK_MEMBER ? "Moje opinie" : "Moje ZPI"}
         </NavLink>
 
         <NavLink
@@ -57,7 +58,7 @@ const Navbar = ({ user, onLogout }) => {
             className="w-full text-sm px-3 py-2 text-zinc-800 border-2 border-gray-300 rounded-sm"
           />
           <button className="ml-3 text-zinc-800">
-            <IoSearchSharp size={20} />
+            <Search size={20} />
           </button>
         </div>
 

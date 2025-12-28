@@ -1,5 +1,3 @@
-export const ACADEMIC_YEAR = "2025/2026";
-
 export const ROLES = {
   KPK_MEMBER: 'Członek KPK',
   TEAM_LEADER: 'Opiekun zespołu',
@@ -8,7 +6,7 @@ export const ROLES = {
   STUDENT: 'Student'
 };
 
-export const STAUTSES = {
+export const STATUSES = {
   OPEN: 'Otwarty',
   PREPARING: 'W przygotowaniu do złożenia wniosku',
   SUBMITTED: 'Złożony',
