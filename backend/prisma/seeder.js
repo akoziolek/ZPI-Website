@@ -1,4 +1,4 @@
-import prisma from '../lib/db.js'
+import prisma from '../src/lib/db.js'
 
 const ROLES = Object.freeze({
   KPK_MEMBER: 'KPK_MEMBER',
@@ -96,27 +96,32 @@ const KPK_MEMBER_DATA = [
 const TOPICS_TO_GENERATE = [
   {
     name: 'Wpływ AI na procesy rekrutacyjne',
+    description: 'Analiza wykorzystania algorytmów uczenia maszynowego w automatyzacji selekcji CV oraz ocenie kompetencji miękkich kandydatów podczas rozmów rekrutacyjnych.',
     status: STATUS.OPEN,
     studentCount: 0,
   },
   {
     name: 'Architektura mikroserwisów w chmurze',
+    description: 'Projekt i implementacja skalowalnego systemu opartego na mikroserwisach z wykorzystaniem technologii Docker i Kubernetes w środowisku chmury obliczeniowej.',
     status: STATUS.PREPARING, 
     studentCount: 3,
   },
   {
     name: 'Modelowanie danych w NoSQL',
+    description: 'Badanie wydajności oraz struktur przechowywania danych w bazach dokumentowych i grafowych w porównaniu do tradycyjnych relacyjnych baz danych.',
     status: STATUS.SUBMITTED,
     studentCount: 4,
   },
   {
     name: 'Machine Learning dla detekcji oszustw',
+    description: 'Opracowanie modelu klasyfikacyjnego wykrywającego anomalie w transakcjach finansowych w czasie rzeczywistym, mającego na celu zapobieganie nadużyciom kart płatniczych.',
     status: STATUS.APPROVED,
     studentCount: 5,
     opinion: ' '
   },
   {
     name: 'Zastosowanie blockchain w logistyce',
+    description: 'Wykorzystanie technologii rozproszonych rejestrów (DLT) do zwiększenia przejrzystości łańcucha dostaw oraz automatyzacji płatności poprzez inteligentne kontrakty (Smart Contracts).',
     status: STATUS.REJECTED,
     studentCount: 3,
     opinion: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.'
@@ -251,7 +256,7 @@ async function main() {
     const topic = await prisma.topic.create({
       data: {
         name: config.name,
-        description: `${config.name}`,
+        description: `${config.description}`,
         status: { connect: { status_id: seededStatuses[config.status].status_id } },
         ...(leader && { employee: { connect: { user_id: leader.user_id } } }),
         
