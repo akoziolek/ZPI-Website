@@ -15,3 +15,21 @@ export const STAUTSES = {
   REJECTED: 'Odrzucony',
   APPROVED: 'Zatwierdzony',
 };
+
+
+export const getTopicColorClasses = (topicStatus) => {
+    switch (topicStatus) {
+        case STAUTSES.OPEN:
+        return 'bg-sky-100 text-gray-800';
+        case STAUTSES.SUBMITTED:
+        return 'bg-yellow-100 text-gray-800';
+        case STAUTSES.APPROVED:
+        return 'bg-green-100 text-gray-800';
+        case STAUTSES.REJECTED:
+        return 'bg-red-100 text-gray-800';
+        case STAUTSES.PREPARING:
+        return 'bg-violet-100 text-gray-800';
+        default:
+        'bg-gray-100 text-gray-800'
+    };
+};

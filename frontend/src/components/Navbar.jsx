@@ -1,17 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import pwrLogo from "../public/pwr-logo-horizontal.png";
 import { Search } from "lucide-react";
 import { ROLES } from '../config.js'
 
-// poprawic wysrodkowanie i co gdy przegladarka sie zwęża
-const Navbar = ({ user, onLogout }) => {
+const Navbar = ({ user, onLogout, searchValue, onSearchChange, onSearchSubmit, navigateOnSearch = true }) => {
   const navigate = useNavigate();
+  const [localSearchValue, setLocalSearchValue] = useState("");
 
   const handleLogout = () => {
     onLogout();
     navigate("/login");
   };
+
+  const handleSearchChange = (value) => {
+    if (searchValue !== undefined) {
+      // Controlled by parent
+      if (onSearchChange) {
+        onSearchChange(value);
+      }
+    } else {
+      // Local state for uncontrolled usage
+      setLocalSearchValue(value);
+    }
+  };
+
+  const handleSearchSubmit = (searchTerm) => {
+    if (onSearchSubmit) {
+      onSearchSubmit(searchTerm); // custom search logic
+    } else if (navigateOnSearch) {
+      // Default behavior: navigate to topics page with search
+      navigate(`/topics?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
+  const currentSearchValue = searchValue !== undefined ? searchValue : localSearchValue;
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit(currentSearchValue);
+    }
+  };
+
+  const handleSearchClick = () => {
+    handleSearchSubmit(currentSearchValue);
+  };
+
   return (
   <nav className="bg-gray-300 shadow-md">
     <div className="relative flex items-center h-16 px-4 py-10">
@@ -26,10 +60,8 @@ const Navbar = ({ user, onLogout }) => {
       </div>
     </div>
 
-    {/* dolny pasek */}
     {user && (
       <div className="flex flex-wrap items-stretch min-h-16 border-t-2 border-b-2 border-gray-600 bg-white">
-        {/* linki */}
         <NavLink
           to="/zpi"
           className={({ isActive }) =>
@@ -50,19 +82,22 @@ const Navbar = ({ user, onLogout }) => {
           Tematy
         </NavLink>
 
-        {/* wyszukiwarka */}
         <div className="flex items-center px-4 flex-1 max-w-md">
           <input
             type="text"
             placeholder="Wyszukaj…"
+            value={currentSearchValue}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
             className="w-full text-sm px-3 py-2 text-zinc-800 border-2 border-gray-300 rounded-sm"
           />
-          <button className="ml-3 text-zinc-800">
+          <button 
+            onClick={handleSearchClick}
+            className="ml-3 text-zinc-800">
             <Search size={20} />
           </button>
         </div>
 
-        {/* prawa strona */}
         <div className="ml-auto flex items-center space-x-4 h-16 px-2">
           <span className="hidden lg:block text-sm font-bold text-zinc-800">
             Zalogowano jako:

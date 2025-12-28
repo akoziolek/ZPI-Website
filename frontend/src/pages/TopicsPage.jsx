@@ -1,17 +1,29 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { apiFetchWithAuth } from "../api/apiFetch";
-import { ACADEMIC_YEAR, STAUTSES } from "../config";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ACADEMIC_YEAR, STAUTSES, getTopicColorClasses } from "../config";
+import { ChevronUp, ChevronDown, Filter } from "lucide-react";
 
 const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [sortConfig, setSortConfig] = useState([
     { key: 'name', direction: 'asc' }
   ]);
+  const [filters, setFilters] = useState({
+    status: [],
+    supervisor: '',
+    studentCount: { min: '', max: '' }
+  });
+  const [navbarSearch, setNavbarSearch] = useState(searchParams.get('search') || ''); // last done search input
+  const [navbarSearchInput, setNavbarSearchInput] = useState(searchParams.get('search') || ''); // curent search input
+  const [showFilters, setShowFilters] = useState(false);
   
+  // call to backend for topics to display
   useEffect(() => {
     const loadTopics = async () => {
       try {
@@ -33,6 +45,22 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
     loadTopics();
   }, [onTokenExpired]);
 
+  // clicking outside filtering area
+  const filterRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setShowFilters(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+
   const handleSort = (key) => {
     setSortConfig(prevConfig => {
       const existingConfig = prevConfig.find(config => config.key === key);
@@ -53,10 +81,55 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
     });
   };
 
-  const sortedTopics = useMemo(() => {
+  const filteredAndSortedTopics = useMemo(() => {
     if (!topics.length) return topics;
 
-    return [...topics].sort((a, b) => {
+    // First apply filters
+    let filtered = topics.filter(topic => {
+      if (filters.status.length > 0 && !filters.status.includes(topic.status_name)) {
+        return false;
+      }
+
+      if (filters.supervisor.trim() !== "") {
+        if (!topic.supervisor) {
+          return false;
+        }
+        const searchLower = filters.supervisor.toLowerCase().trim();
+        const supervisorFullName = `${topic.supervisor.name} ${topic.supervisor.surname}`.toLowerCase();
+        if (!supervisorFullName.includes(searchLower)) {
+          return false;
+        }
+      }
+
+      // Search text filter (from navbar)
+      if (navbarSearch) {
+        const searchLower = navbarSearch.toLowerCase();
+        const nameMatch = topic.name?.toLowerCase().includes(searchLower);
+        const supervisorMatch = topic.supervisor 
+          ? `${topic.supervisor.name} ${topic.supervisor.surname}`.toLowerCase().includes(searchLower)
+          : false;
+        const statusMatch = topic.status_name?.toLowerCase().includes(searchLower);
+
+        if (!nameMatch && !supervisorMatch && !statusMatch) {
+          return false;
+        }
+      }
+
+      if (filters.studentCount.min || filters.studentCount.max) {
+        const studentCount = topic.students?.length || 0;
+        const minCount = filters.studentCount.min ? parseInt(filters.studentCount.min) : 0;
+        const maxCount = filters.studentCount.max ? parseInt(filters.studentCount.max) : Infinity;
+        
+        if (studentCount < minCount || studentCount > maxCount) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    // Then apply sorting
+    return filtered.sort((a, b) => {
       for (const config of sortConfig) {
         let aValue, bValue;
 
@@ -91,7 +164,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
       }
       return 0;
     });
-  }, [topics, sortConfig]);
+  }, [topics, sortConfig, filters, navbarSearch]);
 
   const getSortIcon = (key) => {
     const config = sortConfig.find(c => c.key === key);
@@ -108,28 +181,66 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
     );
   };
 
-  const getTopicColorClasses = (topicStatus) => {
-    switch (topicStatus) {
-      case STAUTSES.OPEN:
-        return 'bg-sky-100 text-gray-800';
-      case STAUTSES.SUBMITTED:
-        return 'bg-yellow-100 text-gray-800';
-      case STAUTSES.APPROVED:
-        return 'bg-green-100 text-gray-800';
-      case STAUTSES.REJECTED:
-        return 'bg-red-100 text-gray-800';
-      case STAUTSES.PREPARING:
-        return 'bg-violet-100 text-gray-800';
-      default:
-        'bg-gray-100 text-gray-800'
-    };
+  // filtering
+  const handleStatusFilterChange = (status, checked) => {
+    setFilters(prev => ({
+      ...prev,
+      status: checked 
+        ? [...prev.status, status]
+        : prev.status.filter(s => s !== status)
+    }));
   };
 
-  const topicsLength = sortedTopics.length;
+  const handleSupervisorFilterChange = (value) => {
+    setFilters(prev => ({
+      ...prev,
+      supervisor: value
+    }));
+  };
+
+  const handleNavbarSearchSubmit = (searchTerm) => {
+    setNavbarSearch(searchTerm);
+    // Update URL with search parameter
+    if (searchTerm.trim()) {
+      navigate(`/topics?search=${encodeURIComponent(searchTerm)}`, { replace: true });
+    } else {
+      navigate('/topics', { replace: true });
+    }
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      status: [],
+      supervisor: '',
+      studentCount: { min: '', max: '' }
+    });
+    setNavbarSearch('');
+    setNavbarSearchInput('');
+    // Clear URL search parameter
+    navigate('/topics', { replace: true });
+  };
+
+  const topicsLength = filteredAndSortedTopics.length;
+  const isInvalidRange =
+    filters.studentCount.min !== '' &&
+    filters.studentCount.max !== '' &&
+    filters.studentCount.min > filters.studentCount.max ;
+  const isFiltering = 
+    filters.status.length > 0 || 
+    filters.supervisor !== '' || 
+    filters.studentCount.min !== '' || 
+    filters.studentCount.max !== '';
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar 
+        user={user} 
+        onLogout={onLogout} 
+        searchValue={navbarSearchInput}
+        onSearchChange={setNavbarSearchInput}
+        onSearchSubmit={handleNavbarSearchSubmit}
+        navigateOnSearch={false}
+      />
       <div className="flex flex-col py-6 sm:px-6 lg:px-8 flex-1">
         <div className="sm:mx-auto sm:w-full sm:max-w-6xl pl-4">
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
@@ -144,19 +255,124 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
           </p>
         </div>
 
-        <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-6xl justify-center">
-          <div className="py-8 px-4 sm:rounded-lg sm:px-10">
-            {loading && (
-              <div className="text-center text-gray-500">Ładowanie tematów...</div>
-            )}
+        {/* Main content */}
+      <div className="flex flex-col items-end w-full mx-auto px-4 max-w-6xl"> 
 
-            {error && (
-              <div className="text-center text-red-600 mb-4">{error}</div>
-            )}
+          <div ref={filterRef} className="relative ">
+            <button
+              onClick={() => setShowFilters(prev => !prev)}
+              className={`flex items-center px-4 py-2 rounded-md transition-colors ${
+                isFiltering 
+                  ? "text-blue-700 font-bold" 
+                  : "text-gray-700  "
+              }`}
+            >
+              Filtry    
+              <Filter className="w-4 h-4 ml-2" />
+            </button>
 
-            {!error && (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 border-separate border-spacing-y-4">
+            {showFilters && (
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                <div className="p-4">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Filtry</h3>
+
+                  {/* Status filters */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Status
+                    </label>
+                    <div className="space-y-2 max-h-34 overflow-y-auto">
+                      {Object.values(STAUTSES).map(status => (
+                        <label key={status} className="flex items-center text-sm">
+                          <input
+                            type="checkbox"
+                            checked={filters.status.includes(status)}
+                            onChange={(e) => handleStatusFilterChange(status, e.target.checked)}
+                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          />
+                          <span className="ml-2 text-gray-700">{status}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Supervisor filter */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Opiekun
+                    </label>
+                    <input
+                      type="text"
+                      value={filters.supervisor}
+                      onChange={(e) => handleSupervisorFilterChange(e.target.value)}
+                      placeholder="Wpisz nazwisko opiekuna..."
+                      className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none "
+                    />
+                  </div>
+
+                  {/* Student count filter */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Liczba studentów
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        value={filters.studentCount.min}
+                        onChange={(e) => setFilters(prev => ({
+                          ...prev,
+                          studentCount: { ...prev.studentCount, min: e.target.value }
+                        }))}
+                        className={`w-1/2 px-2 py-1 rounded-md focus:outline-none border rounded-md 
+                              ${isInvalidRange
+                                ? "bg-red-50 border-red-500 focus:ring-red-500"
+                                : "border-gray-300"}
+                            `}                      
+                      />
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        value={filters.studentCount.max}
+                        onChange={(e) => setFilters(prev => ({
+                          ...prev,
+                          studentCount: { ...prev.studentCount, max: e.target.value }
+                        }))}
+                        className={`w-1/2 px-2 py-1 rounded-md focus:outline-none border rounded-md
+                              ${isInvalidRange
+                                ? "bg-red-50 border-red-500 focus:ring-red-500"
+                                : "border-gray-300"}
+                            `}                      
+                      />
+                    </div>
+                  </div>
+
+                  {/* Clear filters button */}
+                  <button
+                    onClick={clearFilters}
+                    className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+                  >
+                    Wyczyść filtry
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="w-full overflow-x-auto">
+          <div className="mx-auto max-w-6xl px-4 pl-8">
+            <>
+              {loading && (
+                <div className="text-center text-gray-500">Ładowanie tematów...</div>
+              )}
+
+              {error && (
+                <div className="text-center text-red-600 mb-4">{error}</div>
+              )}
+
+              {!error && filteredAndSortedTopics.length !== 0  && (
+              <div>
+                <table className="w-full divide-y divide-gray-200 border-separate border-spacing-y-4">
                   <thead className="bg-gray-50">
                     <tr>
                       <th 
@@ -187,7 +403,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {!loading && sortedTopics.map((topic) => (
+                    {!loading && filteredAndSortedTopics.map((topic) => (
                       <tr key={topic.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap border-y border-l border-gray-600">
                           <div className="text-sm font-semibold text-gray-900 line-clamp-2 max-w-xs ">
@@ -220,19 +436,19 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                     ))}
                 </tbody>
               </table>
-
-                {!loading && sortedTopics.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    Brak tematów do wyświetlenia
-                  </div>
-                )}
-                </div>
+            </div>
             )}
 
+            {!error && !loading && filteredAndSortedTopics.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  Brak tematów do wyświetlenia
+                </div>
+              )}
+            </>
           </div>
         </div>
-      </div>
     </div>
+  </div>
   );
 };
 
