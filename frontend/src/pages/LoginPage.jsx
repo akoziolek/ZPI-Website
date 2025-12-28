@@ -63,7 +63,7 @@ const LoginPage = ({ onLogin }) => {
   
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
 
       <div className="flex flex-col justify-center py-6 sm:px-6 lg:px-8 flex-1">
@@ -77,7 +77,7 @@ const LoginPage = ({ onLogin }) => {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <div className="bg-gray-100 py-8 px-4 shadow sm:rounded-lg sm:px-10">
             {loadingUsers && (
               <div className="text-center text-gray-500">Ładowanie użytkowników...</div>
             )}

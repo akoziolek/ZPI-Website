@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { LoginPage, UserPage, ZPIPage, TopicsPage } from './pages';
+import { LoginPage, UserPage, ZPIPage, TopicsPage, TopicPage } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 import { NotificationProvider } from './contexts/NotificationContext';
 import NotificationContainer from './components/NotificationContainer';
@@ -43,11 +43,20 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/topics"
           element={
             <ProtectedRoute user={user}>
               <TopicsPage user={user} onLogout={logout} onTokenExpired={handleTokenExpired} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/topics/:uuid"
+          element={
+            <ProtectedRoute user={user}>
+              <TopicPage user={user} onLogout={logout} onTokenExpired={handleTokenExpired} />
             </ProtectedRoute>
           }
         />

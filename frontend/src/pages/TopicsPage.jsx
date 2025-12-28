@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { apiFetchWithAuth } from "../api/apiFetch";
 import { ACADEMIC_YEAR, STAUTSES, getTopicColorClasses } from "../config";
@@ -204,7 +204,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
     if (searchTerm.trim()) {
       navigate(`/topics?search=${encodeURIComponent(searchTerm)}`, { replace: true });
     } else {
-      navigate('/topics', { replace: true });
+      navigate('/topics');
     }
   };
 
@@ -232,7 +232,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
     filters.studentCount.max !== '';
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Navbar 
         user={user} 
         onLogout={onLogout} 
@@ -241,10 +241,10 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
         onSearchSubmit={handleNavbarSearchSubmit}
         navigateOnSearch={false}
       />
-      <div className="flex flex-col py-6 sm:px-6 lg:px-8 flex-1">
+      <main className="flex flex-col py-6 sm:px-6 lg:px-8 flex-1">
         <div className="sm:mx-auto sm:w-full sm:max-w-6xl pl-4">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Tematy ZPI {ACADEMIC_YEAR}
+          <h2 className="mt-6 text-2xl font-extrabold text-gray-900">
+            Tematy ZPI {ACADEMIC_YEAR} {navbarSearch && (`- ${navbarSearch}`)}
           </h2>
           <p className="mt-2 text-gray-600">
             ({topicsLength} {topicsLength === 1
@@ -256,12 +256,11 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
         </div>
 
         {/* Main content */}
-      <div className="flex flex-col items-end w-full mx-auto px-4 max-w-6xl"> 
-
+        <div className="flex flex-col items-end w-full mx-auto px-4 max-w-6xl"> 
           <div ref={filterRef} className="relative ">
             <button
               onClick={() => setShowFilters(prev => !prev)}
-              className={`flex items-center px-4 py-2 rounded-md transition-colors ${
+              className={`flex items-center px-4 rounded-md transition-colors ${
                 isFiltering 
                   ? "text-blue-700 font-bold" 
                   : "text-gray-700  "
@@ -373,28 +372,28 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
               {!error && filteredAndSortedTopics.length !== 0  && (
               <div>
                 <table className="w-full divide-y divide-gray-200 border-separate border-spacing-y-4">
-                  <thead className="bg-gray-50">
+                  <thead >
                     <tr>
                       <th 
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
                         onClick={() => handleSort('name')}
                       >
                         Nazwa {getSortIcon('name')}
                       </th>
                       <th 
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
                         onClick={() => handleSort('status_name')}
                       >
                         Status {getSortIcon('status_name')}
                       </th>
                       <th 
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
                         onClick={() => handleSort('supervisor')}
                       >
                         Opiekun {getSortIcon('supervisor')}
                       </th>
                       <th 
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
                         onClick={() => handleSort('students')}
                       >
                         Liczba studentów {getSortIcon('students')}
@@ -404,7 +403,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {!loading && filteredAndSortedTopics.map((topic) => (
-                      <tr key={topic.id} className="hover:bg-gray-50">
+                      <tr key={topic.id} className="hover:bg-gray-200  bg-gray-100">
                         <td className="px-6 py-4 whitespace-nowrap border-y border-l border-gray-600">
                           <div className="text-sm font-semibold text-gray-900 line-clamp-2 max-w-xs ">
                             {topic.name}
@@ -428,9 +427,13 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium border-y border-r border-gray-600">
-                          <button className="text-gray-600 bg-gray-200 hover:text-gray-900 px-3 py-1 border border-gray-600 rounded hover:bg-white transition-colors">
+                          <Link
+                            to={`/topics/${topic.id}`}
+                            className="text-gray-800 bg-gray-300 hover:text-gray-900 px-3 py-1 border border-gray-600 rounded hover:bg-gray-400 transition-colors"
+                          >
                             Wyświetl
-                          </button>
+                          </Link>
+
                         </td>
                       </tr>
                     ))}
@@ -447,8 +450,8 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
             </>
           </div>
         </div>
+      </main>
     </div>
-  </div>
   );
 };
 

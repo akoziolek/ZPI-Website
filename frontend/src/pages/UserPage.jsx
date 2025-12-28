@@ -3,11 +3,11 @@ import Navbar from "../components/Navbar";
 
 const UserPage = ({ user, onLogout }) => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Navbar user={user} onLogout={onLogout} />
 
       <main className="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
-        <div className="max-w-lg mx-auto bg-white rounded-lg shadow-md p-6 mb-6 text-center">
+        <div className="max-w-lg mx-auto p-6 mb-6 text-center bg-gray-50 border-2 border-gray-600">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Informacje o użytkowniku</h3>
           <div className="space-y-3 text-left">
             <div>
