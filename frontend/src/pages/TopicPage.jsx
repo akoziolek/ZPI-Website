@@ -2,18 +2,18 @@ import React, { useState, useEffect} from "react";
 import { useParams} from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { apiFetchWithAuth } from "../api/apiFetch";
-import { STAUTSES, getTopicColorClasses } from "../config";
+import { ROLES, STAUTSES, getTopicColorClasses } from "../config";
 
 
 const TopicPage = ({ user, onLogout, onTokenExpired }) => {
   const [topic, setTopic] = useState([]);
+  const [signatures, setSignatures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { uuid } = useParams();
 
   // call to backend for topics to display
   useEffect(() => {
-    console.log(uuid);
     const loadTopics = async () => {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -23,7 +23,8 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
         const json = await res.json();
         if (!json.success) throw new Error("API returned error");
 
-        setTopic(json.data);
+        const topicData = json.data;
+        setTopic(topicData);
       } catch (err) {
         setError(`Nie można załadować tematu: ${err.message}`);
       } finally {
@@ -33,6 +34,26 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
 
     loadTopics();
   }, [onTokenExpired, uuid]); //nie wiem czy moga  byc dwa
+
+  useEffect(() => {
+    if (!topic || topic.status_name !== STAUTSES.PREPARING) return;
+
+    const loadSignatures = async () => {
+      try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const res = await apiFetchWithAuth(`${backendUrl}/topics/${uuid}/signatures`, {}, onTokenExpired);
+        if (!res.ok) throw new Error(`Network error: ${res.status}`);
+        const json = await res.json();
+        if (!json.success) throw new Error("API returned error");
+
+        setSignatures(json.data.signatures);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadSignatures();
+  }, [topic, uuid, onTokenExpired]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -93,6 +114,7 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
                   </tbody>
                 </table>
 
+                {/*ZMIEN NA FIOLETOWY STATUS!!*/}
                 {topic.status_name === STAUTSES.PREPARING && (
                   <div className="md:border-l md:border-gray-600 md:pl-12">
                     <table className="w-full border-collapse table-fixed">
@@ -101,12 +123,19 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
                           <th className="w-[140px] text-left align-top font-semibold py-2 pr-4 text-gray-600">
                             Podpisano przez
                           </th>
-                          <td className="py-2 align-top italic">
-                            {topic.students?.length > 0 ? (
-                              topic.students.map((student, index) => (
-                                <p key={index} className="leading-tight">{student.name} {student.surname}</p>
-                              ))
-                            ) : ('-')}
+                          <td className="py-2 align-top">
+                            {signatures?.length > 0 ? (
+                              signatures
+                                .slice()
+                                .sort((a, b) => (a.role_name === ROLES.TEAM_LEADER && b.role_name !== ROLES.TEAM_LEADER ? -1 : 1))
+                                .map((user, index) => (
+                                  <p key={index} className="leading-tight">
+                                    {user.name} {user.surname}
+                                  </p>
+                                ))
+                            ) : (
+                              '-'
+                            )}
                           </td>
                         </tr>
                       </tbody>

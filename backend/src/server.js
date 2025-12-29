@@ -10,6 +10,7 @@ import academicEmployeesRoutes from "./routes/academicEmployees.js";
 import opinionsRoutes from "./routes/opinions.js";
 import usersRoutes from "./routes/user.js";
 import authRoutes from "./routes/auth.js";
+import signaturesRoutes from "./routes/signatures.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
@@ -33,8 +34,8 @@ app.use(morgan("dev")); // log the requests
 app.use('/students', studentRoutes);
 app.use('/topics', topicRoutes);
 app.use('/topics', opinionsRoutes);
+app.use('/topics', signaturesRoutes);
 app.use('/academicEmployees', academicEmployeesRoutes);
-//app.use('/declarations', declarationsRoutes);
 app.use('/users', usersRoutes);
 app.use('/auth', authRoutes);
 
