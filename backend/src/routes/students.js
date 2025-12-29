@@ -16,7 +16,7 @@ b)	[GET /student/:uuid] Jako Opiekun Studentów mieć możliwość wyszukiwania 
 // validate the request first !
 
 import { Router } from "express"
-import { getAllStudentsController, getStudentController } from "../controllers/studentsController.js"
+import { getAllStudentsController, getStudentController, getStudentAssignmentController } from "../controllers/studentsController.js"
 
 const studentRoutes = Router()
 
@@ -25,6 +25,6 @@ const studentRoutes = Router()
 
 studentRoutes.get("/", getAllStudentsController);
 studentRoutes.get("/:userUuid", getStudentController);
-
+studentRoutes.get("/:userUuid/assignment", getStudentAssignmentController);
 
 export default studentRoutes

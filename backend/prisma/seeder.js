@@ -67,6 +67,7 @@ const STUDENTS_DATA = [
   { name: 'Dominika', surname: 'Król', index: '012349', ects: 0 },
   { name: 'Jakub', surname: 'Lis', index: '123460', ects: 0 },
   { name: 'Laura', surname: 'Sikora', index: '234570', ects: 0 },
+  { name: 'Anna', surname: 'Sider', index: '204570', ects: 2 },
 ];
 
 const TEAM_LEADERS_DATA = [
@@ -125,7 +126,19 @@ const TOPICS_TO_GENERATE = [
     status: STATUS.REJECTED,
     studentCount: 3,
     opinion: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.'
-  }
+  },
+  {
+    name: 'Bezpieczeństwo aplikacji webowych',
+    description: 'Analiza podatności systemów CMS na ataki typu SQL Injection oraz XSS wraz z implementacją mechanizmów obronnych zgodnych ze standardami OWASP.',
+    status: STATUS.PREPARING,
+    studentCount: 2,
+  },
+  {
+    name: 'Zastosowanie uczenia maszynowego w analizie obrazów',
+    description: 'Projekt i wytrenowanie konwolucyjnej sieci neuronowej (CNN) do rozpoznawania i klasyfikacji obiektów w czasie rzeczywistym przy użyciu biblioteki TensorFlow.',
+    status: STATUS.SUBMITTED,
+    studentCount: 3,
+  },
 ];
 
 const createEmail = (name, surname) =>

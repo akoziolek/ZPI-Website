@@ -1,13 +1,16 @@
 import React, { useState, useEffect} from "react";
 import { useParams} from "react-router-dom";
 import Navbar from "../components/Navbar";
+import TopicActionButtons from "../components/TopicActionButtons";
+import BackButton from "../components/BackButton";
 import { apiFetchWithAuth } from "../api/apiFetch";
-import { ROLES, STAUTSES, getTopicColorClasses } from "../config";
+import { ROLES, STATUSES, getTopicColorClasses } from "../config";
 
 
 const TopicPage = ({ user, onLogout, onTokenExpired }) => {
   const [topic, setTopic] = useState([]);
   const [signatures, setSignatures] = useState([]);
+  const [isAssignedToAnyTopic, setIsAssignedToAnyTopic] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { uuid } = useParams();
@@ -15,16 +18,33 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
   // call to backend for topics to display
   useEffect(() => {
     const loadTopics = async () => {
+      setLoading(true);
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const res = await apiFetchWithAuth(`${backendUrl}/topics/${uuid}`, {}, onTokenExpired);
-        if (!res.ok) throw new Error(`Network error: ${res.status}`);
+        const topicPromise = apiFetchWithAuth(`${backendUrl}/topics/${uuid}`, {}, onTokenExpired)
+        .then(async res => {
+          if (!res.ok) throw new Error(`Network error: ${res.status}`);
+          const json = await res.json();
+          return json.data;
+        });
 
-        const json = await res.json();
-        if (!json.success) throw new Error("API returned error");
+        let assignmentPromise;
+        if (user.role === ROLES.STUDENT) {
+          assignmentPromise = apiFetchWithAuth(`${backendUrl}/students/${user.uuid}/assignment`, {}, onTokenExpired)
+            .then(res => res.json())
+            .then(json => json.data); 
+        } else {
+          assignmentPromise = Promise.resolve(false);
+        }
 
-        const topicData = json.data;
+        const [topicData, isAssignedData] = await Promise.all([
+          topicPromise,
+          assignmentPromise
+        ]);
+
+        
         setTopic(topicData);
+        setIsAssignedToAnyTopic(isAssignedData);
       } catch (err) {
         setError(`Nie można załadować tematu: ${err.message}`);
       } finally {
@@ -33,10 +53,10 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
     };
 
     loadTopics();
-  }, [onTokenExpired, uuid]); //nie wiem czy moga  byc dwa
+  }, [onTokenExpired, uuid, user.role, user.uuid]);
 
   useEffect(() => {
-    if (!topic || topic.status_name !== STAUTSES.PREPARING) return;
+    if (!topic || topic.status_name !== STATUSES.PREPARING) return;
 
     const loadSignatures = async () => {
       try {
@@ -62,7 +82,8 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
         onLogout={onLogout} 
       />
   
-      <main className="flex justify-center px-6 sm:px-6 lg:px-8 py-22">
+      <main className="flex flex-col items-center px-6 sm:px-6 lg:px-8 py-22">
+        {/** CZY OBRAMOWKE SCHOWAC?? */}
           <div className="w-full min-w-[320px] max-w-6xl p-10 border-2 border-gray-600 bg-gray-100">
             <>
             {loading && (
@@ -114,8 +135,7 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
                   </tbody>
                 </table>
 
-                {/*ZMIEN NA FIOLETOWY STATUS!!*/}
-                {topic.status_name === STAUTSES.PREPARING && (
+                {topic.status_name === STATUSES.PREPARING && (
                   <div className="md:border-l md:border-gray-600 md:pl-12">
                     <table className="w-full border-collapse table-fixed">
                       <tbody>
@@ -151,7 +171,7 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
                       <th className="w-[140px] text-left align-top font-semibold py-3 pr-4">
                         Opis
                       </th>
-                      <td className="py-3 leading-relaxed text-gray-700">
+                      <td className="py-3 leading-relaxed">
                         {topic.description || '-'}
                       </td>
                     </tr>
@@ -168,6 +188,22 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
             )}
           </>
         </div>
+       <div className="w-full max-w-6xl mx-auto flex items-start justify-between py-6">
+          
+          <div className="flex-none ml-6">
+            <BackButton />
+          </div>
+
+          <div className="flex-none">
+            <TopicActionButtons 
+              user={user} 
+              topic={topic} 
+              signatures={signatures} 
+              isAssignedToAnyTopic={isAssignedToAnyTopic}
+            />
+          </div>
+        </div>
+
       </main>
     </div>
   );

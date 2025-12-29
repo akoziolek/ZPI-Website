@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { apiFetchWithAuth } from "../api/apiFetch";
-import { ACADEMIC_YEAR, STAUTSES, getTopicColorClasses } from "../config";
+import { ACADEMIC_YEAR, STATUSES, getTopicColorClasses } from "../config";
 import { ChevronUp, ChevronDown, Filter } from "lucide-react";
 
 const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
@@ -281,7 +281,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                       Status
                     </label>
                     <div className="space-y-2 max-h-34 overflow-y-auto">
-                      {Object.values(STAUTSES).map(status => (
+                      {Object.values(STATUSES).map(status => (
                         <label key={status} className="flex items-center text-sm">
                           <input
                             type="checkbox"

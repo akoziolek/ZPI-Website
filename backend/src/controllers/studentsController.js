@@ -1,6 +1,7 @@
 import { 
     getAllStudents, 
-    getStudent 
+    getStudent,
+    checkIfStudentHasTopic
 } from "../services/studentsService.js";
 
 export async function getAllStudentsController(req, res) {
@@ -13,4 +14,11 @@ export async function getStudentController(req, res) {
 
     const student = await getStudent(userUuid);
     res.json({ success: true, data: student });
+}
+
+export async function getStudentAssignmentController(req, res) {
+    const { userUuid } = req.params;
+
+    const hasTopic = await checkIfStudentHasTopic(userUuid);
+    res.json({ success: true, data: hasTopic });
 }

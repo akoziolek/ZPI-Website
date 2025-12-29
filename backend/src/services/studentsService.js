@@ -56,3 +56,15 @@ export async function getStudent(userUuid) {
 
     return mapStudentToDto(student);
 }
+
+
+export async function checkIfStudentHasTopic(userUuid) {
+    const count = await prisma.student.count({
+        where: {
+            user: { uuid: userUuid },
+            topic_id: { not: null }
+        }
+    });
+
+    return count > 0;
+}
