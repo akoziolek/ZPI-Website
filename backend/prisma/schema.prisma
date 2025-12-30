@@ -21,7 +21,7 @@ model Status {
 
 model User {
   user_id    Int      @id @default(autoincrement())
-  uuid       String   @db.Uuid @default(uuid())
+  uuid       String   @db.Uuid @default(uuid()) @unique
   name       String   @db.VarChar(50)
   surname    String   @db.VarChar(50)
   mail       String   @unique @db.VarChar(255)
@@ -62,7 +62,7 @@ model Student {
 
 model Topic {
   topic_id  Int    @id @default(autoincrement())
-  uuid      String @db.Uuid @default(uuid())
+  uuid      String @db.Uuid @default(uuid()) @unique
   name      String @db.VarChar(1000)
   description String
 
