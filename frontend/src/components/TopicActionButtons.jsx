@@ -59,7 +59,7 @@ const TopicActionButtons = ({ user, topic, signatures, isAssignedToAnyTopic }) =
         .map(actionId => (
           <button 
             key={actionId} 
-            onClick={() => handlers[actionId](topic.uuid)}
+            onClick={() => handlers[actionId](topic.id)}
             className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded min-w-xs border border-gray shadow"
           >
             {TOPIC_ACTIONS_LABELS[actionId]}

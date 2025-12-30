@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { MoveLeft } from 'lucide-react';
 
@@ -6,13 +5,17 @@ function BackButton() {
   const navigate = useNavigate();
 
   return (
-    <button onClick={() => navigate(-1)}>
-      <div className="flex">
-        <MoveLeft className="mr-2"/>
-        Wróć
-      </div>
-
-    </button>
+    <>
+      <button 
+        onClick={() => navigate(-1)} 
+        className="flex items-center hover:text-gray-900 transition-colors" 
+      >
+        <div className="flex items-center">
+          <MoveLeft className="mr-2" />
+          Wróć
+        </div>
+      </button>
+    </>
   );
 };
 
