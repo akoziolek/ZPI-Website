@@ -403,7 +403,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {!loading && filteredAndSortedTopics.map((topic) => (
-                      <tr key={topic.id} className="hover:bg-gray-200  bg-gray-100">
+                      <tr key={topic.uuid} className="hover:bg-gray-200  bg-gray-100">
                         <td className="px-6 py-4 whitespace-nowrap border-y border-l border-gray-600">
                           <div className="text-sm font-semibold text-gray-900 line-clamp-2 max-w-xs ">
                             {topic.name}
@@ -428,7 +428,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium border-y border-r border-gray-600">
                           <Link
-                            to={`/topics/${topic.id}`}
+                            to={`/topics/${topic.uuid}`}
                             className="text-gray-800 bg-gray-300 hover:text-gray-900 px-3 py-1 border border-gray-600 rounded hover:bg-gray-400 transition-colors"
                           >
                             Wyświetl

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 function mapUser(user) {
     return {
-        id: user.uuid,
+       uuid: user.uuid,
         name: user.name,
         surname: user.surname,
         mail: user.mail,

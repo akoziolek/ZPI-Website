@@ -90,10 +90,10 @@ const LoginPage = ({ onLogin }) => {
               <div className="grid grid-cols-1 gap-3 overflow-y-scroll h-96">
                 {! loadingUsers && users.map((user) => (
                   <button
-                    key={user.id}
+                    key={user.uuid}
                     onClick={() => setSelectedUser(user)}
                     className={`w-full text-left px-4 py-3 border rounded-md transition-colors ${
-                      selectedUser?.id === user.id
+                      selectedUser?.uuid === user.uuid
                         ? "border-blue-500 bg-blue-50 text-blue-700"
                         : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                     }`}

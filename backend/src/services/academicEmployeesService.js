@@ -3,7 +3,7 @@ import { NotFoundError } from "../utils/errors.js";
 
 function mapAcademicEmployeeToDto(academicEmployee) {
     return {
-        id: academicEmployee.user.uuid,
+       uuid: academicEmployee.user.uuid,
         name: academicEmployee.user.name,
         surname: academicEmployee.user.surname,
         mail: academicEmployee.user.mail,

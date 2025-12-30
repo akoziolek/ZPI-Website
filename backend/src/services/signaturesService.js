@@ -6,7 +6,7 @@ import {
 export function mapSignatureToDto(declaration) {
   return {
     signatures: declaration.signatures.map(({ user }) => ({
-      id: user.uuid,
+     uuid: user.uuid,
       name: user.name,
       surname: user.surname,
       role_name: user.role.role_name,

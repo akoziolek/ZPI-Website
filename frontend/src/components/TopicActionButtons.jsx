@@ -15,17 +15,17 @@ const TopicActionButtons = ({ user, topic, signatures, isAssignedToAnyTopic }) =
   }
 
   const isUserSupervisor = () => {
-    return (topic.supervisor?.id === user.uuid);
+    return (topic.supervisor?.uuid === user.uuid);
   }
   const isStudentTeamMember = () => {
-    return topic.students?.some(s => s.id === user.uuid)// debug needed for id and uuid
+    return topic.students?.some(s => s.uuid === user.uuid)// debug needed for id and uuid
   }
   const isUserTeamMember = () => {
     return isUserSupervisor() || isStudentTeamMember();
   }
 
   const hasSigned = () => {
-    return signatures?.some(sig => sig.id === user.uuid);
+    return signatures?.some(sig => sig.uuid === user.uuid);
   }
   
   const isActionAllowed = (actionId) => {
@@ -59,7 +59,7 @@ const TopicActionButtons = ({ user, topic, signatures, isAssignedToAnyTopic }) =
         .map(actionId => (
           <button 
             key={actionId} 
-            onClick={() => handlers[actionId](topic.id)}
+            onClick={() => handlers[actionId](topic.uuid)}
             className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded min-w-xs border border-gray shadow"
           >
             {TOPIC_ACTIONS_LABELS[actionId]}
