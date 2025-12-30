@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { MoveLeft } from 'lucide-react';
 
-function BackButton() {
+const BackButton = () => {
   const navigate = useNavigate();
 
   return (

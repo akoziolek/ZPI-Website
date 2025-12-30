@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useBlocker } from "react-router-dom";
+import { useParams, useBlocker, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import { useModal } from "../hooks/useModal";
 import { apiFetchWithAuth } from "../api/apiFetch";
 import { STATUSES } from "../config";
+import { useApiRequest } from "../hooks/useApiFetch";
+import { useNavigate } from "react-router-dom";
 
 const OpinionFormPage = ({ user, onLogout, onTokenExpired}) => {
   const [topic, setTopic] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [reasoning, setReasoning] = useState("");
+  const [argumentation, setArgumentation] = useState("");
   const { openModal, closeModal } = useModal();
-  const isReasoningInputted = reasoning.trim().length > 0;
+  const request = useApiRequest(onTokenExpired);
+  const isReasoningInputted = argumentation.trim().length > 0;
   const { uuid } = useParams();
+  const navigate = useNavigate();
   // block changing the page, when reasoning is inputted
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
@@ -96,6 +100,42 @@ const OpinionFormPage = ({ user, onLogout, onTokenExpired}) => {
     };
   }, [isReasoningInputted]);
 
+  // to chyba nie miejsce na to???, czy w backendzie jeszcze sprawdzamy?
+  const rejectTopic = () => {
+    if(!isReasoningInputted) {
+      openModal({
+        type: "warning",
+        message: "Nie podano uzasadnienia",
+        isBlocking: false,
+        refresh: false,
+      });
+    }
+    else{
+      request({
+        endpoint: `topics/${uuid}/reject`,
+        method: "POST",
+        body: { argumentation: argumentation },
+        successMessage: "Odrzucono temat!",
+        failureMsg: "Wystąpił błąd podczas dodawania opinii!",
+        refresh: false,
+        actions: (
+          <button
+            onClick={() => {
+              setArgumentation(""); 
+              closeModal();
+              // wait for setArgumentation to load
+              setTimeout(() => {
+                  navigate(-1, { replace: true }); 
+              }, 0);
+            }}
+            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow transition-colors"
+          >
+            Zamknij
+          </button>
+        ),
+    })
+  }};
+  
 
   return (
     <>
@@ -163,8 +203,8 @@ const OpinionFormPage = ({ user, onLogout, onTokenExpired}) => {
                           rows="4"
                           type="text"
                           maxLength={1000}
-                          value={reasoning}
-                          onChange={(e) => setReasoning(e.target.value)}
+                          value={argumentation}
+                          onChange={(e) => setArgumentation(e.target.value)}
                           className="w-full bg-white border-gray-600 text-sm px-2 py-2 text-zinc-800 border-2 rounded-sm focus:outline-none focus:border-blue-500 transition-colors"
                         />
                       </td>
@@ -187,7 +227,10 @@ const OpinionFormPage = ({ user, onLogout, onTokenExpired}) => {
             <div className="flex-none ml-6">
               <BackButton className=""/>
             </div>
-            <button className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded min-w-xs border border-gray shadow">
+            <button 
+              className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded min-w-xs border border-gray shadow"
+              onClick={() => rejectTopic()}
+              >
               Dodaj
             </button>
           </div>

@@ -4,7 +4,8 @@ import {
   RouterProvider, 
   createRoutesFromElements, 
   Route, 
-  Navigate 
+  Navigate,
+  Outlet 
 } from 'react-router-dom';
 
 import { LoginPage, UserPage, ZPIPage, TopicsPage, TopicPage } from './pages';
@@ -16,13 +17,24 @@ import { ROLES } from './config';
 import OpinionFormPage from './pages/OpinionFormPage';
 import { ModalProvider } from './contexts/ModalContext';
 
+
+const RootLayout = () => {
+  return (
+    <ModalProvider>
+      <NotificationContainer />
+      <Outlet />
+    </ModalProvider>
+  );
+};
+
 function AppContent() {
   const { user, loading, login, logout, handleTokenExpired } = useAuth();
 
   const router = useMemo(() => {
     return createBrowserRouter(
       createRoutesFromElements(
-        <>
+        <Route element={<RootLayout />}>
+          
           <Route
             path="/login"
             element={
@@ -77,10 +89,10 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
-        </>
+        </Route>
       )
     );
-  }, [user, login, logout, handleTokenExpired]); // Router odświeży się tylko gdy zmienią się te dane
+  }, [user, login, logout, handleTokenExpired]);
 
   if (loading) {
     return (
@@ -91,19 +103,14 @@ function AppContent() {
   }
 
   return (
-    <>
-      <NotificationContainer />
-      <RouterProvider router={router} />
-    </>
+    <RouterProvider router={router} />
   );
 }
 
 function App() {
   return (
     <NotificationProvider>
-      <ModalProvider>
         <AppContent />  
-      </ModalProvider>
     </NotificationProvider>
   );
 }

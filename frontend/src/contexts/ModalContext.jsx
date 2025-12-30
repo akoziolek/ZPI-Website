@@ -27,6 +27,7 @@ export const ModalProvider = ({ children }) => {
         message={modalConfig.message}
         isBlocking={modalConfig.isBlocking ?? true}
         actions={modalConfig.actions}
+        refresh={modalConfig.refresh}
       />
     </ModalContext.Provider>
   );

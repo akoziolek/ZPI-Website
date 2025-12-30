@@ -15,8 +15,7 @@ export async function approveTopic(topicUuid, argumentation, userId) {
     if (topic.status.status_name !== STATUSES.SUBMITTED) {
         throw new ValidationError("Topic must be in 'Złożony' status to be approved");
     }
-
-    // Assume user is KPK member, TODO: check role - enable middleware
+    // ROLE checked in middleware
 
     // Create opinion
     await prisma.opinion.create({

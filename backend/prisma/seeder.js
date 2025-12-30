@@ -68,6 +68,45 @@ const STUDENTS_DATA = [
   { name: 'Jakub', surname: 'Lis', index: '123460', ects: 0 },
   { name: 'Laura', surname: 'Sikora', index: '234570', ects: 0 },
   { name: 'Anna', surname: 'Sider', index: '204570', ects: 2 },
+
+  { name: 'Ola', surname: 'Kot', index: '232323', ects: 0},
+  { name: 'Olga', surname: 'Grzyb', index: '12242', ects: 0},
+  { name: 'Tomasz', surname: 'Nowy', index: '239123', ects: 4},
+  { name: 'Łukasz', surname: 'Szybki', index: '252003', ects: 0},
+  { name: 'Ignacy', surname: 'Maj', index: '212423', ects: 0},
+  { name: 'Tomasz', surname: 'Nowy', index: '239823', ects: 4 },
+  { name: 'Łukasz', surname: 'Szybki', index: '252023', ects: 0 },
+  { name: 'Ignacy', surname: 'Maj', index: '212323', ects: 0 },
+  { name: 'Karolina', surname: 'Pawlak', index: '323456', ects: 0 },
+  { name: 'Mateusz', surname: 'Michalski', index: '334567', ects: 0 },
+  { name: 'Patrycja', surname: 'Kubiak', index: '345678', ects: 0 },
+  { name: 'Adrian', surname: 'Bąk', index: '356789', ects: 0 },
+  { name: 'Julia', surname: 'Ostrowska', index: '367890', ects: 0 },
+  { name: 'Szymon', surname: 'Urbański', index: '378901', ects: 0 },
+  { name: 'Paulina', surname: 'Cieślak', index: '389012', ects: 0 },
+  { name: 'Damian', surname: 'Kruk', index: '390123', ects: 0 },
+  { name: 'Sandra', surname: 'Bednarek', index: '401234', ects: 0 },
+  { name: 'Kamil', surname: 'Tomczak', index: '412345', ects: 0 },
+  { name: 'Sebastian', surname: 'Kubiak', index: '423456', ects: 0 },
+  { name: 'Martyna', surname: 'Sadowska', index: '434567', ects: 0 },
+  { name: 'Dawid', surname: 'Kamiński', index: '445678', ects: 0 },
+  { name: 'Paulina', surname: 'Rutkowska', index: '456781', ects: 0 },
+  { name: 'Norbert', surname: 'Kołodziej', index: '467892', ects: 0 },
+  { name: 'Karol', surname: 'Szczepański', index: '478903', ects: 0 },
+  { name: 'Iga', surname: 'Piasecka', index: '489014', ects: 0 },
+  { name: 'Marcin', surname: 'Borowski', index: '490125', ects: 0 },
+  { name: 'Aleksandra', surname: 'Kowal', index: '501236', ects: 0 },
+  { name: 'Łukasz', surname: 'Domański', index: '512347', ects: 0 },
+  { name: 'Emilia', surname: 'Makowska', index: '523458', ects: 0 },
+  { name: 'Patryk', surname: 'Witkowski', index: '534569', ects: 0 },
+  { name: 'Natalia', surname: 'Kurek', index: '545670', ects: 0 },
+  { name: 'Oskar', surname: 'Pietrzak', index: '556781', ects: 0 },
+  { name: 'Zuzanna', surname: 'Błaszczyk', index: '567892', ects: 0 },
+  { name: 'Kacper', surname: 'Kalinowski', index: '578903', ects: 0 },
+  { name: 'Milena', surname: 'Polańska', index: '589014', ects: 0 },
+  { name: 'Hubert', surname: 'Szulc', index: '590125', ects: 0 },
+  { name: 'Wiktoria', surname: 'Kaczor', index: '601236', ects: 0 },
+  { name: 'Artur', surname: 'Zawadzki', index: '612347', ects: 0 },
 ];
 
 const TEAM_LEADERS_DATA = [
@@ -76,6 +115,15 @@ const TEAM_LEADERS_DATA = [
   { name: 'Kacper', surname: 'Witkowski' },
   { name: 'Natalia', surname: 'Michalska' },
   { name: 'Jakub', surname: 'Zalewski' },
+  { name: 'Michał', surname: 'Kowalski' },
+  { name: 'Janusz', surname: 'Drzewo' },
+  { name: 'Piotr', surname: 'Jastrzębski' },
+  { name: 'Łukasz', surname: 'Kowalski' },
+  { name: 'Radosław', surname: 'Sowa' },
+  { name: 'Maciej', surname: 'Łódź' },
+  { name: 'Kuba', surname: 'Jarzębski' },
+  { name: 'Maria', surname: 'Kowalska' },
+
 ];
 
 const TEACHING_SUPERVISORS_DATA = [
@@ -92,6 +140,8 @@ const STUDENTS_SUPERVISORS_DATA = [
 const KPK_MEMBER_DATA = [
   { name: 'Alicja', surname: 'Kot' },
   { name: 'Adam', surname: 'Kot' },
+  { name: 'Amelia', surname: 'Kot' },
+  { name: 'Artur', surname: 'Kot' },
 ];
 
 const TOPICS_TO_GENERATE = [
@@ -137,12 +187,72 @@ const TOPICS_TO_GENERATE = [
     name: 'Zastosowanie uczenia maszynowego w analizie obrazów',
     description: 'Projekt i wytrenowanie konwolucyjnej sieci neuronowej (CNN) do rozpoznawania i klasyfikacji obiektów w czasie rzeczywistym przy użyciu biblioteki TensorFlow.',
     status: STATUS.SUBMITTED,
+    studentCount: 1,
+  },
+  {
+    name: 'Analiza wydajności aplikacji webowych',
+    description: 'Porównanie wydajności aplikacji frontendowych opartych o różne frameworki JavaScript oraz techniki optymalizacji renderowania.',
+    status: STATUS.SUBMITTED,
+    studentCount: 3,
+  },
+  {
+    name: 'System rekomendacji oparty na uczeniu maszynowym',
+    description: 'Zaprojektowanie i implementacja prostego systemu rekomendacji wykorzystującego algorytmy uczenia maszynowego oraz analizę danych użytkowników.',
+    status: STATUS.SUBMITTED,
+    studentCount: 4,
+  },
+  {
+    name: 'Bezpieczeństwo aplikacji webowych',
+    description: 'Analiza najczęstszych podatności aplikacji webowych (OWASP Top 10) oraz implementacja mechanizmów zabezpieczających.',
+    status: STATUS.SUBMITTED,
+    studentCount: 2,
+  },
+  {
+    name: 'Projekt i implementacja REST API',
+    description: 'Stworzenie skalowalnego API zgodnego z zasadami REST, z uwzględnieniem autoryzacji, paginacji oraz dokumentacji.',
+    status: STATUS.SUBMITTED,
+    studentCount: 3,
+  },
+  {
+    name: 'Porównanie baz danych SQL i NoSQL',
+    description: 'Analiza różnic w modelowaniu danych, wydajności i zastosowaniach relacyjnych oraz nierelacyjnych baz danych.',
+    status: STATUS.SUBMITTED,
+    studentCount: 2,
+  },
+  {
+    name: 'Aplikacja do zarządzania projektami zespołowymi',
+    description: 'Projekt i implementacja aplikacji wspierającej planowanie zadań, komunikację zespołu oraz kontrolę postępów prac.',
+    status: STATUS.SUBMITTED,
+    studentCount: 4,
+  },
+  {
+    name: 'Monitorowanie i logowanie w systemach rozproszonych',
+    description: 'Zastosowanie narzędzi do monitorowania, zbierania logów i analizy błędów w aplikacjach opartych o architekturę mikroserwisów.',
+    status: STATUS.SUBMITTED,
+    studentCount: 3,
+  },
+  {
+    name: 'Automatyzacja testów aplikacji',
+    description: 'Implementacja testów jednostkowych, integracyjnych i end-to-end oraz analiza ich wpływu na jakość oprogramowania.',
+    status: STATUS.SUBMITTED,
+    studentCount: 2,
+  },
+  {
+    name: 'Aplikacja mobilna wspierająca naukę',
+    description: 'Stworzenie aplikacji mobilnej umożliwiającej planowanie nauki, śledzenie postępów oraz powtórki materiału.',
+    status: STATUS.SUBMITTED,
+    studentCount: 4,
+  },
+  {
+    name: 'Przetwarzanie danych w czasie rzeczywistym',
+    description: 'Projekt systemu przetwarzającego strumienie danych w czasie rzeczywistym z wykorzystaniem nowoczesnych narzędzi backendowych.',
+    status: STATUS.SUBMITTED,
     studentCount: 3,
   },
 ];
 
-const createMail = (name, surname) =>
-  `${name.toLowerCase()}.${surname.toLowerCase()}@pwr.edu.pl`;
+const createEmail = (name, surname, index="") =>
+  `${name.toLowerCase()}.${surname.toLowerCase()}.${index}@pwr.edu.pl`;
 
 async function seedByKeyMap(valuesMap, upsertFunction) {
   const mappedDbEntries = await Promise.all(
@@ -199,7 +309,7 @@ async function main() {
       data: {
         name: data.name,
         surname: data.surname,
-        mail: createMail(data.name, data.surname),
+        mail: createEmail(data.name, data.surname, data.index),
         role_id: seededRoles.STUDENT.role_id,
       },
     });
@@ -227,7 +337,7 @@ async function main() {
     for (let i = 0; i < userDataArray.length; i++) {
       const data = userDataArray[i];
 
-      const uniqueMail = createMail(data.name, data.surname).replace('@', `${i + 1}@`);
+      const uniqueMail = createEmail(data.name, data.surname).replace('@', `${i + 1}@`);
 
       const user = await prisma.user.create({
         data: {
