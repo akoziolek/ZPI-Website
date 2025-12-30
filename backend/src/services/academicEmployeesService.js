@@ -27,7 +27,7 @@ export async function getAllAcademicEmployees() {
 }
 
 export async function getAcademicEmployee(uuid) {
-    const employee = await prisma.academicEmployee.findFirst({
+    const employee = await prisma.academicEmployee.findUnique({
         where: {
             user: {
                 uuid: uuid

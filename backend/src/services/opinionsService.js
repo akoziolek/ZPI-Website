@@ -3,7 +3,7 @@ import { NotFoundError, ValidationError } from "../utils/errors.js";
 import { STATUSES } from "../config.js";
 
 export async function approveTopic(topicUuid, argumentation, userId) {
-    const topic = await prisma.topic.findFirst({
+    const topic = await prisma.topic.findUnique({
         where: { uuid: topicUuid },
         include: { status: true }
     });
@@ -38,7 +38,7 @@ export async function approveTopic(topicUuid, argumentation, userId) {
 }
 
 export async function rejectTopic(topicUuid, argumentation, userId) {
-    const topic = await prisma.topic.findFirst({
+    const topic = await prisma.topic.findUnique({
         where: { uuid: topicUuid },
         include: { status: true }
     });

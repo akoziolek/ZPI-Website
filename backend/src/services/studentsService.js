@@ -32,7 +32,7 @@ export async function getAllStudents() {
 }
 
 export async function getStudent(userUuid) {
-    const student = await prisma.student.findFirst({
+    const student = await prisma.student.findUnique({
         where: {
             user: { uuid: userUuid }
         },

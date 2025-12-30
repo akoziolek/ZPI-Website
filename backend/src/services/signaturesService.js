@@ -15,7 +15,7 @@ export function mapSignatureToDto(declaration) {
 }
 
 export const getTopicSignatures = async (topicUuid) => {
-  const topic = await prisma.topic.findFirst({
+  const topic = await prisma.topic.findUnique({
     where: { uuid: topicUuid },
     select: {
       declaration: {

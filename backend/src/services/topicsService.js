@@ -49,7 +49,7 @@ export const getAllTopics = async (search) => {
 };
 
 export const getTopicByUuid = async (topicUuid) => {
-    const topic = await prisma.topic.findFirst({
+    const topic = await prisma.topic.findUnique({
         where: { uuid: topicUuid },
         include: {
             status: true,
