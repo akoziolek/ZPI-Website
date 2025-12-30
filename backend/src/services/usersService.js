@@ -15,7 +15,6 @@ function mapUser(user) {
 export const getAllUsers = async () => {
     const users = await prisma.user.findMany({
         select: {
-            user_id: true,
             uuid: true,
             name: true,
             surname: true,
@@ -33,7 +32,7 @@ export const getAllUsers = async () => {
 
 export const generateToken = (user) => {
     return jwt.sign(
-        { userId: user.user_id, uuid: user.uuid, role: user.role.role_name },
+        { uuid: user.uuid, role: user.role.role_name, email: user.mail },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
     );
@@ -46,9 +45,9 @@ export const updateUserLogin = async (userId) => {
     });
 };
 
-export const findUserByMail = async (mail) => {
+export const findUserByMail = async (userMail) => {
     const user = await prisma.user.findUnique({
-        where: { mail },
+        where: { mail: userMail },
         include: { role: true }
     });
     return user;

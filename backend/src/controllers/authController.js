@@ -13,13 +13,12 @@ export async function authenticateUser(req, res) {
         if (!user) throw new NotFoundError("User not found");
         
         const token = generateToken(user);
-        await updateUserLogin(user.user_id);
+        await updateUserLogin(user.user_id); // id na backendzie, jest ok
 
         res.json({
             success: true,
             token,
             user: {
-                user_id: user.user_id,
                 uuid: user.uuid,
                 name: user.name,
                 surname: user.surname,
@@ -39,7 +38,6 @@ export async function verifyToken(req, res) {
     res.json({
         success: true,
         user: {
-            user_id: req.user.user_id,
             uuid: req.user.uuid,
             name: req.user.name,
             surname: req.user.surname,
