@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { NotificationProvider } from './contexts/NotificationContext';
 import NotificationContainer from './components/NotificationContainer';
 import { useAuth } from './hooks/useAuth';
+import { ROLES } from './config';
 
 function AppContent() {
   const { user, loading, login, logout, handleTokenExpired } = useAuth();
@@ -16,7 +17,6 @@ function AppContent() {
       </div>
     );
   }
-
   return (
     <>
       <NotificationContainer />

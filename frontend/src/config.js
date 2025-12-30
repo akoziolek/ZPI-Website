@@ -8,6 +8,8 @@ export const ROLES = {
   STUDENT: 'Student'
 };
 
+export const ALL_ROLES = Object.values(ROLES);
+
 export const STATUSES = {
   OPEN: 'Otwarty',
   PREPARING: 'W przygotowaniu do złożenia wniosku',
