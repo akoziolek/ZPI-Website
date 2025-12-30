@@ -7,7 +7,7 @@ function mapUser(user) {
         id: user.uuid,
         name: user.name,
         surname: user.surname,
-        email: user.mail,
+        mail: user.mail,
         role: user.role.role_name
     };
 }

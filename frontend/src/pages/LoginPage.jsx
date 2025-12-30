@@ -42,7 +42,7 @@ const LoginPage = ({ onLogin }) => {
       const res = await fetch(`${backendUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mail: selectedUser.email }),
+        body: JSON.stringify({ mail: selectedUser.mail }),
       });
 
       const json = await res.json();
@@ -101,7 +101,7 @@ const LoginPage = ({ onLogin }) => {
                     <div className="font-medium">
                       {user.role} ({user.name} {user.surname})
                     </div>
-                    <div className="text-sm text-gray-500">{user.email}</div>
+                    <div className="text-sm text-gray-500">{user.mail}</div>
                   </button>
                 ))}
 

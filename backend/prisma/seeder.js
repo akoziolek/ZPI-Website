@@ -141,7 +141,7 @@ const TOPICS_TO_GENERATE = [
   },
 ];
 
-const createEmail = (name, surname) =>
+const createMail = (name, surname) =>
   `${name.toLowerCase()}.${surname.toLowerCase()}@pwr.edu.pl`;
 
 async function seedByKeyMap(valuesMap, upsertFunction) {
@@ -199,7 +199,7 @@ async function main() {
       data: {
         name: data.name,
         surname: data.surname,
-        mail: createEmail(data.name, data.surname),
+        mail: createMail(data.name, data.surname),
         role_id: seededRoles.STUDENT.role_id,
       },
     });
@@ -227,7 +227,7 @@ async function main() {
     for (let i = 0; i < userDataArray.length; i++) {
       const data = userDataArray[i];
 
-      const uniqueMail = createEmail(data.name, data.surname).replace('@', `${i + 1}@`);
+      const uniqueMail = createMail(data.name, data.surname).replace('@', `${i + 1}@`);
 
       const user = await prisma.user.create({
         data: {

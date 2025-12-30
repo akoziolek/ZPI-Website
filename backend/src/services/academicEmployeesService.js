@@ -6,7 +6,7 @@ function mapAcademicEmployeeToDto(academicEmployee) {
         id: academicEmployee.user.uuid,
         name: academicEmployee.user.name,
         surname: academicEmployee.user.surname,
-        email: academicEmployee.user.mail,
+        mail: academicEmployee.user.mail,
     };
 }
 

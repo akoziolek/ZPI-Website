@@ -15,7 +15,7 @@ const UserPage = ({ user, onLogout }) => {
               <span className="ml-2 text-gray-900">{user?.name} {user?.surname}</span>
             </div>
             <div>
-              <span className="font-medium text-gray-700">Email:</span>
+              <span className="font-medium text-gray-700">Mail:</span>
               <span className="ml-2 text-gray-900">{user?.mail}</span>
             </div>
             <div>

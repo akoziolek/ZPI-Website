@@ -6,7 +6,7 @@ export async function authenticateUser(req, res) {
     try {
         const { mail } = req.body;
 
-        if (!mail) throw new ValidationError("Email is required");
+        if (!mail) throw new ValidationError("Mail is required");
     
         const user = await findUserByMail(mail);
         

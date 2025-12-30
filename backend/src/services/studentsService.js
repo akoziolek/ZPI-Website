@@ -6,7 +6,7 @@ function mapStudentToDto(student) {
         id: student.user.uuid,
         name: student.user.name,
         surname: student.user.surname,
-        email: student.user.mail,
+        mail: student.user.mail,
         indexNumber: student.index,
         ects: student.ects_deficit
     };
