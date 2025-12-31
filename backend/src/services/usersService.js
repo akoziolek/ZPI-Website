@@ -1,6 +1,4 @@
 import prisma from "../lib/db.js";
-import jwt from 'jsonwebtoken';
-
 
 function mapUser(user) {
     return {
@@ -29,15 +27,6 @@ export const getAllUsers = async () => {
     return users.map(mapUser);
 };
 
-
-export const generateToken = (user) => {
-    return jwt.sign(
-        { uuid: user.uuid, role: user.role.role_name, email: user.mail },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-    );
-};
-
 export const updateUserLogin = async (userId) => {
     await prisma.user.update({
         where: { user_id: userId },
@@ -48,6 +37,14 @@ export const updateUserLogin = async (userId) => {
 export const findUserByMail = async (userMail) => {
     const user = await prisma.user.findUnique({
         where: { mail: userMail },
+        include: { role: true }
+    });
+    return user;
+};
+
+export const findUserByUuid = async (userUuid) => {
+    const user = await prisma.user.findUnique({
+        where: { uuid: userUuid},
         include: { role: true }
     });
     return user;

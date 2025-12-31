@@ -8,7 +8,7 @@ export const authenticateToken = async (req, res, next) => {
         return res.status(401).json({ success: false, message: 'Access token required' });
     }
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const user = await prisma.user.findUnique({
             where: { 
                 uuid: decoded.uuid
@@ -23,8 +23,13 @@ export const authenticateToken = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.log(error);
-        return res.status(403).json({ success: false, message: 'Invalid token' });
+        if (error.name === 'TokenExpiredError') {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'Token expired', 
+            });
+        }
+         return res.status(403).json({ success: false, message: 'Invalid token' });
     }
 };
 

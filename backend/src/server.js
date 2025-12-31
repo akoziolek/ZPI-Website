@@ -3,6 +3,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 import studentRoutes from "./routes/students.js"  // import routera
 import topicRoutes from "./routes/topics.js";
@@ -16,10 +17,10 @@ import { errorHandler } from "./middleware/errorHandler.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true // Pozwala na przesyłanie ciasteczek/tokenów 
 };
@@ -28,6 +29,7 @@ app.use(express.json()); // parse HTTP body
 app.use(cors(corsOptions)); 
 app.use(helmet()); // middleware that sets various HTTP headers to protect your app from common web vulnerabilities
 app.use(morgan("dev")); // log the requests
+app.use(cookieParser());
 
 app.use('/students', studentRoutes);
 app.use('/topics', topicRoutes);

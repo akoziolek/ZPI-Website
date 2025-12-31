@@ -1,6 +1,7 @@
-import prisma from "../lib/db.js";
-import { generateToken, updateUserLogin, findUserByMail } from "../services/usersService.js";
+import { generateAccessToken, generateRefreshToken } from "../services/authService.js";
+import { updateUserLogin, findUserByMail, findUserByUuid } from "../services/usersService.js";
 import { NotFoundError, ValidationError } from "../utils/errors.js";
+import jwt from "jsonwebtoken";
 
 export async function authenticateUser(req, res) {
     try {
@@ -12,12 +13,22 @@ export async function authenticateUser(req, res) {
         
         if (!user) throw new NotFoundError("User not found");
         
-        const token = generateToken(user);
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+        const isProduction = process.env.NODE_ENV === 'production';
+
+        res.cookie('jwt', refreshToken, {
+            httpOnly: true,
+            sameSite: isProduction ? 'None' : 'Lax', 
+            secure: isProduction, 
+            maxAge: 24 * 60 * 60 * 1000
+        });
+
         await updateUserLogin(user.user_id); // id na backendzie, jest ok
 
         res.json({
             success: true,
-            token,
+            token: accessToken,
             user: {
                 uuid: user.uuid,
                 name: user.name,
@@ -32,6 +43,32 @@ export async function authenticateUser(req, res) {
     }
 }
 
+
+export const handleRefreshToken = async (req, res) => {
+    const cookies = req.cookies;
+
+    if (!cookies?.jwt) return res.sendStatus(401); // check if cookie exist
+    const refreshToken = cookies.jwt;
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        
+        const user = await findUserByUuid(decoded.uuid); 
+        if (!user) return res.sendStatus(403);
+        
+        const accessToken = generateAccessToken(user); // generate new access token
+
+        res.json({
+            success: true,
+            token: accessToken
+        });
+    } catch (error) {
+        console.error(error);
+        return res.sendStatus(403); // refresh token has expired
+    }
+};
+
+// who am i, after authentication
 export async function verifyToken(req, res) {
     // The authenticateToken middleware already verified the token
     // and attached the user to req.user

@@ -14,13 +14,26 @@ export async function apiFetch(url, options = {}) {
 }
 
 export async function apiFetchWithAuth(url, options = {}, onTokenExpired = null) {
-  const res = await apiFetch(url, options);
+  let res = await apiFetch(url, options);
 
+  // token expired (401 lub 403)
   if (res.status === 401 || res.status === 403) {
-    if (onTokenExpired) {
-      onTokenExpired();
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const refreshRes = await fetch(`${backendUrl}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",  //send cookies
+    });
+
+    if (refreshRes.ok) {
+      const data = await refreshRes.json();
+      localStorage.setItem("token", data.token);
+
+      res = await apiFetch(url, options); // try fetching again
+    } else {
+      if(onTokenExpired) onTokenExpired();
+      throw new Error("Sesja wygasła definitywnie");
     }
-    throw new Error("Sesja wygasła");
   }
 
   return res;
@@ -29,7 +42,7 @@ export async function apiFetchWithAuth(url, options = {}, onTokenExpired = null)
 export async function verifyToken() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   try {
-    const res = await apiFetch(`${backendUrl}/auth/verify`);
+    const res = await apiFetchWithAuth(`${backendUrl}/auth/verify`);
     if (res.ok) {
       const json = await res.json();
       return json.success ? json.user : null;
