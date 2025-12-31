@@ -3,20 +3,20 @@ import { useParams, useBlocker, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import { useModal } from "../contexts/ModalContext";
-import { apiFetchWithAuth } from "../api/apiFetch";
 import { STATUSES } from "../config";
-import { useApiRequest } from "../hooks/useApiFetch";
+import { useActionRequest } from "../hooks/useTopicsHandlers";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
+import { useApi } from "../hooks/useApi";
 
 const OpinionFormPage = () => {
-  const { user, logout, onTokenExpired } = useAuthContext(); 
+  const { user } = useAuthContext(); 
   const [topic, setTopic] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [argumentation, setArgumentation] = useState("");
   const { openModal, closeModal } = useModal();
-  const request = useApiRequest(onTokenExpired);
+  //const request = useActionRequest();
   const isReasoningInputted = argumentation.trim().length > 0;
   const { uuid } = useParams();
   const navigate = useNavigate();
@@ -26,12 +26,13 @@ const OpinionFormPage = () => {
       isReasoningInputted && currentLocation.pathname !== nextLocation.pathname
   );
 
+  /*
   useEffect(() => {
     const loadTopic = async () => {
       setLoading(true);
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const topicPromise = apiFetchWithAuth(`${backendUrl}/topics/${uuid}`, {}, onTokenExpired)
+        const topicPromise = apiRequest(`${backendUrl}/topics/${uuid}`, {})
         .then(async res => {
           if (!res.ok) throw new Error(`Network error: ${res.status}`);
           const json = await res.json();
@@ -56,7 +57,32 @@ const OpinionFormPage = () => {
     };
 
     loadTopic();
-  }, [onTokenExpired, uuid, user.role, user.uuid]);
+  }, [ uuid, user.role, user.uuid]);
+*/
+const { request } = useApi();
+
+useEffect(() => {
+  const loadTopic = async () => {
+    setLoading(true);
+
+    try {
+      const topicData = await request({ endpoint: `topics/${uuid}` });
+
+      // jeśli coś zmieniło się w statusie
+      if (topicData.status === STATUSES.APPROVED || topicData.status === STATUSES.REJECTED) {
+        setError("Status tematu uległ zmianie, jest on już rozpatrzono.");
+      } else {
+        setTopic(topicData);
+      }
+    } catch (err) {
+      setError(`Nie można załadować tematu: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadTopic();
+}, [request, uuid, user.role, user.uuid]);
 
   useEffect(() => {
     if (blocker.state === "blocked") {
@@ -103,49 +129,87 @@ const OpinionFormPage = () => {
   }, [isReasoningInputted]);
 
   // to chyba nie miejsce na to???, czy w backendzie jeszcze sprawdzamy?
-  const rejectTopic = () => {
-    if(!isReasoningInputted) {
-      openModal({
-        type: "warning",
-        message: "Nie podano uzasadnienia",
-        isBlocking: false,
-        refresh: false,
-      });
-    }
-    else{
+ const performRequest = useActionRequest();
+
+ //czy to tez do slownika i tam stworzyc rowniez performRequest od razu
+ //JAK TUTAJ
+ /*
+ export const useTopicHandlers = () => {
+  const request = useActionRequest();
+  const navigate = useNavigate();
+
+  const handlers = {
+    [TOPIC_ACTIONS.APPROVE]: (uuid) =>
+      request({
+        endpoint: `topics/${uuid}/approve`,
+        method: "POST",
+        body: { argumentation: "" },
+        successMessage: "Zatwierdzono temat!",
+        failureMsg: "Wystąpił błąd podczas dodawania opinii!",
+      }),
+    [TOPIC_ACTIONS.REJECT]: (uuid, argumentation) =>
       request({
         endpoint: `topics/${uuid}/reject`,
         method: "POST",
-        body: { argumentation: argumentation },
+        body: { argumentation },
         successMessage: "Odrzucono temat!",
         failureMsg: "Wystąpił błąd podczas dodawania opinii!",
-        refresh: false,
         actions: (
           <button
             onClick={() => {
-              setArgumentation(""); 
-              closeModal();
-              // wait for setArgumentation to load
-              setTimeout(() => {
-                  navigate(-1, { replace: true }); 
-              }, 0);
+              navigate(-1, { replace: true });
             }}
             className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow transition-colors"
           >
             Zamknij
           </button>
         ),
-    })
-  }};
+      }),
+    // ...inne akcje
+  };
+
+  return handlers;
+};
+*/
+const rejectTopic = () => {
+  if (!isReasoningInputted) {
+    openModal({
+      type: "warning",
+      message: "Nie podano uzasadnienia",
+      isBlocking: false,
+      refresh: false,
+    });
+    return;
+  }
+
+  performRequest({
+    endpoint: `topics/${uuid}/reject`,
+    method: "POST",
+    body: { argumentation },
+    successMessage: "Odrzucono temat!",
+    failureMsg: "Wystąpił błąd podczas dodawania opinii!",
+    refresh: false,
+    actions: (
+      <button
+        onClick={() => {
+          setArgumentation("");
+          closeModal();
+          setTimeout(() => navigate(-1, { replace: true }), 0);
+        }}
+        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow transition-colors"
+      >
+        Zamknij
+      </button>
+    ),
+  });
+};
+
   
 
   return (
     <>
       <div className="min-h-screen flex flex-col">
-        <Navbar 
-          user={user} 
-          onLogout={logout} 
-        />
+        <Navbar />
     
         <main className="flex flex-col items-center px-6 sm:px-6 lg:px-8 py-18">
           {loading && (

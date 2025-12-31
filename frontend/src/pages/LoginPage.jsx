@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../contexts/AuthContext";
+import { useApi } from "../hooks/useApi";
 
 const LoginPage = () => {
   const { login } = useAuthContext();
@@ -28,6 +29,25 @@ const LoginPage = () => {
 
     loadUsers();
   }, []);
+
+  /*
+  const { request } = useApi();
+
+useEffect(() => {
+  const loadUsers = async () => {
+    try {
+      const data = await request({ endpoint: "users" });
+      setUsers(data);
+    } catch (err) {
+      setError("Nie można załadować użytkowników");
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  loadUsers();
+}, [request]);
+*/
 
 
   // Obsługa logowania

@@ -1,4 +1,4 @@
-export async function apiFetch(url, options = {}) {
+async function apiFetch(url, options = {}) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(url, {
@@ -12,8 +12,8 @@ export async function apiFetch(url, options = {}) {
 
   return res;
 }
-
-export async function apiFetchWithAuth(url, options = {}, onTokenExpired = null) {
+/*
+export async function apiRequest(url, options = {}, onTokenExpired = null) {
   let res = await apiFetch(url, options);
 
   // token expired (401 lub 403)
@@ -31,25 +31,46 @@ export async function apiFetchWithAuth(url, options = {}, onTokenExpired = null)
 
       res = await apiFetch(url, options); // try fetching again
     } else {
-      if(onTokenExpired) onTokenExpired();
-      throw new Error("Sesja wygasła definitywnie");
+      if(onTokenExpired) onTokenExpired(); // CZY TU TEZ IMPORTOWAC ONTOKEN EXPIRED Z KONEKSTU?
+      throw new Error("Session expired");
     }
   }
 
   return res;
 }
+*/
 
-export async function verifyToken() {
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  try {
-    const res = await apiFetchWithAuth(`${backendUrl}/auth/verify`);
-    if (res.ok) {
-      const json = await res.json();
-      return json.success ? json.user : null;
+// to nie dziala useapi dziala 
+export async function apiRequest(url, options = {}, onTokenExpired) {
+  let res = await apiFetch(url, options);
+
+  if (res.status === 401 || res.status === 403) {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const refreshRes = await fetch(`${backendUrl}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+
+    if (!refreshRes.ok) {
+      onTokenExpired?.();
+      throw new Error("Session expired");
     }
-    return null;
-  } catch (error) {
-    console.error("Token verification failed:", error);
-    return null;
+
+    const { token } = await refreshRes.json();
+    localStorage.setItem("token", token);
+    res = await apiFetch(url, options);
   }
+
+  if (!res.ok) {
+    throw new Error(`HTTP_${res.status}`);
+  }
+
+  const json = await res.json();
+  if (json.success === false) {
+    throw new Error(json.message || "API_ERROR");
+  }
+
+  return json.data ?? json;
 }
+// czy zwracac jsona??

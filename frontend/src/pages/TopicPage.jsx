@@ -3,12 +3,12 @@ import { useParams} from "react-router-dom";
 import Navbar from "../components/Navbar";
 import TopicActionButtons from "../components/TopicActionButtons";
 import BackButton from "../components/BackButton";
-import { apiFetchWithAuth } from "../api/apiFetch";
+
 import { ROLES, STATUSES, getTopicColorClasses } from "../config";
 import { useAuthContext } from "../contexts/AuthContext";
-
+import { useApi } from "../hooks/useApi";
 const TopicPage = () => {
-  const { user, logout, onTokenExpired } = useAuthContext();
+  const { user } = useAuthContext();
   const [topic, setTopic] = useState([]);
   const [signatures, setSignatures] = useState([]);
   const [isAssignedToAnyTopic, setIsAssignedToAnyTopic] = useState(false);
@@ -17,12 +17,13 @@ const TopicPage = () => {
   const { uuid } = useParams();
 
   // call to backend for topics to display
+  /*
   useEffect(() => {
     const loadTopic = async () => {
       setLoading(true);
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const topicPromise = apiFetchWithAuth(`${backendUrl}/topics/${uuid}`, {}, onTokenExpired)
+        const topicPromise = apiRequest(`${backendUrl}/topics/${uuid}`, {}, onTokenExpired)
         .then(async res => {
           if (!res.ok) throw new Error(`Network error: ${res.status}`);
           const json = await res.json();
@@ -31,7 +32,7 @@ const TopicPage = () => {
 
         let assignmentPromise;
         if (user.role === ROLES.STUDENT) {
-          assignmentPromise = apiFetchWithAuth(`${backendUrl}/students/${user.uuid}/assignment`, {}, onTokenExpired)
+          assignmentPromise = apiRequest(`${backendUrl}/students/${user.uuid}/assignment`, {}, onTokenExpired)
             .then(res => res.json())
             .then(json => json.data); 
         } else {
@@ -63,7 +64,8 @@ const TopicPage = () => {
     const loadSignatures = async () => {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const res = await apiFetchWithAuth(`${backendUrl}/topics/${uuid}/signatures`, {}, onTokenExpired);
+        // przeniesc onTokenExpirerd do apifetch?
+        const res = await apiRequest(`${backendUrl}/topics/${uuid}/signatures`, {}, onTokenExpired);
         if (!res.ok) throw new Error(`Network error: ${res.status}`);
         const json = await res.json();
         if (!json.success) throw new Error("API returned error");
@@ -76,13 +78,63 @@ const TopicPage = () => {
 
     loadSignatures();
   }, [topic, uuid, onTokenExpired]);
+*/
+const { request } = useApi();
+
+useEffect(() => {
+  const loadTopic = async () => {
+    setLoading(true);
+
+    try {
+      const topicPromise = request({
+        endpoint: `topics/${uuid}`
+      });
+
+      const assignmentPromise =
+        user.role === ROLES.STUDENT
+          ? request({
+              endpoint: `students/${user.uuid}/assignment`
+            })
+          : Promise.resolve(false);
+
+      const [topicData, isAssignedData] = await Promise.all([
+        topicPromise,
+        assignmentPromise
+      ]);
+
+      setTopic(topicData);
+      setIsAssignedToAnyTopic(isAssignedData);
+    } catch (err) {
+      setError("Nie można załadować tematu");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadTopic();
+}, [request, uuid, user.role, user.uuid]);
+
+useEffect(() => {
+  if (!topic || topic.status_name !== STATUSES.PREPARING) return;
+
+  const loadSignatures = async () => {
+    try {
+      const data = await request({
+        endpoint: `topics/${uuid}/signatures`
+      });
+
+      setSignatures(data.signatures);
+    } catch (err) {
+      console.error("Nie można załadować podpisów");
+    }
+  };
+
+  loadSignatures();
+}, [request, topic, uuid]);
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar 
-        user={user} 
-        onLogout={logout} 
-      />
+      <Navbar />
   
       <main className="flex flex-col items-center px-6 sm:px-6 lg:px-8 py-22">
         <>

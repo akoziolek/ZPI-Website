@@ -1,6 +1,35 @@
 import { useState, useEffect, useCallback } from 'react';
-import { verifyToken } from '../api/apiFetch';
 import { useNotification } from '../contexts/NotificationContext';
+import { apiRequest } from '../api/apiFetch';
+
+/*
+async function verifyToken() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  try {
+    const res = await apiRequest(`${backendUrl}/auth/verify`);
+    if (res.ok) {
+      const json = await res.json();
+      return json.success ? json.user : null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return null;
+  }
+}
+  */
+ async function verifyToken() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  try {
+    const data = await apiRequest(`${backendUrl}/auth/verify`);
+    // data jest już parsowane, np. { success: true, user: {...} }
+    return data.user ?? null;
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return null;
+  }
+}
+
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);

@@ -1,15 +1,16 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { apiFetchWithAuth } from "../api/apiFetch";
+//import { apiRequest } from "../api/apiFetch";
 import { ACADEMIC_YEAR, STATUSES, getTopicColorClasses } from "../config";
 import { ChevronUp, ChevronDown, Filter } from "lucide-react";
-import { useAuthContext } from "../contexts/AuthContext";
+//import { useAuthContext } from "../contexts/AuthContext";
+import { useApi } from "../hooks/useApi";
 
 const TopicsPage = () => {
-  const { user, logout, onTokenExpired } = useAuthContext();
-  const [searchParams] = useSearchParams();
+  //const { onTokenExpired } = useAuthContext();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,11 +27,12 @@ const TopicsPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   
   // call to backend for topics to display
+  /*
   useEffect(() => {
     const loadTopics = async () => {
       try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const res = await apiFetchWithAuth(`${backendUrl}/topics`, {}, onTokenExpired);
+        const res = await apiRequest(`${backendUrl}/topics`, {}, onTokenExpired);
         if (!res.ok) throw new Error(`Network error: ${res.status}`);
 
         const json = await res.json();
@@ -46,6 +48,24 @@ const TopicsPage = () => {
 
     loadTopics();
   }, [onTokenExpired]);
+  */
+
+    const { request } = useApi();
+    useEffect(() => {
+      const loadTopics = async () => {
+        try {
+          const data = await request({ endpoint: "topics" });
+          setTopics(data);
+        } catch {
+          setError("Nie można załadować tematów");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      loadTopics();
+    }, [request]);
+
 
   // clicking outside filtering area
   const filterRef = useRef(null);
@@ -236,8 +256,6 @@ const TopicsPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar 
-        user={user} 
-        onLogout={logout} 
         searchValue={navbarSearchInput}
         onSearchChange={setNavbarSearchInput}
         onSearchSubmit={handleNavbarSearchSubmit}
