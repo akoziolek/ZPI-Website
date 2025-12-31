@@ -1,11 +1,12 @@
-import React from "react";
 import { getAvailableActions, TOPIC_ACTIONS, TOPIC_ACTIONS_LABELS, MAX_TOPIC_CAPACITY, MIN_TOPIC_CAPACITY, ROLES } from "../config";
 import { useTopicHandlers } from "../hooks/useTopicsHandlers";
-import { STATUSES } from "../config.js";
+import { useAuthContext } from "../contexts/AuthContext.js";
 
 // DO SPRAWDZENIA + POPRAWIC UI
-const TopicActionButtons = ({ user, topic, signatures, isAssignedToAnyTopic }) => {
+const TopicActionButtons = ({ topic, signatures, isAssignedToAnyTopic }) => {
   const handlers = useTopicHandlers();
+  const { user } = useAuthContext();
+
   if (!topic) return null;
 
   const baseActions = getAvailableActions(user.role, topic.status_name); 

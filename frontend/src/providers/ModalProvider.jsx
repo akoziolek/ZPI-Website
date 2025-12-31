@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import AnnouncementModal from '../components/AnnouncementModal';
-import { ModalContext } from '../hooks/useModal';
+import { ModalContext } from '../contexts/ModalContext';
 
 export const ModalProvider = ({ children }) => {
   const [modalConfig, setModalConfig] = useState({ isOpen: false });

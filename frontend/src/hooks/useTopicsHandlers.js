@@ -3,7 +3,7 @@ import { TOPIC_ACTIONS } from "../config.js";
 import { useNavigate } from "react-router-dom";
 import { useApiRequest } from "./useApiFetch.js";
 
-// TO DO - only an example, what if new page opens?
+
 export const useTopicHandlers = ( onTokenExpired ) => {
   const request = useApiRequest(onTokenExpired);
   const navigate = useNavigate();
@@ -20,6 +20,7 @@ export const useTopicHandlers = ( onTokenExpired ) => {
       }),
     [TOPIC_ACTIONS.REJECT]: (uuid) =>
       navigate(`/topics/${uuid}/opinion`),
+    // .... reszta
   };
 
   return handlers;

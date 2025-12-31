@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { apiFetchWithAuth } from "../api/apiFetch";
 import { ACADEMIC_YEAR, STATUSES, getTopicColorClasses } from "../config";
 import { ChevronUp, ChevronDown, Filter } from "lucide-react";
+import { useAuthContext } from "../contexts/AuthContext";
 
-const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
+const TopicsPage = () => {
+  const { user, logout, onTokenExpired } = useAuthContext();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [topics, setTopics] = useState([]);
@@ -235,7 +237,7 @@ const TopicsPage = ({ user, onLogout, onTokenExpired }) => {
     <div className="min-h-screen flex flex-col">
       <Navbar 
         user={user} 
-        onLogout={onLogout} 
+        onLogout={logout} 
         searchValue={navbarSearchInput}
         onSearchChange={setNavbarSearchInput}
         onSearchSubmit={handleNavbarSearchSubmit}

@@ -1,4 +1,4 @@
-import { useModal } from './useModal';
+import { useModal } from '../contexts/ModalContext';
 import { apiFetchWithAuth } from '../api/apiFetch';
 
 export const useApiRequest = (onTokenExpired) => {

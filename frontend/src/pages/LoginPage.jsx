@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAuthContext } from "../contexts/AuthContext";
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = () => {
+  const { login } = useAuthContext();
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -51,7 +53,7 @@ const LoginPage = ({ onLogin }) => {
       localStorage.setItem("token", json.token);
       localStorage.setItem("user", JSON.stringify(json.user));
 
-      onLogin(json.user);
+      login(json.user);
       navigate("/topics");
     } catch (err) {
       setError(err.message);
@@ -88,7 +90,11 @@ const LoginPage = ({ onLogin }) => {
 
             {!error && (  
               <div className="grid grid-cols-1 gap-3 overflow-y-scroll h-96">
-                {! loadingUsers && users.map((user) => (
+                {!loadingUsers && 
+                  users
+                    .slice() 
+                    .sort((a, b) => a.role.localeCompare(b.role))
+                    .map((user) => (
                   <button
                     key={user.uuid}
                     onClick={() => setSelectedUser(user)}

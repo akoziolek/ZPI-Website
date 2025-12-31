@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useBlocker, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
-import { useModal } from "../hooks/useModal";
+import { useModal } from "../contexts/ModalContext";
 import { apiFetchWithAuth } from "../api/apiFetch";
 import { STATUSES } from "../config";
 import { useApiRequest } from "../hooks/useApiFetch";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../contexts/AuthContext";
 
-const OpinionFormPage = ({ user, onLogout, onTokenExpired}) => {
+const OpinionFormPage = () => {
+  const { user, logout, onTokenExpired } = useAuthContext(); 
   const [topic, setTopic] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -142,7 +144,7 @@ const OpinionFormPage = ({ user, onLogout, onTokenExpired}) => {
       <div className="min-h-screen flex flex-col">
         <Navbar 
           user={user} 
-          onLogout={onLogout} 
+          onLogout={logout} 
         />
     
         <main className="flex flex-col items-center px-6 sm:px-6 lg:px-8 py-18">

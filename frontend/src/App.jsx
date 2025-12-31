@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { 
   createBrowserRouter, 
   RouterProvider, 
@@ -10,13 +10,13 @@ import {
 
 import { LoginPage, UserPage, ZPIPage, TopicsPage, TopicPage } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
-import { NotificationProvider } from './contexts/NotificationContext';
 import NotificationContainer from './components/NotificationContainer';
-import { useAuth } from './hooks/useAuth';
 import { ROLES } from './config';
 import OpinionFormPage from './pages/OpinionFormPage';
-import { ModalProvider } from './contexts/ModalContext';
-
+import { NotificationProvider } from './providers/NotificationProvider';
+import { ModalProvider } from './providers/ModalProvider';
+import { AuthProvider } from './providers/AuthProvider';
+import { useAuthContext } from './contexts/AuthContext';
 
 const RootLayout = () => {
   return (
@@ -27,72 +27,69 @@ const RootLayout = () => {
   );
 };
 
-function AppContent() {
-  const { user, loading, login, logout, handleTokenExpired } = useAuth();
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route element={<RootLayout />}>
+      <Route path="/login" element={<LoginPage />} />
 
-  const router = useMemo(() => {
-    return createBrowserRouter(
-      createRoutesFromElements(
-        <Route element={<RootLayout />}>
-          
-          <Route
-            path="/login"
-            element={
-              user ? <Navigate to="/topics" replace /> : <LoginPage onLogin={login} />
-            }
-          />
-          <Route
-            path="/user"
-            element={
-              <ProtectedRoute user={user}>
-                <UserPage user={user} onLogout={logout} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/zpi"
-            element={
-              <ProtectedRoute user={user}>
-                <ZPIPage user={user} onLogout={logout} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/topics"
-            element={
-              <ProtectedRoute user={user}>
-                <TopicsPage user={user} onLogout={logout} onTokenExpired={handleTokenExpired} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/topics/:uuid/opinion"
-            element={
-              <ProtectedRoute user={user} allowedRoles={[ROLES.KPK_MEMBER]}>
-                <OpinionFormPage user={user} onLogout={logout} onTokenExpired={handleTokenExpired} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/topics/:uuid"
-            element={
-              <ProtectedRoute user={user}>
-                <TopicPage user={user} onLogout={logout} onTokenExpired={handleTokenExpired} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute user={user}>
-                <ZPIPage user={user} onLogout={logout} />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
-      )
-    );
-  }, [user, login, logout, handleTokenExpired]);
+      <Route
+        path="/user"
+        element={
+          <ProtectedRoute>
+            <UserPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/topics"
+        element={
+          <ProtectedRoute>
+            <TopicsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/topics/:uuid/opinion"
+        element={
+          <ProtectedRoute allowedRoles={[ROLES.KPK_MEMBER]}>
+            <OpinionFormPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/topics/:uuid"
+        element={
+          <ProtectedRoute>
+            <TopicPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/zpi"
+        element={
+          <ProtectedRoute>
+            <ZPIPage />
+          </ProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <TopicsPage />
+          </ProtectedRoute>
+        }
+      />
+    </Route>
+  )
+);
+
+function AppContent() {
+  const { loading } = useAuthContext();
 
   if (loading) {
     return (
@@ -102,15 +99,17 @@ function AppContent() {
     );
   }
 
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 
+
 function App() {
+  // auth nie wyzej?
   return (
     <NotificationProvider>
+      <AuthProvider> 
         <AppContent />  
+      </AuthProvider>
     </NotificationProvider>
   );
 }

@@ -1,10 +1,11 @@
-import React from "react";
 import Navbar from "../components/Navbar";
+import { useAuthContext } from "../contexts/AuthContext";
 
-const UserPage = ({ user, onLogout }) => {
+const UserPage = () => {
+  const { user, logout } = useAuthContext();
   return (
     <div className="min-h-screen">
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar user={user} onLogout={logout} />
 
       <main className="max-w-7xl mx-auto py-12 sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto p-6 mb-6 text-center bg-gray-50 border-2 border-gray-600">

@@ -1,13 +1,14 @@
-import React, { useState, useEffect} from "react";
+import { useState, useEffect} from "react";
 import { useParams} from "react-router-dom";
 import Navbar from "../components/Navbar";
 import TopicActionButtons from "../components/TopicActionButtons";
 import BackButton from "../components/BackButton";
 import { apiFetchWithAuth } from "../api/apiFetch";
 import { ROLES, STATUSES, getTopicColorClasses } from "../config";
+import { useAuthContext } from "../contexts/AuthContext";
 
-
-const TopicPage = ({ user, onLogout, onTokenExpired }) => {
+const TopicPage = () => {
+  const { user, logout, onTokenExpired } = useAuthContext();
   const [topic, setTopic] = useState([]);
   const [signatures, setSignatures] = useState([]);
   const [isAssignedToAnyTopic, setIsAssignedToAnyTopic] = useState(false);
@@ -80,7 +81,7 @@ const TopicPage = ({ user, onLogout, onTokenExpired }) => {
     <div className="min-h-screen flex flex-col">
       <Navbar 
         user={user} 
-        onLogout={onLogout} 
+        onLogout={logout} 
       />
   
       <main className="flex flex-col items-center px-6 sm:px-6 lg:px-8 py-22">

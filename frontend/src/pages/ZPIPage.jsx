@@ -1,10 +1,11 @@
-import React from "react";
 import Navbar from "../components/Navbar";
+import { useAuthContext } from "../contexts/AuthContext";
 
-const ZPIPage = ({ user, onLogout }) => {
+const ZPIPage = () => {
+  const { user, logout } = useAuthContext();
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar user={user} onLogout={logout} />
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">

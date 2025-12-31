@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { verifyToken } from '../api/apiFetch';
-import { useNotification } from './useNotification';
+import { useNotification } from '../contexts/NotificationContext';
 
 export const useAuth = () => {
   const [user, setUser] = useState(null);

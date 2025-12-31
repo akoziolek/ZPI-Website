@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import pwrLogo from "../public/pwr-logo-horizontal.png";
 import { Search } from "lucide-react";
 import { ROLES } from '../config.js'
+import { useAuthContext } from "../contexts/AuthContext.js";
 
-const Navbar = ({ user, onLogout, searchValue, onSearchChange, onSearchSubmit, navigateOnSearch = true }) => {
+const Navbar = ({ searchValue, onSearchChange, onSearchSubmit, navigateOnSearch = true }) => {
+  const { user, logout  } = useAuthContext();
   const navigate = useNavigate();
   const [localSearchValue, setLocalSearchValue] = useState("");
 
   const handleLogout = () => {
-    onLogout();
+    logout();
     navigate("/login");
   };
 

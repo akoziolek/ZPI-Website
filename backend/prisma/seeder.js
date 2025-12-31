@@ -164,30 +164,10 @@ const TOPICS_TO_GENERATE = [
     studentCount: 4,
   },
   {
-    name: 'Machine Learning dla detekcji oszustw',
-    description: 'Opracowanie modelu klasyfikacyjnego wykrywającego anomalie w transakcjach finansowych w czasie rzeczywistym, mającego na celu zapobieganie nadużyciom kart płatniczych.',
-    status: STATUS.APPROVED,
-    studentCount: 5,
-    opinion: ' '
-  },
-  {
-    name: 'Zastosowanie blockchain w logistyce',
-    description: 'Wykorzystanie technologii rozproszonych rejestrów (DLT) do zwiększenia przejrzystości łańcucha dostaw oraz automatyzacji płatności poprzez inteligentne kontrakty (Smart Contracts).',
-    status: STATUS.REJECTED,
-    studentCount: 3,
-    opinion: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.'
-  },
-  {
-    name: 'Bezpieczeństwo aplikacji webowych',
-    description: 'Analiza podatności systemów CMS na ataki typu SQL Injection oraz XSS wraz z implementacją mechanizmów obronnych zgodnych ze standardami OWASP.',
-    status: STATUS.PREPARING,
-    studentCount: 2,
-  },
-  {
-    name: 'Zastosowanie uczenia maszynowego w analizie obrazów',
-    description: 'Projekt i wytrenowanie konwolucyjnej sieci neuronowej (CNN) do rozpoznawania i klasyfikacji obiektów w czasie rzeczywistym przy użyciu biblioteki TensorFlow.',
-    status: STATUS.SUBMITTED,
-    studentCount: 1,
+  name: 'Zastosowanie uczenia maszynowego w analizie obrazów',
+  description: 'Projekt i wytrenowanie konwolucyjnej sieci neuronowej (CNN) do rozpoznawania i klasyfikacji obiektów w czasie rzeczywistym przy użyciu biblioteki TensorFlow.',
+  status: STATUS.SUBMITTED,
+  studentCount: 1,
   },
   {
     name: 'Analiza wydajności aplikacji webowych',
@@ -201,31 +181,7 @@ const TOPICS_TO_GENERATE = [
     status: STATUS.SUBMITTED,
     studentCount: 4,
   },
-  {
-    name: 'Bezpieczeństwo aplikacji webowych',
-    description: 'Analiza najczęstszych podatności aplikacji webowych (OWASP Top 10) oraz implementacja mechanizmów zabezpieczających.',
-    status: STATUS.SUBMITTED,
-    studentCount: 2,
-  },
-  {
-    name: 'Projekt i implementacja REST API',
-    description: 'Stworzenie skalowalnego API zgodnego z zasadami REST, z uwzględnieniem autoryzacji, paginacji oraz dokumentacji.',
-    status: STATUS.SUBMITTED,
-    studentCount: 3,
-  },
-  {
-    name: 'Porównanie baz danych SQL i NoSQL',
-    description: 'Analiza różnic w modelowaniu danych, wydajności i zastosowaniach relacyjnych oraz nierelacyjnych baz danych.',
-    status: STATUS.SUBMITTED,
-    studentCount: 2,
-  },
-  {
-    name: 'Aplikacja do zarządzania projektami zespołowymi',
-    description: 'Projekt i implementacja aplikacji wspierającej planowanie zadań, komunikację zespołu oraz kontrolę postępów prac.',
-    status: STATUS.SUBMITTED,
-    studentCount: 4,
-  },
-  {
+    {
     name: 'Monitorowanie i logowanie w systemach rozproszonych',
     description: 'Zastosowanie narzędzi do monitorowania, zbierania logów i analizy błędów w aplikacjach opartych o architekturę mikroserwisów.',
     status: STATUS.SUBMITTED,
@@ -249,6 +205,33 @@ const TOPICS_TO_GENERATE = [
     status: STATUS.SUBMITTED,
     studentCount: 3,
   },
+  {
+    name: 'Machine Learning dla detekcji oszustw',
+    description: 'Opracowanie modelu klasyfikacyjnego wykrywającego anomalie w transakcjach finansowych w czasie rzeczywistym, mającego na celu zapobieganie nadużyciom kart płatniczych.',
+    status: STATUS.APPROVED,
+    studentCount: 5,
+    opinion: ' '
+  },
+  {
+    name: 'Zastosowanie blockchain w logistyce',
+    description: 'Wykorzystanie technologii rozproszonych rejestrów (DLT) do zwiększenia przejrzystości łańcucha dostaw oraz automatyzacji płatności poprzez inteligentne kontrakty (Smart Contracts).',
+    status: STATUS.REJECTED,
+    studentCount: 3,
+    opinion: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.'
+  },
+  {
+    name: 'Bezpieczeństwo aplikacji webowych',
+    description: 'Analiza podatności systemów CMS na ataki typu SQL Injection oraz XSS wraz z implementacją mechanizmów obronnych zgodnych ze standardami OWASP.',
+    status: STATUS.PREPARING,
+    studentCount: 2,
+  },
+  {
+    name: 'Bezpieczeństwo aplikacji webowych',
+    description: 'Analiza najczęstszych podatności aplikacji webowych (OWASP Top 10) oraz implementacja mechanizmów zabezpieczających.',
+    status: STATUS.SUBMITTED,
+    studentCount: 2,
+  },
+
 ];
 
 const createEmail = (name, surname, index="") =>

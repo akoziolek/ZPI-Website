@@ -3,7 +3,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
-//import path from "path";
+
 import studentRoutes from "./routes/students.js"  // import routera
 import topicRoutes from "./routes/topics.js";
 import academicEmployeesRoutes from "./routes/academicEmployees.js";
@@ -18,15 +18,13 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-
-// is this visible in requests? X-Powered-By ?? make it not
-
-app.use(express.json()); // parse HTTP body
 const corsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // Pozwala na przesyłanie ciasteczek/tokenów jeśli ich używasz
+  credentials: true // Pozwala na przesyłanie ciasteczek/tokenów 
 };
+
+app.use(express.json()); // parse HTTP body
 app.use(cors(corsOptions)); 
 app.use(helmet()); // middleware that sets various HTTP headers to protect your app from common web vulnerabilities
 app.use(morgan("dev")); // log the requests
