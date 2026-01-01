@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useBlocker, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import { useModal } from "../contexts/ModalContext";
@@ -8,6 +8,7 @@ import { useActionRequest } from "../hooks/useTopicsHandlers";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useApi } from "../hooks/useApi";
+import { useUnsavedChanges } from "../hooks/useUnsavedChanges.jsx";
 
 const OpinionFormPage = () => {
   const { user } = useAuthContext(); 
@@ -21,11 +22,7 @@ const OpinionFormPage = () => {
   const { request } = useApi();
   const navigate = useNavigate();
 
-  // block changing the page, when reasoning is inputted
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      isReasoningInputted && currentLocation.pathname !== nextLocation.pathname
-  );
+  useUnsavedChanges(isReasoningInputted);
 
   useEffect(() => {
     const loadTopic = async () => {
@@ -50,50 +47,7 @@ const OpinionFormPage = () => {
     loadTopic();
   }, [request, uuid, user.role, user.uuid]);
 
-  useEffect(() => {
-    if (blocker.state === "blocked") {
-      openModal({
-        type: "warning",
-        message: "Czy na pewno chcesz przerwać dodawanie opinii?",
-        isBlocking: true,
-        actions: (
-        <>
-          <button
-            onClick={() => { blocker.reset(); closeModal(); }}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow"
-          >
-            Anuluj
-          </button>
-          <button
-            onClick={() => { blocker.proceed(); closeModal(); }}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow"
-          >
-            Przerwij
-          </button>
-        </>
-      )
-      });
-    }
-  }, [blocker, openModal, closeModal]);
-
-
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      if (isReasoningInputted) {
-        event.preventDefault();
-        event.returnValue = "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?";
-        return event.returnValue;
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // Czyszczenie listenera przy odmontowaniu komponentu
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [isReasoningInputted]);
-
+  
   // to chyba nie miejsce na to???, z useTopicHandlers, czy w backendzie jeszcze sprawdzamy?
  const performRequest = useActionRequest();
 
