@@ -1,14 +1,11 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-//import { apiRequest } from "../api/apiFetch";
 import { ACADEMIC_YEAR, STATUSES, getTopicColorClasses } from "../config";
 import { ChevronUp, ChevronDown, Filter } from "lucide-react";
-//import { useAuthContext } from "../contexts/AuthContext";
 import { useApi } from "../hooks/useApi";
 
 const TopicsPage = () => {
-  //const { onTokenExpired } = useAuthContext();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [topics, setTopics] = useState([]);
@@ -26,45 +23,21 @@ const TopicsPage = () => {
   const [navbarSearchInput, setNavbarSearchInput] = useState(searchParams.get('search') || ''); // curent search input
   const [showFilters, setShowFilters] = useState(false);
   
-  // call to backend for topics to display
-  /*
+  const { request } = useApi();
   useEffect(() => {
     const loadTopics = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const res = await apiRequest(`${backendUrl}/topics`, {}, onTokenExpired);
-        if (!res.ok) throw new Error(`Network error: ${res.status}`);
-
-        const json = await res.json();
-        if (!json.success) throw new Error("API returned error");
-
-        setTopics(json.data);
-      } catch (err) {
-        setError(`Nie można załadować tematów: ${err.message}`);
+        const data = await request({ endpoint: "topics" });
+        setTopics(data);
+      } catch {
+        setError("Nie można załadować tematów");
       } finally {
         setLoading(false);
       }
     };
 
     loadTopics();
-  }, [onTokenExpired]);
-  */
-
-    const { request } = useApi();
-    useEffect(() => {
-      const loadTopics = async () => {
-        try {
-          const data = await request({ endpoint: "topics" });
-          setTopics(data);
-        } catch {
-          setError("Nie można załadować tematów");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadTopics();
-    }, [request]);
+  }, [request]);
 
 
   // clicking outside filtering area

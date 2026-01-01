@@ -7,7 +7,6 @@ const authRoutes = Router();
 
 authRoutes.post("/login", authenticateUser);
 authRoutes.get("/verify", authenticateToken, verifyToken);
-// authRoutes.js
 authRoutes.post("/refresh", handleRefreshToken);
 
 export default authRoutes;

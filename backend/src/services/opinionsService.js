@@ -1,6 +1,18 @@
 import prisma from "../lib/db.js";
 import { NotFoundError, ValidationError } from "../utils/errors.js";
 import { STATUSES } from "../config.js";
+import { findStatus } from "./statusService.js";
+import { updateStatus } from "./topicsService.js";
+
+async function createOpinion(argumentation, userId, topicId) {
+    await prisma.opinion.create({
+        data: {
+            argumentation,
+            employee_id: userId,
+            topic_id: topicId
+        }
+    });
+}
 
 export async function approveTopic(topicUuid, argumentation, userId) {
     const topic = await prisma.topic.findUnique({
@@ -16,23 +28,12 @@ export async function approveTopic(topicUuid, argumentation, userId) {
         throw new ValidationError("Topic must be in 'Złożony' status to be approved");
     }
     // ROLE checked in middleware
-
-    // Create opinion
-    await prisma.opinion.create({
-        data: {
-            argumentation,
-            employee_id: userId,
-            topic_id: topic.topic_id
-        }
-    });
-
+    createOpinion(argumentation, userId, topic.topic_id);
+    
     // Update status to approved
-    const approvedStatus = await prisma.status.findUnique({ where: { status_name: STATUSES.APPROVED } });
+    const approvedStatus = await findStatus(STATUSES.APPROVED);
     if (approvedStatus) {
-        await prisma.topic.update({
-            where: { uuid: topicUuid },
-            data: { status_id: approvedStatus.status_id }
-        });
+        await updateStatus(topicUuid, approvedStatus.status_id);
     }
 }
 
@@ -51,20 +52,11 @@ export async function rejectTopic(topicUuid, argumentation, userId) {
     }
 
     // Create opinion
-    await prisma.opinion.create({
-        data: {
-            argumentation,
-            employee_id: userId,
-            topic_id: topic.topic_id
-        }
-    });
+    createOpinion(argumentation, userId, topic.topic_id);
 
     // Update status to rejected
-    const rejectedStatus = await prisma.status.findUnique({ where: { status_name: STATUSES.REJECTED } });
+    const rejectedStatus = await findStatus(STATUSES.REJECTED);
     if (rejectedStatus) {
-        await prisma.topic.update({
-            where: { uuid: topicUuid },
-            data: { status_id: rejectedStatus.status_id }
-        });
+        await updateStatus(topicUuid, rejectedStatus.status_id);
     }
 }

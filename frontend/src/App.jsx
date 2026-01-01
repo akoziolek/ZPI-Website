@@ -1,10 +1,8 @@
-import React from 'react';
 import { 
   createBrowserRouter, 
   RouterProvider, 
   createRoutesFromElements, 
   Route, 
-  Navigate,
   Outlet 
 } from 'react-router-dom';
 

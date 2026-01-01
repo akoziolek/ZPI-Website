@@ -16,37 +16,28 @@ const OpinionFormPage = () => {
   const [error, setError] = useState("");
   const [argumentation, setArgumentation] = useState("");
   const { openModal, closeModal } = useModal();
-  //const request = useActionRequest();
   const isReasoningInputted = argumentation.trim().length > 0;
   const { uuid } = useParams();
+  const { request } = useApi();
   const navigate = useNavigate();
+
   // block changing the page, when reasoning is inputted
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
       isReasoningInputted && currentLocation.pathname !== nextLocation.pathname
   );
 
-  /*
   useEffect(() => {
     const loadTopic = async () => {
       setLoading(true);
-      try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const topicPromise = apiRequest(`${backendUrl}/topics/${uuid}`, {})
-        .then(async res => {
-          if (!res.ok) throw new Error(`Network error: ${res.status}`);
-          const json = await res.json();
-          return json.data;
-        });
-  
-        const [topicData] = await Promise.all([
-          topicPromise,
-        ]);
 
-        // if something changed from the last call to backend
-        if(topicData.status === STATUSES.APPROVED || topicData.status === STATUSES.REJECTED) {
+      try {
+        const topicData = await request({ endpoint: `topics/${uuid}` });
+
+        // jeśli coś zmieniło się w statusie
+        if (topicData.status === STATUSES.APPROVED || topicData.status === STATUSES.REJECTED) {
           setError("Status tematu uległ zmianie, jest on już rozpatrzono.");
-        } else{
+        } else {
           setTopic(topicData);
         }
       } catch (err) {
@@ -57,32 +48,7 @@ const OpinionFormPage = () => {
     };
 
     loadTopic();
-  }, [ uuid, user.role, user.uuid]);
-*/
-const { request } = useApi();
-
-useEffect(() => {
-  const loadTopic = async () => {
-    setLoading(true);
-
-    try {
-      const topicData = await request({ endpoint: `topics/${uuid}` });
-
-      // jeśli coś zmieniło się w statusie
-      if (topicData.status === STATUSES.APPROVED || topicData.status === STATUSES.REJECTED) {
-        setError("Status tematu uległ zmianie, jest on już rozpatrzono.");
-      } else {
-        setTopic(topicData);
-      }
-    } catch (err) {
-      setError(`Nie można załadować tematu: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  loadTopic();
-}, [request, uuid, user.role, user.uuid]);
+  }, [request, uuid, user.role, user.uuid]);
 
   useEffect(() => {
     if (blocker.state === "blocked") {
@@ -128,83 +94,41 @@ useEffect(() => {
     };
   }, [isReasoningInputted]);
 
-  // to chyba nie miejsce na to???, czy w backendzie jeszcze sprawdzamy?
+  // to chyba nie miejsce na to???, z useTopicHandlers, czy w backendzie jeszcze sprawdzamy?
  const performRequest = useActionRequest();
 
- //czy to tez do slownika i tam stworzyc rowniez performRequest od razu
- //JAK TUTAJ
- /*
- export const useTopicHandlers = () => {
-  const request = useActionRequest();
-  const navigate = useNavigate();
+  const rejectTopic = () => {
+    if (!isReasoningInputted) {
+      openModal({
+        type: "warning",
+        message: "Nie podano uzasadnienia",
+        isBlocking: false,
+        refresh: false,
+      });
+      return;
+    }
 
-  const handlers = {
-    [TOPIC_ACTIONS.APPROVE]: (uuid) =>
-      request({
-        endpoint: `topics/${uuid}/approve`,
-        method: "POST",
-        body: { argumentation: "" },
-        successMessage: "Zatwierdzono temat!",
-        failureMsg: "Wystąpił błąd podczas dodawania opinii!",
-      }),
-    [TOPIC_ACTIONS.REJECT]: (uuid, argumentation) =>
-      request({
-        endpoint: `topics/${uuid}/reject`,
-        method: "POST",
-        body: { argumentation },
-        successMessage: "Odrzucono temat!",
-        failureMsg: "Wystąpił błąd podczas dodawania opinii!",
-        actions: (
-          <button
-            onClick={() => {
-              navigate(-1, { replace: true });
-            }}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow transition-colors"
-          >
-            Zamknij
-          </button>
-        ),
-      }),
-    // ...inne akcje
-  };
-
-  return handlers;
-};
-*/
-const rejectTopic = () => {
-  if (!isReasoningInputted) {
-    openModal({
-      type: "warning",
-      message: "Nie podano uzasadnienia",
-      isBlocking: false,
+    performRequest({
+      endpoint: `topics/${uuid}/reject`,
+      method: "POST",
+      body: { argumentation },
+      successMessage: "Odrzucono temat!",
+      failureMsg: "Wystąpił błąd podczas dodawania opinii!",
       refresh: false,
+      actions: (
+        <button
+          onClick={() => {
+            setArgumentation("");
+            closeModal();
+            setTimeout(() => navigate(-1, { replace: true }), 0);
+          }}
+          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow transition-colors"
+        >
+          Zamknij
+        </button>
+      ),
     });
-    return;
-  }
-
-  performRequest({
-    endpoint: `topics/${uuid}/reject`,
-    method: "POST",
-    body: { argumentation },
-    successMessage: "Odrzucono temat!",
-    failureMsg: "Wystąpił błąd podczas dodawania opinii!",
-    refresh: false,
-    actions: (
-      <button
-        onClick={() => {
-          setArgumentation("");
-          closeModal();
-          setTimeout(() => navigate(-1, { replace: true }), 0);
-        }}
-        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow transition-colors"
-      >
-        Zamknij
-      </button>
-    ),
-  });
-};
-
-  
+  };
 
   return (
     <>

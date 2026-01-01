@@ -69,3 +69,10 @@ export const getTopicByUuid = async (topicUuid) => {
 export const getStatusByName = async (statusName) => {
     return await prisma.status.findUnique({ where: { status_name: statusName } });
 };
+
+export const updateStatus = async (topicId, newStatusId) => {
+    await prisma.topic.update({
+        where: { uuid: topicId },
+        data: { status_id: newStatusId }
+    });
+}

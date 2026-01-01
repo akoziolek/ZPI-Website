@@ -13,8 +13,6 @@ b)	[GET /student/:uuid] Jako Opiekun Studentów mieć możliwość wyszukiwania 
 
 */
 
-// validate the request first !
-
 import { Router } from "express"
 import { getAllStudentsController, getStudentController, getStudentAssignmentController } from "../controllers/studentsController.js"
 

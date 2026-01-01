@@ -1,10 +1,8 @@
 import { useModal } from '../contexts/ModalContext';
 import { useAuthContext } from '../contexts/AuthContext.js';
 import { apiRequest } from '../api/apiFetch.js';
-// src/hooks/useTopicHandlers.js
 import { TOPIC_ACTIONS } from "../config.js";
 import { useNavigate } from "react-router-dom";
-
 
 export const useActionRequest = () => {
   const { onTokenExpired } = useAuthContext(); 
@@ -77,4 +75,3 @@ export const useTopicHandlers = () => {
 
   return handlers;
 };
-

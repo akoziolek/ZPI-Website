@@ -7,6 +7,7 @@ import BackButton from "../components/BackButton";
 import { ROLES, STATUSES, getTopicColorClasses } from "../config";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useApi } from "../hooks/useApi";
+
 const TopicPage = () => {
   const { user } = useAuthContext();
   const [topic, setTopic] = useState([]);
@@ -15,122 +16,58 @@ const TopicPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { uuid } = useParams();
+  const { request } = useApi();
 
-  // call to backend for topics to display
-  /*
   useEffect(() => {
     const loadTopic = async () => {
       setLoading(true);
+
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const topicPromise = apiRequest(`${backendUrl}/topics/${uuid}`, {}, onTokenExpired)
-        .then(async res => {
-          if (!res.ok) throw new Error(`Network error: ${res.status}`);
-          const json = await res.json();
-          return json.data;
+        const topicPromise = request({
+          endpoint: `topics/${uuid}`
         });
 
-        let assignmentPromise;
-        if (user.role === ROLES.STUDENT) {
-          assignmentPromise = apiRequest(`${backendUrl}/students/${user.uuid}/assignment`, {}, onTokenExpired)
-            .then(res => res.json())
-            .then(json => json.data); 
-        } else {
-          assignmentPromise = Promise.resolve(false);
-        }
+        const assignmentPromise =
+          user.role === ROLES.STUDENT
+            ? request({
+                endpoint: `students/${user.uuid}/assignment`
+              })
+            : Promise.resolve(false);
 
         const [topicData, isAssignedData] = await Promise.all([
           topicPromise,
           assignmentPromise
         ]);
 
-        
         setTopic(topicData);
         setIsAssignedToAnyTopic(isAssignedData);
-      } catch (err) {
-        setError(`Nie można załadować tematu: ${err.message}`);
+      } catch  {
+        setError("Nie można załadować tematu");
       } finally {
         setLoading(false);
       }
     };
 
     loadTopic();
-  }, [onTokenExpired, uuid, user.role, user.uuid]);
+  }, [request, uuid, user.role, user.uuid]);
 
-  // osobny useEffect, bo zależnośc od topic
   useEffect(() => {
     if (!topic || topic.status_name !== STATUSES.PREPARING) return;
 
     const loadSignatures = async () => {
       try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        // przeniesc onTokenExpirerd do apifetch?
-        const res = await apiRequest(`${backendUrl}/topics/${uuid}/signatures`, {}, onTokenExpired);
-        if (!res.ok) throw new Error(`Network error: ${res.status}`);
-        const json = await res.json();
-        if (!json.success) throw new Error("API returned error");
+        const data = await request({
+          endpoint: `topics/${uuid}/signatures`
+        });
 
-        setSignatures(json.data.signatures);
-      } catch (err) {
-        console.error(err);
+        setSignatures(data.signatures);
+      } catch  {
+        console.error("Nie można załadować podpisów");
       }
     };
 
     loadSignatures();
-  }, [topic, uuid, onTokenExpired]);
-*/
-const { request } = useApi();
-
-useEffect(() => {
-  const loadTopic = async () => {
-    setLoading(true);
-
-    try {
-      const topicPromise = request({
-        endpoint: `topics/${uuid}`
-      });
-
-      const assignmentPromise =
-        user.role === ROLES.STUDENT
-          ? request({
-              endpoint: `students/${user.uuid}/assignment`
-            })
-          : Promise.resolve(false);
-
-      const [topicData, isAssignedData] = await Promise.all([
-        topicPromise,
-        assignmentPromise
-      ]);
-
-      setTopic(topicData);
-      setIsAssignedToAnyTopic(isAssignedData);
-    } catch (err) {
-      setError("Nie można załadować tematu");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  loadTopic();
-}, [request, uuid, user.role, user.uuid]);
-
-useEffect(() => {
-  if (!topic || topic.status_name !== STATUSES.PREPARING) return;
-
-  const loadSignatures = async () => {
-    try {
-      const data = await request({
-        endpoint: `topics/${uuid}/signatures`
-      });
-
-      setSignatures(data.signatures);
-    } catch (err) {
-      console.error("Nie można załadować podpisów");
-    }
-  };
-
-  loadSignatures();
-}, [request, topic, uuid]);
+  }, [request, topic, uuid]);
 
   return (
     <div className="min-h-screen flex flex-col">

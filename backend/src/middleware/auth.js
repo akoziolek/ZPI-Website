@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import prisma from '../lib/db.js';
+import { findUserByUuid } from '../services/usersService.js';
 
 export const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -9,13 +10,8 @@ export const authenticateToken = async (req, res, next) => {
     }
     try {
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        const user = await prisma.user.findUnique({
-            where: { 
-                uuid: decoded.uuid
-            },
-            include: { role: true }
-        });
-
+        const user = await findUserByUuid(decoded.uuid);
+        
         if (!user) {
             return res.status(401).json({ success: false, message: 'User not found' });
         }
