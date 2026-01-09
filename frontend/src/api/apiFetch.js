@@ -34,14 +34,27 @@ export async function apiRequest(url, options = {}, onTokenExpired) {
     res = await apiFetch(url, options);
   }
 
-  if (!res.ok) {
-    throw new Error(`HTTP_${res.status}`);
+  let json;
+  try {
+    json = await res.json();
+  } catch {
+    json = {};
   }
 
-  const json = await res.json();
-  if (json.success === false) {
-    throw new Error(json.message || "API_ERROR");
+  // if (!res.ok) {
+  //   throw new Error(`HTTP_${res.status}`);
+  // }
+
+
+  if (!res.ok || json.success === false) {
+    const error = new Error(json.message || `HTTP_${res.status}`)
+    error.response = { data: json };
+    throw error;
   }
+
+  // if (json.success === false) {
+  //   throw new Error(json.message || "API_ERROR");
+  // }
 
   return json.data ?? json;
 }

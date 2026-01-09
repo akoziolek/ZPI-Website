@@ -13,3 +13,5 @@ export const STATUSES = {
   REJECTED: 'Odrzucony',
   APPROVED: 'Zatwierdzony',
 };
+
+export const MAX_TOPIC_CAPACITY = 5;

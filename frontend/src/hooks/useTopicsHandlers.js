@@ -1,7 +1,7 @@
 import { useModal } from '../contexts/ModalContext';
 import { useAuthContext } from '../contexts/AuthContext.js';
 import { apiRequest } from '../api/apiFetch.js';
-import { TOPIC_ACTIONS } from "../config.js";
+import { TOPIC_ACTIONS, ERROR_MESSAGES } from "../config.js";
 import { useNavigate } from "react-router-dom";
 
 export const useActionRequest = () => {
@@ -39,9 +39,13 @@ export const useActionRequest = () => {
 
       return data;
     } catch (err) {
+
+      const code = err?.response?.data?.errorCode;
+      const errorMessage = (code && ERROR_MESSAGES[code]) || failureMessage || ERROR_MESSAGES.DEFAULT;
+
       openModal({
         type: "warning",
-        message: failureMessage,
+        message: errorMessage,
         isBlocking: false,
         actions,
         refresh
@@ -70,6 +74,20 @@ export const useTopicHandlers = () => {
       }),
     [TOPIC_ACTIONS.REJECT]: (uuid) =>
       navigate(`/topics/${uuid}/opinion`),
+    [TOPIC_ACTIONS.JOIN]: (uuid) =>
+      request({
+        endpoint: `topics/${uuid}/join`,
+        method: "POST",
+        successMessage: "Dopisano do tematu!",
+        failureMsg: "Wystąpił problem przy dopisywaniu do tematu!",
+      }),
+    [TOPIC_ACTIONS.WITHDRAW]: (uuid) => 
+      request({
+        endpoint: `topics/${uuid}/withdraw`,
+        method: "DELETE",
+        successMessage: "Wypisano się z tematu!",
+        failureMsg: "Wystąpił problem przy wypisywaniu z tematu!",
+      }),
     // .... reszta
   };
 

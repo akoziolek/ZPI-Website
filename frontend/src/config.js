@@ -94,3 +94,10 @@ export const getAvailableActions = (role, status) =>
 
 export const MAX_TOPIC_CAPACITY = 5;
 export const MIN_TOPIC_CAPACITY = 2;
+
+export const ERROR_MESSAGES = {
+  STUDENTS_LIMIT_REACHED: "Brak miejsc!",
+  TOPIC_NOT_OPEN: "Temat nie jest otwarty",
+  TOPIC_NOT_FOUND: "Nie znaleziono tematu",
+  DEFAULT: "Wystąpił błąd!",
+}

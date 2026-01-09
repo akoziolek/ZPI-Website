@@ -72,7 +72,11 @@ import {
     getAllTopicsController,
     getTopicController,
 } from "../controllers/topicsController.js";
-import { authenticateToken } from "../middleware/auth.js";
+import {
+    joinTopicController,
+    withdrawTopicController,
+} from "../controllers/assignmentController.js";
+import { authenticateToken, requireRole } from "../middleware/auth.js";
 
 const topicRoutes = Router();
 
@@ -95,6 +99,8 @@ topicRoutes.delete("/:uuid/students/:studentId", authenticateToken, requireRole(
 
 topicRoutes.get("/", authenticateToken, getAllTopicsController);
 topicRoutes.get("/:uuid", authenticateToken, getTopicController);
+topicRoutes.post("/:uuid/join", authenticateToken, requireRole(['Student']), joinTopicController);
+topicRoutes.delete("/:uuid/withdraw", authenticateToken, requireRole(['Student']), withdrawTopicController);
 
 
 export default topicRoutes;
