@@ -88,6 +88,13 @@ export const useTopicHandlers = () => {
         successMessage: "Wypisano się z tematu!",
         failureMsg: "Wystąpił problem przy wypisywaniu z tematu!",
       }),
+    [TOPIC_ACTIONS.SIGN]: (uuid) => 
+      request({
+        endpoint: `topics/${uuid}/sign`,
+        method: "POST",
+        successMessage: "Podpisano deklarację!",
+        failureMsg: "Podczas autoryzacji podpisu wystąpił błąd!",
+      }),
     // .... reszta
   };
 
