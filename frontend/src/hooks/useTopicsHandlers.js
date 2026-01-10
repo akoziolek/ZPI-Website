@@ -40,8 +40,7 @@ export const useActionRequest = () => {
       return data;
     } catch (err) {
 
-      const code = err?.response?.data?.errorCode;
-      const errorMessage = (code && ERROR_MESSAGES[code]) || failureMessage || ERROR_MESSAGES.DEFAULT;
+      const errorMessage = ERROR_MESSAGES[err.message] ?? failureMessage;
 
       openModal({
         type: "warning",

@@ -24,15 +24,15 @@ export async function signDeclaration(topicUuid, userId) {
     });
 
     if (!topic) {
-        throw new NotFoundError("TOPIC_NOT_FOUND");
+        throw new NotFoundError("Topic not found");
     }
 
     if (!topic.declaration) {
-        throw new NotFoundError("NO_DECLARATION")
+        throw new NotFoundError("Declaration not foundN")
     }
 
     if (topic.status.status_name !== STATUSES.PREPARING) {
-        throw new ValidationError("TOPIC_NOT_PREPARING");
+        throw new ValidationError("Topic must be in 'W przygotowaniu do słożenia wniosku' status to be signed");
     }
 
     const declarationId = topic.declaration.declaration_id
@@ -55,8 +55,6 @@ export async function signDeclaration(topicUuid, userId) {
 
     const studentCount = await prisma.student.count({ where: { topic_id: topic.topic_id } })
     const signatureCount = await prisma.signature.count({ where: { declaration_id: declarationId } })
-
-    console.log("students:", studentCount, "signatures:", signatureCount);
 
     if (studentCount === signatureCount) {
         const submittedStatus = await findStatus(STATUSES.SUBMITTED);

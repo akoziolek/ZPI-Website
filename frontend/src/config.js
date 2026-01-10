@@ -97,9 +97,5 @@ export const MIN_TOPIC_CAPACITY = 2;
 
 export const ERROR_MESSAGES = {
   STUDENTS_LIMIT_REACHED: "Brak miejsc!",
-  TOPIC_NOT_OPEN: "Temat nie jest otwarty",
-  TOPIC_NOT_PREPARING: "Temat nie jest w przygotowaniu do złożenia wniosku",
-  TOPIC_NOT_FOUND: "Nie znaleziono tematu",
-  ALREADY_SIGNED: "Już podpisałeś/aś deklarację!",
-  DEFAULT: "Wystąpił błąd!",
+  ALREADY_SIGNED: "Już podpisałeś/aś deklarację!"
 }
