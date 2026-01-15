@@ -45,6 +45,19 @@ const SIGNATURE_STATUSES = new Set([
   STATUS.REJECTED,
 ]);
 
+const ACADEMIC_TITLES = [
+  { full_name: "Licencjat", shortcut: "lic." },
+  { full_name: "Inżynier", shortcut: "inż." },
+  { full_name: "Magister", shortcut: "mgr" },
+  { full_name: "Magister Inżynier", shortcut: "mgr inż." },
+  { full_name: "Doktor Inżynier", shortcut: "dr inż." },
+  { full_name: "Doktor Habilitowany", shortcut: "dr hab." },
+  { full_name: "Doktor Habilitowany Inżynier", shortcut: "dr hab. inż." },
+  { full_name: "Profesor Uczelni", shortcut: "prof. uczelni" },
+  { full_name: "Profesor", shortcut: "prof. dr hab." },
+  { full_name: "Profesor Inżynier", shortcut: "prof. dr hab. inż." }
+];
+
 const STUDENTS_DATA = [
   { name: 'Anna', surname: 'Nowak', index: '234567', ects: 5 },
   { name: 'Piotr', surname: 'Zieliński', index: '345678', ects: 0 },
@@ -312,12 +325,33 @@ async function main() {
 
   console.log('Seeded %d students', seededStudents.length);
   console.log('\n4. Seeding other users...');
+  console.log('\n4.1 Seeding academic titles');
+
+  const academic_titles = [];
+  for (const data of ACADEMIC_TITLES) {
+    const title = await prisma.academicTitle.upsert({
+      where: { full_name: data.full_name },
+      update: {},
+      create: {
+        full_name: data.full_name,
+        shortcut: data.shortcut,
+      },
+    })
+    academic_titles.push(title);
+  };
+
+  console.log('\n4.1 Seeded %d academic titles', academic_titles.length); 
 
   async function seedWorkersByRole(userDataArray, roleKey) {
     const roleId = seededRoles[roleKey].role_id;
     const seededUsers = [];
+    const PROBABILITY = 0.7;
 
     for (let i = 0; i < userDataArray.length; i++) {
+      const randomTitleId = Math.random() < PROBABILITY 
+        ? academic_titles[Math.floor(Math.random() * academic_titles.length)].id 
+        : null;
+        
       const data = userDataArray[i];
 
       const uniqueMail = createEmail(data.name, data.surname).replace('@', `${i + 1}@`);
@@ -333,9 +367,10 @@ async function main() {
 
       await prisma.academicEmployee.create({
         data: {
-          user: { connect: { user_id: user.user_id } }
+          user_id: user.user_id, // Zakładając, że user_id to @id w AcademicEmployee
+          academic_title_id: randomTitleId, // Po prostu przypisujesz ID lub null
         }
-      })
+      });
       seededUsers.push(user);
     }
 

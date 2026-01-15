@@ -106,7 +106,7 @@ const TopicPage = () => {
                       Opiekun
                     </th>
                     <td className="py-2 align-top">
-                      {topic.supervisor ? `${topic.supervisor.name} ${topic.supervisor.surname}` : '-'}
+                      {topic.supervisor ? `${topic.supervisor?.shortcut_academic_title || ""} ${topic.supervisor.name} ${topic.supervisor.surname}` : '-'}
                     </td>
                   </tr>
                   <tr>

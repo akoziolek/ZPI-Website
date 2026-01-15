@@ -39,13 +39,23 @@ model User {
   @@index([uuid])
 }
 
-model AcademicEmployee {
-  user_id Int @id
-  user    User @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-
-  opinions Opinion[]
-  topics   Topic[]
+model AcademicTitle {
+  id        Int                @id @default(autoincrement())
+  full_name String             @unique()
+  shortcut  String             
+  employees AcademicEmployee[]
 }
+
+model AcademicEmployee {
+  user_id           Int            @id
+  user              User           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  academic_title_id Int?
+  academic_title    AcademicTitle? @relation(fields: [academic_title_id], references: [id])
+  
+  opinions          Opinion[]
+  topics            Topic[]
+}
+
 
 model Student {
   user_id Int @id

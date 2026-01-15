@@ -51,9 +51,12 @@ const TopicsTable = ({ topics, sortConfig, onSort }) => {
                   {topic.status_name}
                 </span>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap border-y border-gray-600">
+              <td className="px-6 py-4 border-y border-gray-600  h-24">
                 <div className="text-sm font-semibold text-gray-900">
-                  {topic.supervisor ? `${topic.supervisor.name} ${topic.supervisor.surname}` : 'Brak opiekuna'}
+                  {topic.supervisor ? 
+                    `${topic.supervisor?.shortcut_academic_title || ""} ${topic.supervisor.name} ${topic.supervisor.surname}` 
+                    : 'Brak opiekuna'
+                  }
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-center border-y border-gray-600">

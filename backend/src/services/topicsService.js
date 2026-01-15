@@ -14,6 +14,8 @@ export function mapTopicToDto(topic) {
            uuid: topic.employee.user.uuid,
             name: topic.employee.user.name,
             surname: topic.employee.user.surname,
+            full_academic_title: topic.employee.academic_title?.full_name,
+            shortcut_academic_title: topic.employee.academic_title?.shortcut,
         } : null,
 
         students: topic.students.map(student => ({
@@ -41,7 +43,7 @@ export const getAllTopics = async (search) => {
         } : {},
         include: {
             status: true,
-            employee: { include: { user: true } },
+            employee: { include: { user: true, academic_title: true } },
             students: { include: { user: true } }
         }
     });
@@ -53,7 +55,7 @@ export const getTopicByUuid = async (topicUuid) => {
         where: { uuid: topicUuid },
         include: {
             status: true,
-            employee: { include: { user: true } },
+            employee: { include: { user: true, academic_title: true } },
             students: { include: { user: true } },
             opinion: { include: { employee: { include: { user: true } } } }
         }
