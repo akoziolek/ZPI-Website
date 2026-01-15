@@ -14,8 +14,13 @@ import authRoutes from "./routes/auth.js";
 import signaturesRoutes from "./routes/signatures.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
-dotenv.config();
-
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    require('dotenv').config();
+  } catch (e) {
+    console.log("Dotenv not loaded (probably production environment)");
+  }
+}
 const app = express();
 const PORT = process.env.PORT;
 
