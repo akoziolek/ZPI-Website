@@ -1,4 +1,4 @@
-async function apiFetch(url, options = {}) {
+export async function apiFetch(url, options = {}) {
   const token = localStorage.getItem("token");
 
   const res = await fetch(url, {
@@ -41,20 +41,11 @@ export async function apiRequest(url, options = {}, onTokenExpired) {
     json = {};
   }
 
-  // if (!res.ok) {
-  //   throw new Error(`HTTP_${res.status}`);
-  // }
-
-
   if (!res.ok || json.success === false) {
     const error = new Error(json.message || `HTTP_${res.status}`)
     error.response = { data: json };
     throw error;
   }
-
-  // if (json.success === false) {
-  //   throw new Error(json.message || "API_ERROR");
-  // }
 
   return json.data ?? json;
 }

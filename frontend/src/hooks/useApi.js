@@ -23,6 +23,5 @@ export const useApi = () => {
     [backendUrl, onTokenExpired]
   );
 
-  return { request };
+  return  request ;
 };
-

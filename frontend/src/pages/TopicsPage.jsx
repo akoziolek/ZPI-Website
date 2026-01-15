@@ -10,7 +10,7 @@ import { ACADEMIC_YEAR } from "../config";
 const TopicsPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { request } = useApi();
+  const  request  = useApi();
   
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
