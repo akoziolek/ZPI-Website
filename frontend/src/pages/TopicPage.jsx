@@ -16,7 +16,7 @@ const TopicPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { uuid } = useParams();
-  const { request } = useApi();
+  const  request  = useApi();
 
   useEffect(() => {
     const loadTopic = async () => {

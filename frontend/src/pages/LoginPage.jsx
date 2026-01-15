@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../contexts/AuthContext";
+import { apiFetch } from "../api/apiFetch";
 
 const LoginPage = () => {
   const { login } = useAuthContext();
@@ -39,12 +40,11 @@ const LoginPage = () => {
       setError("");
 
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      // ujednolicić zapytania do bazy!
-      const res = await fetch(`${backendUrl}/auth/login`, {
+      localStorage.removeItem("token"); 
+      const res = await apiFetch(`${backendUrl}/auth/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mail: selectedUser.mail }),
-         credentials: "include",
+        credentials: "include", // To zostanie poprawnie przekazane przez ...options
       });
 
       const json = await res.json();

@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import { useModal } from "../contexts/ModalContext";
 import { STATUSES } from "../config";
-import { useActionRequest } from "../hooks/useTopicsHandlers";
+import { useActionRequest } from "../hooks/useActionRequest.js";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useApi } from "../hooks/useApi";
@@ -19,7 +19,7 @@ const OpinionFormPage = () => {
   const { openModal, closeModal } = useModal();
   const isReasoningInputted = argumentation.trim().length > 0;
   const { uuid } = useParams();
-  const { request } = useApi();
+  const request  = useApi();
   const navigate = useNavigate();
 
   useUnsavedChanges(isReasoningInputted);
@@ -33,7 +33,7 @@ const OpinionFormPage = () => {
 
         // jeśli coś zmieniło się w statusie
         if (topicData.status === STATUSES.APPROVED || topicData.status === STATUSES.REJECTED) {
-          setError("Status tematu uległ zmianie, jest on już rozpatrzono.");
+          setError("Status tematu uległ zmianie, jest on już rozpatrzony.");
         } else {
           setTopic(topicData);
         }
