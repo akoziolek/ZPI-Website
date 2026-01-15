@@ -6,7 +6,11 @@ import {
   Outlet 
 } from 'react-router-dom';
 
-import { LoginPage, UserPage, ZPIPage, TopicsPage, TopicPage } from './pages';
+import LoginPage from './pages/LoginPage';
+import UserPage from './pages/UserPage';
+import ZPIPage from './pages/ZPIPage';
+import TopicPage from './pages/TopicPage';
+import TopicsPage from './pages/TopicsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import NotificationContainer from './components/NotificationContainer';
 import { ROLES } from './config';
