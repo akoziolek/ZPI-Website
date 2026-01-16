@@ -4,11 +4,11 @@ import Navbar from "../components/Navbar";
 import BackButton from "../components/BackButton";
 import { useModal } from "../contexts/ModalContext";
 import { STATUSES } from "../config";
-import { useActionRequest } from "../hooks/useActionRequest.js";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useApi } from "../hooks/useApi";
 import { useUnsavedChanges } from "../hooks/useUnsavedChanges.jsx";
+import { useTopicActionsHandlers } from "../hooks/useTopicActionsHandlers.js";
 
 const OpinionFormPage = () => {
   const { user } = useAuthContext(); 
@@ -48,39 +48,31 @@ const OpinionFormPage = () => {
   }, [request, uuid, user.role, user.uuid]);
 
   
-  // to chyba nie miejsce na to???, z useTopicHandlers, czy w backendzie jeszcze sprawdzamy?
- const performRequest = useActionRequest();
+ const handlers = useTopicActionsHandlers();
 
   const rejectTopic = () => {
     if (!isReasoningInputted) {
-      openModal({
-        type: "warning",
-        message: "Nie podano uzasadnienia",
-        isBlocking: false,
-        refresh: false,
-      });
+      openModal({ type: "warning", message: "Nie podano uzasadnienia" });
       return;
     }
 
-    performRequest({
-      endpoint: `topics/${uuid}/opinion`,
-      method: "POST",
-      body: { argumentation: argumentation, isPositive: "false" },
-      successMessage: "Odrzucono temat!",
-      failureMsg: "Wystąpił błąd podczas dodawania opinii!",
-      refresh: false,
-      actions: (
-        <button
-          onClick={() => {
-            setArgumentation("");
-            closeModal();
-            setTimeout(() => navigate(-1, { replace: true }), 0);
-          }}
-          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow transition-colors"
-        >
-          Zamknij
-        </button>
-      ),
+    const successAction = (
+      <button
+        onClick={() => {
+          setArgumentation("");
+          closeModal();
+          setTimeout(() => navigate(-1, { replace: true }), 0);
+        }}
+        className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow"
+      >
+        Zamknij
+      </button>
+    );
+
+    handlers.submitRejection({
+      uuid,
+      argumentation,
+      actions: successAction 
     });
   };
 

@@ -40,7 +40,17 @@ export const useTopicActionsHandlers = () => {
         successMessage: "Podpisano deklarację!",
         failureMsg: "Podczas autoryzacji podpisu wystąpił błąd!",
       }),
-    // ... reszta handlerów
+    submitRejection: ({ uuid, argumentation, actions }) => 
+      request({
+        endpoint: `topics/${uuid}/opinion`,
+        method: "POST",
+        body: { argumentation: argumentation, isPositive: "false" },
+        successMessage: "Odrzucono temat!",
+        failureMsg: "Wystąpił błąd podczas dodawania opinii!",
+        refresh: false,
+        actions: actions 
+      }),
+  // ... reszta handlerów
   };
 };
 
