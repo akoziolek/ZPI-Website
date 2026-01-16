@@ -6,15 +6,21 @@ import {
   Outlet 
 } from 'react-router-dom';
 
+// Importy stron
 import LoginPage from './pages/LoginPage';
 import UserPage from './pages/UserPage';
 import ZPIPage from './pages/ZPIPage';
 import TopicPage from './pages/TopicPage';
 import TopicsPage from './pages/TopicsPage';
+import OpinionFormPage from './pages/OpinionFormPage';
+
+// Importy komponentów i konfiguracji
 import ProtectedRoute from './components/ProtectedRoute';
 import NotificationContainer from './components/NotificationContainer';
+import { GlobalModal } from './components/GlobalModal'; // Zakładam, że stworzyłeś ten komponent wg poprzedniej porady
 import { ROLES } from './config';
-import OpinionFormPage from './pages/OpinionFormPage';
+
+// Importy Providerów i Contextu
 import { NotificationProvider } from './providers/NotificationProvider';
 import { ModalProvider } from './providers/ModalProvider';
 import { AuthProvider } from './providers/AuthProvider';
@@ -22,10 +28,14 @@ import { useAuthContext } from './contexts/AuthContext';
 
 const RootLayout = () => {
   return (
-    <ModalProvider>
+    <>
       <NotificationContainer />
+      {/* Jeśli wydzieliłeś modal do osobnego komponentu (GlobalModal), wstaw go tutaj. 
+          Jeśli nie, modal wyrenderuje się sam przez ModalProvider w App. */}
+      <GlobalModal /> 
+      
       <Outlet />
-    </ModalProvider>
+    </>
   );
 };
 
@@ -104,13 +114,14 @@ function AppContent() {
   return <RouterProvider router={router} />;
 }
 
-
 function App() {
-  // auth nie wyzej?
   return (
     <NotificationProvider>
-      <AuthProvider> 
-        <AppContent />  
+      <AuthProvider>
+        <ModalProvider>
+            {/* Renderujemy AppContent, który ma dostęp do wszystkich contextów powyżej */}
+            <AppContent />
+        </ModalProvider>
       </AuthProvider>
     </NotificationProvider>
   );

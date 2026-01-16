@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import AnnouncementModal from '../components/AnnouncementModal';
 import { ModalContext } from '../contexts/ModalContext';
 
 export const ModalProvider = ({ children }) => {
@@ -16,19 +15,15 @@ export const ModalProvider = ({ children }) => {
     setModalConfig((prev) => ({ ...prev, isOpen: false }));
   }, []);
 
+  const value = { 
+    openModal, 
+    closeModal, 
+    modalConfig 
+  };
 
   return (
-    <ModalContext.Provider value={{ openModal, closeModal }}>
-      {children}
-      <AnnouncementModal
-        isOpen={modalConfig.isOpen}
-        onClose={closeModal}
-        type={modalConfig.type || "info"}
-        message={modalConfig.message}
-        isBlocking={modalConfig.isBlocking ?? true}
-        actions={modalConfig.actions}
-        refresh={modalConfig.refresh}
-      />
+    <ModalContext.Provider value={value}>
+      {children} 
     </ModalContext.Provider>
   );
 };
