@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuthContext } from "../contexts/AuthContext";
-import { apiFetch } from "../api/apiFetch";
+import { apiRequest } from "../api/apiFetch";
 
 const LoginPage = () => {
   const { login } = useAuthContext();
@@ -30,39 +30,46 @@ const LoginPage = () => {
     loadUsers();
   }, []);
 
-  // Obsługa logowania
   const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!selectedUser) return;
+  e.preventDefault();
+  if (!selectedUser) return;
 
-    try {
-      setLoggingIn(true);
-      setError("");
+  try {
+    setLoggingIn(true);
+    setError("");
 
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      localStorage.removeItem("token"); 
-      const res = await apiFetch(`${backendUrl}/auth/login`, {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    
+    // Usuwamy stary token, aby apiRequest nie wysłał go w nagłówku (chociaż apiFetch bierze go z localStorage w momencie wywołania)
+    localStorage.removeItem("token"); 
+
+    const data = await apiRequest(
+      `${backendUrl}/auth/login`, 
+      {
         method: "POST",
-        body: JSON.stringify({ mail: selectedUser.mail }),
-        credentials: "include", // To zostanie poprawnie przekazane przez ...options
-      });
+        body: JSON.stringify({ mail: selectedUser.mail }), // apiFetch w Twoim kodzie nie robi auto-stringify, więc musisz to zostawić
+        credentials: "include",
+      },
+      // Trzeci argument to onTokenExpired - przy logowaniu możemy go pominąć lub dać pustą funkcję
+      () => {} 
+    );
 
-      const json = await res.json();
-      if (!json.success) throw new Error(json.message);
+    // apiRequest zwraca (json.data ?? json), więc tutaj masz już gotowe dane
+    // Zakładam, że backend zwraca token i user bezpośrednio w obiekcie, więc `data` to cały response
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
 
-      localStorage.setItem("token", json.token);
-      localStorage.setItem("user", JSON.stringify(json.user));
+    login(data.user);
+    navigate("/topics");
 
-      login(json.user);
-      navigate("/topics");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoggingIn(false);
-    }
-  };
+  } catch (err) {
+    // apiRequest automatycznie rzuca błąd z message z backendu, więc to zadziała poprawnie
+    setError(err.message);
+  } finally {
+    setLoggingIn(false);
+  }
+};
 
-  
 
   return (
     <div className="min-h-screen flex flex-col">
