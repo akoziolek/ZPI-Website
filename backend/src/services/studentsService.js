@@ -1,4 +1,4 @@
-import prisma from "../lib/db.js";
+import prismaClient from "../lib/db.js";
 import { NotFoundError } from "../utils/errors.js";
 
 function mapStudentToDto(student) {
@@ -13,7 +13,7 @@ function mapStudentToDto(student) {
 }
 
 export async function getAllStudents() {
-    const students = await prisma.student.findMany({
+    const students = await prismaClient.student.findMany({
         select: {
             index: true,
             ects_deficit: true,
@@ -32,7 +32,7 @@ export async function getAllStudents() {
 }
 
 export async function getStudent(userUuid) {
-    const student = await prisma.student.findUnique({
+    const student = await prismaClient.student.findUnique({
         where: {
             user: { uuid: userUuid }
         },
@@ -59,7 +59,7 @@ export async function getStudent(userUuid) {
 
 
 export async function checkIfStudentHasTopic(userUuid) {
-    const count = await prisma.student.count({
+    const count = await prismaClient.student.count({
         where: {
             user: { uuid: userUuid },
             topic_id: { not: null }

@@ -1,5 +1,5 @@
-import prisma from "../lib/db.js";
+import prismaClient from "../lib/db.js";
 
 export async function findStatus(statusName) {
-    return await prisma.status.findUnique({ where: { status_name: statusName } });
+    return await prismaClient.status.findUnique({ where: { status_name: statusName } });
 }

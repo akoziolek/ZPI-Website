@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authenticateUser, verifyToken } from "../controllers/authController.js";
+import { authenticateUser, verifyToken, handleRefreshToken } from "../controllers/authController.js";
 import { authenticateToken } from "../middleware/auth.js";
-import { handleRefreshToken } from "../controllers/authController.js";
+
 
 const authRoutes = Router();
 

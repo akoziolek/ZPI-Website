@@ -1,4 +1,4 @@
-import prisma from "../lib/db.js";
+import prismaClient from "../lib/db.js";
 
 function mapUser(user) {
     return {
@@ -11,7 +11,7 @@ function mapUser(user) {
 }
 
 export const getAllUsers = async () => {
-    const users = await prisma.user.findMany({
+    const users = await prismaClient.user.findMany({
         select: {
             uuid: true,
             name: true,
@@ -28,14 +28,14 @@ export const getAllUsers = async () => {
 };
 
 export const updateUserLogin = async (userId) => {
-    await prisma.user.update({
+    await prismaClient.user.update({
         where: { user_id: userId },
         data: { last_login: new Date() }
     });
 };
 
 export const findUserByMail = async (userMail) => {
-    const user = await prisma.user.findUnique({
+    const user = await prismaClient.user.findUnique({
         where: { mail: userMail },
         include: { role: true }
     });
@@ -43,7 +43,7 @@ export const findUserByMail = async (userMail) => {
 };
 
 export const findUserByUuid = async (userUuid) => {
-    const user = await prisma.user.findUnique({
+    const user = await prismaClient.user.findUnique({
         where: { uuid: userUuid},
         include: { role: true }
     });

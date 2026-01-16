@@ -1,4 +1,4 @@
-import prisma from "../lib/db.js";
+import prismaClient from "../lib/db.js";
 import {
     NotFoundError,
 } from "../utils/errors.js";
@@ -15,7 +15,7 @@ export function mapSignatureToDto(declaration) {
 }
 
 export const getTopicSignatures = async (topicUuid) => {
-  const topic = await prisma.topic.findUnique({
+  const topic = await prismaClient.topic.findUnique({
     where: { uuid: topicUuid },
     select: {
       declaration: {

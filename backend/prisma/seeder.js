@@ -1,4 +1,4 @@
-import prisma from '../src/lib/db.js'
+import prismaClient from '../src/lib/db.js'
 
 const ROLES = Object.freeze({
   KPK_MEMBER: 'KPK_MEMBER',
@@ -266,7 +266,7 @@ async function main() {
   console.log('1. Seeding Roles...');
 
   const seededRoles = await seedByKeyMap(ROLES_LABELS, (role_name) =>
-    prisma.role.upsert({
+    prismaClient.role.upsert({
       where: { role_name },
       update: {},
       create: { role_name },
@@ -277,7 +277,7 @@ async function main() {
   console.log('\n2. Seeding statuses...');
 
   const seededStatuses = await seedByKeyMap(STATUS_LABELS, (status_name) =>
-    prisma.status.upsert({
+    prismaClient.status.upsert({
       where: { status_name },
       update: {},
       create: { status_name },
@@ -287,21 +287,21 @@ async function main() {
   console.log('Seeded %d statuses', Object.keys(seededStatuses).length);
 
   // czy usuwamy ?, czy tak jak wczesniej z upsert
-  await prisma.$transaction([
-    prisma.opinion.deleteMany(),
-    prisma.signature.deleteMany(),
-    prisma.student.deleteMany(),
-    prisma.topic.deleteMany(),
-    prisma.declaration.deleteMany(),
-    prisma.academicEmployee.deleteMany(),
-    prisma.user.deleteMany(),
+  await prismaClient.$transaction([
+    prismaClient.opinion.deleteMany(),
+    prismaClient.signature.deleteMany(),
+    prismaClient.student.deleteMany(),
+    prismaClient.topic.deleteMany(),
+    prismaClient.declaration.deleteMany(),
+    prismaClient.academicEmployee.deleteMany(),
+    prismaClient.user.deleteMany(),
   ]);
 
   console.log('\n3. Seeding students...');
 
   const seededStudents = [];
   for (const data of STUDENTS_DATA) {
-    const user = await prisma.user.create({
+    const user = await prismaClient.user.create({
       data: {
         name: data.name,
         surname: data.surname,
@@ -310,7 +310,7 @@ async function main() {
       },
     });
 
-    await prisma.student.create({
+    await prismaClient.student.create({
       data: {
         index: data.index,
         ects_deficit: data.ects,
@@ -329,7 +329,7 @@ async function main() {
 
   const academic_titles = [];
   for (const data of ACADEMIC_TITLES) {
-    const title = await prisma.academicTitle.upsert({
+    const title = await prismaClient.academicTitle.upsert({
       where: { full_name: data.full_name },
       update: {},
       create: {
@@ -356,7 +356,7 @@ async function main() {
 
       const uniqueMail = createEmail(data.name, data.surname).replace('@', `${i + 1}@`);
 
-      const user = await prisma.user.create({
+      const user = await prismaClient.user.create({
         data: {
           name: data.name,
           surname: data.surname,
@@ -365,7 +365,7 @@ async function main() {
         },
       });
 
-      await prisma.academicEmployee.create({
+      await prismaClient.academicEmployee.create({
         data: {
           user_id: user.user_id, // Zakładając, że user_id to @id w AcademicEmployee
           academic_title_id: randomTitleId, // Po prostu przypisujesz ID lub null
@@ -394,7 +394,7 @@ async function main() {
     const needsDeclaration = DECLARATION_STATUSES.has(config.status);
     const needsSignatures = SIGNATURE_STATUSES.has(config.status);
 
-    const topic = await prisma.topic.create({
+    const topic = await prismaClient.topic.create({
       data: {
         name: config.name,
         description: `${config.description}`,
@@ -439,5 +439,5 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await prismaClient.$disconnect();
   }); 

@@ -63,9 +63,9 @@ const OpinionFormPage = () => {
     }
 
     performRequest({
-      endpoint: `topics/${uuid}/reject`,
+      endpoint: `topics/${uuid}/opinion`,
       method: "POST",
-      body: { argumentation },
+      body: { argumentation: argumentation, isPositive: "false" },
       successMessage: "Odrzucono temat!",
       failureMsg: "Wystąpił błąd podczas dodawania opinii!",
       refresh: false,

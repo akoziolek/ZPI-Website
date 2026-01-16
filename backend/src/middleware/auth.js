@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import prisma from '../lib/db.js';
 import { findUserByUuid } from '../services/usersService.js';
 
 export const authenticateToken = async (req, res, next) => {

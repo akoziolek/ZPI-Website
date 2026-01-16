@@ -1,6 +1,7 @@
 import { PrismaClient } from "../../generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 
+
 // config to use only one prisma client/connection to the database 
 
 const adapter = new PrismaPg({
@@ -11,10 +12,10 @@ const prismaClientSingleton = () => {
   return new PrismaClient({ adapter });
 };
 
-const prisma = global.prismaGlobal ?? prismaClientSingleton();
+const prismaClient = global.prismaGlobal ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== "production") {
-  global.prismaGlobal = prisma;
+  global.prismaGlobal = prismaClient;
 }
 
-export default prisma;
+export default prismaClient;

@@ -1,4 +1,4 @@
-import prisma from "../lib/db.js";
+import prismaClient from "../lib/db.js";
 import { NotFoundError } from "../utils/errors.js";
 
 function mapAcademicEmployeeToDto(academicEmployee) {
@@ -13,7 +13,7 @@ function mapAcademicEmployeeToDto(academicEmployee) {
 }
 
 export async function getAllAcademicEmployees() {
-    const employees = await prisma.academicEmployee.findMany({
+    const employees = await prismaClient.academicEmployee.findMany({
         include: {
             user: {
                 select: {
@@ -35,7 +35,7 @@ export async function getAllAcademicEmployees() {
 }
 
 export async function getAcademicEmployee(uuid) {
-    const employee = await prisma.academicEmployee.findUnique({
+    const employee = await prismaClient.academicEmployee.findUnique({
         where: {
             user: {
                 uuid: uuid

@@ -2,7 +2,7 @@ import {
     joinTopic, 
     withdrawTopic, 
 } from "../services/assignmentsService.js";
-import { NotFoundError, ValidationError } from "../utils/errors.js";
+
 
 export async function joinTopicController(req, res) {
     const { uuid } = req.params;

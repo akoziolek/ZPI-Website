@@ -1,9 +1,9 @@
-import prisma from "../lib/db.js";
+import prismaClient from "../lib/db.js";
 import { NotFoundError, ValidationError } from "../utils/errors.js";
 import { STATUSES, MAX_TOPIC_CAPACITY } from "../config.js";
 
 async function join(userId, topicId) {
-    await prisma.student.update({
+    await prismaClient.student.update({
         where: { user_id: userId },
         data: {
             topic: {
@@ -14,7 +14,7 @@ async function join(userId, topicId) {
 }
 
 async function withdraw(userId) {
-    await prisma.student.update({
+    await prismaClient.student.update({
         where: { user_id: userId },
         data: {
             topic: { disconnect: true }
@@ -23,7 +23,7 @@ async function withdraw(userId) {
 }
 
 export async function joinTopic(topicUuid, userId) {
-    const topic = await prisma.topic.findUnique({
+    const topic = await prismaClient.topic.findUnique({
         where: { uuid: topicUuid },
         include: { status: true, _count: { select: { students: true } } }
     });
@@ -44,7 +44,7 @@ export async function joinTopic(topicUuid, userId) {
 }
 
 export async function withdrawTopic(topicUuid, userId) {
-    const topic = await prisma.topic.findUnique({
+    const topic = await prismaClient.topic.findUnique({
         where: { uuid: topicUuid },
         include: { status: true }
     });

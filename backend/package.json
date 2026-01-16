@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install",
-    "dev": "nodemon -r dotenv/config --legacy-watch src/server.js  && npx prisma generate && prisma migrate deploy",
+    "dev": "npx prisma generate && npx prisma migrate deploy && nodemon -r dotenv/config --legacy-watch src/server.js",
     "start": "npx prisma generate && npx prisma db seed && node src/server.js",
     "seed": "node prisma/seed.js"
   },

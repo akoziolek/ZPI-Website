@@ -1,6 +1,7 @@
 import { useAuth } from '../hooks/useAuth';
 import { AuthContext } from '../contexts/AuthContext';
 
+// 2. Główny komponent Providera
 export const AuthProvider = ({ children }) => {
   const auth = useAuth(); 
 

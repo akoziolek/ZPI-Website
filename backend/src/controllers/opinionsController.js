@@ -1,24 +1,13 @@
 import { 
-    approveTopic, 
-    rejectTopic, 
+    addOpinion
 } from "../services/opinionsService.js";
-
-// rola sprawdzana w middleware and status in service
-export async function approveTopicController(req, res) {
+export async function addOpinionController(req, res) {
     const { uuid } = req.params;
-    const { argumentation } = req.body;
+    const { argumentation, isPositive } = req.body;
     const userId = req.user.user_id;
 
-    await approveTopic(uuid, argumentation, userId);
-    res.json({ success: true, message: "Topic approved" });
+    await addOpinion(uuid, argumentation, isPositive, userId);
+    res.json({ success: true, message: isPositive ? "Topic rejected" : "Topic approved" });
 }
 
-export async function rejectTopicController(req, res) {
-    const { uuid } = req.params;
-    const { argumentation } = req.body;
-    const userId = req.user.user_id;
-
-    await rejectTopic(uuid, argumentation, userId);
-    res.json({ success: true, message: "Topic rejected" });
-}
 

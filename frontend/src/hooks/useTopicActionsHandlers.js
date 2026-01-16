@@ -11,9 +11,9 @@ export const useTopicActionsHandlers = () => {
   return {
     [TOPIC_ACTIONS.APPROVE]: (uuid) =>
       request({
-        endpoint: `topics/${uuid}/approve`,
+        endpoint: `topics/${uuid}/opinion`,
         method: "POST",
-        body: { argumentation: "" },
+        body: { argumentation: "", isPositive: true },
         successMessage: "Zatwierdzono temat!",
         failureMsg: "Wystąpił błąd podczas dodawania opinii!",
       }),

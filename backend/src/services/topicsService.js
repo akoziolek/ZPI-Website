@@ -1,4 +1,4 @@
-import prisma from "../lib/db.js";
+import prismaClient from "../lib/db.js";
 import {
     NotFoundError,
 } from "../utils/errors.js";
@@ -37,7 +37,7 @@ export function mapTopicToDto(topic) {
 }
 
 export const getAllTopics = async (search) => {
-    const topics = await prisma.topic.findMany({
+    const topics = await prismaClient.topic.findMany({
         where: search ? {
             name: { contains: search, mode: 'insensitive' }
         } : {},
@@ -51,7 +51,7 @@ export const getAllTopics = async (search) => {
 };
 
 export const getTopicByUuid = async (topicUuid) => {
-    const topic = await prisma.topic.findUnique({
+    const topic = await prismaClient.topic.findUnique({
         where: { uuid: topicUuid },
         include: {
             status: true,
@@ -68,12 +68,8 @@ export const getTopicByUuid = async (topicUuid) => {
     return mapTopicToDto(topic);
 };
 
-export const getStatusByName = async (statusName) => {
-    return await prisma.status.findUnique({ where: { status_name: statusName } });
-};
-
 export const updateStatus = async (topicId, newStatusId) => {
-    await prisma.topic.update({
+    await prismaClient.topic.update({
         where: { uuid: topicId },
         data: { status_id: newStatusId }
     });

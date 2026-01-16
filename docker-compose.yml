@@ -8,6 +8,13 @@ services:
       - "5173:5173"
     environment:
       - REACT_APP_BACKEND_URL=http://backend:3001
+      - NODE_ENV=${development}
+      - JWT_SECRET=${JWT_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - PORT=${PORT}
+
     volumes:
       - ./frontend:/app
       - /app/node_modules
