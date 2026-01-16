@@ -52,7 +52,7 @@ const OpinionFormPage = () => {
 
   const rejectTopic = () => {
     if (!isReasoningInputted) {
-      openModal({ type: "warning", message: "Nie podano uzasadnienia" });
+      openModal({ type: "warning", message: "Nie podano uzasadnienia", refresh: false });
       return;
     }
 
