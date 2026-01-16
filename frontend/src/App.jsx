@@ -17,7 +17,7 @@ import OpinionFormPage from './pages/OpinionFormPage';
 // Importy komponentów i konfiguracji
 import ProtectedRoute from './components/ProtectedRoute';
 import NotificationContainer from './components/NotificationContainer';
-import { GlobalModal } from './components/GlobalModal'; // Zakładam, że stworzyłeś ten komponent wg poprzedniej porady
+import AnnouncementModal from './components/AnnouncementModal';
 import { ROLES } from './config';
 
 // Importy Providerów i Contextu
@@ -30,10 +30,7 @@ const RootLayout = () => {
   return (
     <>
       <NotificationContainer />
-      {/* Jeśli wydzieliłeś modal do osobnego komponentu (GlobalModal), wstaw go tutaj. 
-          Jeśli nie, modal wyrenderuje się sam przez ModalProvider w App. */}
-      <GlobalModal /> 
-      
+      <AnnouncementModal /> 
       <Outlet />
     </>
   );

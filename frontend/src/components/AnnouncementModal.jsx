@@ -1,37 +1,45 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { TriangleAlert } from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
+import { useModal } from '../contexts/ModalContext'; // Importujemy hook tutaj
 
-const AnnouncementModal = ({ 
-  isOpen, 
-  onClose, 
-  type = 'info', // 'info' lub 'warning'
-  message, 
-  actions, 
-  isBlocking = false,
-  refresh = true,
-}) => {
-  
+const AnnouncementModal = () => {
+  // 1. Pobieramy stan z Contextu BEZPOŚREDNIO tutaj
+  const { modalConfig, closeModal } = useModal();
+  const { 
+    isOpen, 
+    type = 'info', 
+    message, 
+    actions, 
+    isBlocking = false, 
+    refresh = true 
+  } = modalConfig;
+
   const navigate = useNavigate();
-  // Obsługa klawisza ESC (tylko jeśli nie jest blokujący)
+
+  // 2. Obsługa klawisza ESC
   useEffect(() => {
     const handleEsc = (e) => {
       if (!isBlocking && isOpen && e.key === 'Escape') {
-        onClose();
+        closeModal();
       }
     };
-    window.addEventListener('keydown', handleEsc);
+    if (isOpen) {
+      window.addEventListener('keydown', handleEsc);
+    }
     return () => window.removeEventListener('keydown', handleEsc);
-  }, [isBlocking, isOpen, onClose]);
+  }, [isBlocking, isOpen, closeModal]);
 
+  // 3. Early return
   if (!isOpen) return null;
 
   const isWarning = type === 'warning';
 
+  // 4. Renderowanie UI
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60  transition-opacity"
-      onClick={() => !isBlocking && onClose()} 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-opacity"
+      onClick={() => !isBlocking && closeModal()} 
     >
       <div 
         className="relative w-full max-w-md min-h-55 bg-gray-200 border-3 border-gray-800 shadow-2xl transform transition-all scale-100 p-6 m-4"
@@ -39,13 +47,8 @@ const AnnouncementModal = ({
       >
         <p className='text-2xl font-bold mb-4'>Komunikat</p>
    
-        <div
-          className={`flex mb-6 mx-4 items-center ${
-            isWarning ? "justify-left" : "justify-center"
-          }`}
-        >
+        <div className={`flex mb-6 mx-4 items-center ${isWarning ? "justify-left" : "justify-center"}`}>
           {isWarning && <TriangleAlert size={64} />}
-
           <div className={`${isWarning ? "ml-4" : ""}`}>
             <div className="my-2 text-lg">
               {message}
@@ -53,16 +56,16 @@ const AnnouncementModal = ({
           </div>
         </div>
 
-
         <div className="flex justify-center gap-3 mt-4">
-          {console.log(actions)}
           {actions ? (
             actions
           ) : (
             <button
-              onClick={() => { onClose(); if(refresh){ navigate(0)}; }}
+              onClick={() => { 
+                closeModal(); 
+                if (refresh) { navigate(0); }
+              }}
               className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded border border-gray shadow"
-
             >
               Zamknij
             </button>

@@ -1,6 +1,7 @@
 import { 
     addOpinion
 } from "../services/opinionsService.js";
+
 export async function addOpinionController(req, res) {
     const { uuid } = req.params;
     const { argumentation, isPositive } = req.body;
