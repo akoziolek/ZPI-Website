@@ -37,24 +37,16 @@ export async function signDeclaration(topicUuid, userId) {
 
     const declarationId = topic.declaration.declaration_id
 
-    const existingSignature = await prismaClient.signature.findUnique({
-        where: {
-            user_id_declaration_id: {
-                user_id: userId,
-                declaration_id: declarationId,
-            },
-        },
-    });
+    const signatureExists = topic.declaration.signatures.some((signature) => signature.user_id === userId);
 
-    if (existingSignature) {
+    if (signatureExists) {
         throw new ValidationError("ALREADY_SIGNED");
     }
 
     await createSignature(userId, declarationId);
 
-
-    const studentCount = await prismaClient.student.count({ where: { topic_id: topic.topic_id } })
-    const signatureCount = await prismaClient.signature.count({ where: { declaration_id: declarationId } })
+    const studentCount = topic._count.students
+    const signatureCount = topic.declaration.signatures.length // without just added signature
 
     if (studentCount === signatureCount) {
         const submittedStatus = await findStatus(STATUSES.SUBMITTED);
