@@ -169,80 +169,93 @@ const TOPICS_TO_GENERATE = [
     description: 'Projekt i implementacja skalowalnego systemu opartego na mikroserwisach z wykorzystaniem technologii Docker i Kubernetes w środowisku chmury obliczeniowej.',
     status: STATUS.PREPARING, 
     studentCount: 3,
+    declaration_date: new Date("2026-01-17T13:24:00")
   },
   {
     name: 'Modelowanie danych w NoSQL',
     description: 'Badanie wydajności oraz struktur przechowywania danych w bazach dokumentowych i grafowych w porównaniu do tradycyjnych relacyjnych baz danych.',
     status: STATUS.SUBMITTED,
     studentCount: 4,
+    declaration_date: new Date("2025-12-18T15:28:00")
   },
   {
   name: 'Zastosowanie uczenia maszynowego w analizie obrazów',
   description: 'Projekt i wytrenowanie konwolucyjnej sieci neuronowej (CNN) do rozpoznawania i klasyfikacji obiektów w czasie rzeczywistym przy użyciu biblioteki TensorFlow.',
   status: STATUS.SUBMITTED,
   studentCount: 1,
+  declaration_date: new Date("2026-01-10T10:21:45"),
   },
   {
     name: 'Analiza wydajności aplikacji webowych',
     description: 'Porównanie wydajności aplikacji frontendowych opartych o różne frameworki JavaScript oraz techniki optymalizacji renderowania.',
     status: STATUS.SUBMITTED,
     studentCount: 3,
+    declaration_date: new Date("2025-12-10T08:54:51"),
   },
   {
     name: 'System rekomendacji oparty na uczeniu maszynowym',
     description: 'Zaprojektowanie i implementacja prostego systemu rekomendacji wykorzystującego algorytmy uczenia maszynowego oraz analizę danych użytkowników.',
     status: STATUS.SUBMITTED,
     studentCount: 4,
+    declaration_date: new Date("2025-11-10T09:54:13"),
   },
     {
     name: 'Monitorowanie i logowanie w systemach rozproszonych',
     description: 'Zastosowanie narzędzi do monitorowania, zbierania logów i analizy błędów w aplikacjach opartych o architekturę mikroserwisów.',
     status: STATUS.SUBMITTED,
     studentCount: 3,
+    declaration_date: new Date("2025-12-01T16:12:32"),
   },
   {
     name: 'Automatyzacja testów aplikacji',
     description: 'Implementacja testów jednostkowych, integracyjnych i end-to-end oraz analiza ich wpływu na jakość oprogramowania.',
     status: STATUS.SUBMITTED,
     studentCount: 2,
+    declaration_date: new Date("2025-11-19T19:34:51"),
   },
   {
     name: 'Aplikacja mobilna wspierająca naukę',
     description: 'Stworzenie aplikacji mobilnej umożliwiającej planowanie nauki, śledzenie postępów oraz powtórki materiału.',
     status: STATUS.SUBMITTED,
     studentCount: 4,
+    declaration_date: new Date("2025-12-03T18:00:01"),
   },
   {
     name: 'Przetwarzanie danych w czasie rzeczywistym',
     description: 'Projekt systemu przetwarzającego strumienie danych w czasie rzeczywistym z wykorzystaniem nowoczesnych narzędzi backendowych.',
     status: STATUS.SUBMITTED,
     studentCount: 3,
+    declaration_date: new Date("2025-12-10T11:05:50"),
   },
   {
     name: 'Machine Learning dla detekcji oszustw',
     description: 'Opracowanie modelu klasyfikacyjnego wykrywającego anomalie w transakcjach finansowych w czasie rzeczywistym, mającego na celu zapobieganie nadużyciom kart płatniczych.',
     status: STATUS.APPROVED,
     studentCount: 5,
-    opinion: ' '
+    opinion: ' ',
+    declaration_date: new Date("2025-12-07T10:30:15"),
   },
   {
     name: 'Zastosowanie blockchain w logistyce',
     description: 'Wykorzystanie technologii rozproszonych rejestrów (DLT) do zwiększenia przejrzystości łańcucha dostaw oraz automatyzacji płatności poprzez inteligentne kontrakty (Smart Contracts).',
     status: STATUS.REJECTED,
     studentCount: 3,
-    opinion: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.'
+    opinion: 'Temat jest nieaktualny i zbyt teoretyczny. Wymaga modernizacji.',
+    declaration_date: new Date("2025-11-30T16:25:25"),
   },
   {
     name: 'Bezpieczeństwo aplikacji webowych',
     description: 'Analiza podatności systemów CMS na ataki typu SQL Injection oraz XSS wraz z implementacją mechanizmów obronnych zgodnych ze standardami OWASP.',
     status: STATUS.PREPARING,
     studentCount: 2,
+    declaration_date: new Date("2025-12-02T08:59:17"),
   },
   {
     name: 'Bezpieczeństwo aplikacji webowych',
     description: 'Analiza najczęstszych podatności aplikacji webowych (OWASP Top 10) oraz implementacja mechanizmów zabezpieczających.',
     status: STATUS.SUBMITTED,
     studentCount: 2,
+    declaration_date: new Date("2025-11-10T12:12:06"),
   },
 
 ];
@@ -406,6 +419,8 @@ async function main() {
         ...(needsDeclaration && {
           declaration: {
             create: {
+              created_at: config.declaration_date || new Date(),
+
               ...(needsSignatures && {
                 signatures: {
                   create: [leader, ...students]
