@@ -50,6 +50,14 @@ docker-compose up --build
 
 **docker compose exec backend npx prisma migrate reset** - reset the database, and apply migrations again
 
+### Unit tests
+
+**docker build -t zpi-backend-test .**                      - build tests (run in backend)
+
+**docker run -it --rm zpi-backend-test npm test**           - run tests with attached stdin and allocated TTY
+
+**docker run --rm zpi-backend-test npm test -- --run**      - run tests once and exit
+
 
 
 render...
