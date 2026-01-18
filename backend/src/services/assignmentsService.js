@@ -29,11 +29,11 @@ export async function joinTopic(topicUuid, userId) {
     });
 
     if (!topic) {
-        throw new NotFoundError("TOPIC_NOT_FOUND");
+        throw new NotFoundError("Topic not found");
     }
 
     if (topic.status.status_name !== STATUSES.OPEN) {
-        throw new ValidationError("TOPIC_NOT_OPEN");
+        throw new ValidationError("Topic must be in 'Otwarty' status to be joined");
     }
 
     if (topic._count.students >= MAX_TOPIC_CAPACITY) {
@@ -50,11 +50,11 @@ export async function withdrawTopic(topicUuid, userId) {
     });
 
     if (!topic) {
-        throw new NotFoundError("TOPIC_NOT_FOUND");
+        throw new NotFoundError("Topic not found");
     }
 
     if (topic.status.status_name !== STATUSES.OPEN) {
-        throw new ValidationError("TOPIC_NOT_OPEN");
+        throw new ValidationError("Topic must be in 'Otwarty' status to be joined");
     }
 
     await withdraw(userId);
