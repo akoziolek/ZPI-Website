@@ -48,7 +48,7 @@ export async function signDeclaration(topicUuid, userId) {
     const studentCount = topic._count.students
     const signatureCount = topic.declaration.signatures.length // without just added signature
 
-    if (studentCount === signatureCount) {
+    if ((studentCount-1) === signatureCount) {
         const submittedStatus = await findStatus(STATUSES.SUBMITTED);
         if (submittedStatus) {
             await updateStatus(topicUuid, submittedStatus.status_id);
