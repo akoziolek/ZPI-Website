@@ -49,3 +49,13 @@ export const findUserByUuid = async (userUuid) => {
     });
     return user;
 };
+
+export function formatUserResponse(user) {
+    return {
+        uuid: user.uuid,
+        name: user.name,
+        surname: user.surname,
+        mail: user.mail,
+        role: user.role?.role_name || user.role // obsługa różnych formatów roli
+    };
+}

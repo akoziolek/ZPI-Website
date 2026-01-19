@@ -41,7 +41,7 @@ const TopicsTable = ({ topics, sortConfig, onSort }) => {
         <tbody className="bg-white divide-y divide-gray-200">
           {topics.map((topic) => (
             <tr key={topic.uuid} className="hover:bg-gray-200 bg-gray-100">
-              <td className="px-6 py-4 whitespace-nowrap border-y border-l border-gray-600">
+              <td className="px-6 py-4 border-y border-l border-gray-600">
                 <div className="text-sm font-semibold text-gray-900 line-clamp-2 max-w-xs">
                   {topic.name}
                 </div>

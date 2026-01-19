@@ -1,4 +1,4 @@
-import { TOPIC_ACTIONS, TOPIC_ACTIONS_LABELS, MAX_TOPIC_CAPACITY, MIN_TOPIC_CAPACITY, ROLES } from "../config";
+import { TOPIC_ACTIONS_LABELS } from "../config";
 import { useTopicActions } from "../hooks/useTopicActionsHandlers.js";
 
 

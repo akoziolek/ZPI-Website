@@ -40,3 +40,9 @@ export class BusinessLogicError extends AppError {
     super(message, 400);
   }
 }
+
+export class ForbiddenError extends AppError {
+  constructor(message = "Forbidden") {
+    super(message, 403);
+  }
+}

@@ -1,41 +1,33 @@
 import jwt from 'jsonwebtoken';
 import { findUserByUuid } from '../services/usersService.js';
+import { AuthenticationError, ForbiddenError } from '../utils/errors.js';
 
 export const authenticateToken = async (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
-    if (!token) {
-        return res.status(401).json({ success: false, message: 'Access token required' });
-    }
     try {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+
+        if (!token) throw new AuthenticationError('Access token required');
+
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        const user = await findUserByUuid(decoded.uuid);
         
-        if (!user) {
-            return res.status(401).json({ success: false, message: 'User not found' });
-        }
+        const user = await findUserByUuid(decoded.uuid);
+        if (!user) throw new AuthenticationError('User not found');
 
         req.user = user;
         next();
     } catch (error) {
-        if (error.name === 'TokenExpiredError') {
-            return res.status(403).json({ 
-                success: false, 
-                message: 'Token expired', 
-            });
-        }
-         return res.status(403).json({ success: false, message: 'Invalid token' });
+        // Przekazujemy błąd do centralnego errorHandler
+        next(error); 
     }
 };
 
 export const requireRole = (allowedRoles) => {
     return (req, res, next) => {
-        if (!req.user) {
-            return res.status(401).json({ success: false, message: 'Authentication required' });
-        }
+        if (!req.user) return next(new AuthenticationError());
 
         if (!allowedRoles.includes(req.user.role.role_name)) {
-            return res.status(403).json({ success: false, message: 'Insufficient permissions' });
+            return next(new ForbiddenError('Insufficient permissions'));
         }
 
         next();

@@ -1,75 +1,20 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { useAuthContext } from "../contexts/AuthContext";
-import { apiRequest } from "../api/apiFetch";
+import { useState } from "react";
+import { useLogin } from "../hooks/useAuth";
 
 const LoginPage = () => {
-  const { login } = useAuthContext();
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const { users, loadingUsers, loggingIn, error, executeLogin } = useLogin();
   const [selectedUser, setSelectedUser] = useState(null);
-  const [loadingUsers, setLoadingUsers] = useState(true);
-  const [loggingIn, setLoggingIn] = useState(false);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const loadUsers = async () => {
-      try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
-        const res = await fetch(`${backendUrl}/users`);
-        const json = await res.json();
-        setUsers(json.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoadingUsers(false);
-      }
-    };
-
-    loadUsers();
-  }, []);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-  if (!selectedUser) return;
+    e.preventDefault();
+    if (!selectedUser) return;
 
-  try {
-    setLoggingIn(true);
-    setError("");
-
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    
-    // Usuwamy stary token, aby apiRequest nie wysłał go w nagłówku (chociaż apiFetch bierze go z localStorage w momencie wywołania)
-    localStorage.removeItem("token"); 
-
-    const data = await apiRequest(
-      `${backendUrl}/auth/login`, 
-      {
-        method: "POST",
-        body: JSON.stringify({ mail: selectedUser.mail }), // apiFetch w Twoim kodzie nie robi auto-stringify, więc musisz to zostawić
-        credentials: "include",
-      },
-      // Trzeci argument to onTokenExpired - przy logowaniu możemy go pominąć lub dać pustą funkcję
-      () => {} 
-    );
-
-    // apiRequest zwraca (json.data ?? json), więc tutaj masz już gotowe dane
-    // Zakładam, że backend zwraca token i user bezpośrednio w obiekcie, więc `data` to cały response
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-
-    login(data.user);
-    navigate("/topics");
-
-  } catch (err) {
-    // apiRequest automatycznie rzuca błąd z message z backendu, więc to zadziała poprawnie
-    setError(err.message);
-  } finally {
-    setLoggingIn(false);
-  }
-};
-
+    const success = await executeLogin(selectedUser);
+    if (success) navigate("/topics");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
