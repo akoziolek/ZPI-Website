@@ -26,10 +26,9 @@ export async function addOpinion(topicUuid, argumentation, isPositive, userId) {
         }
     });
 
-    // Update status to rejected
     const newStatus = isPositive == true ? STATUSES.APPROVED : STATUSES.REJECTED;
-    const rejectedStatus = await findStatus(newStatus);
-    if (rejectedStatus) {
-        await updateStatus(topicUuid, rejectedStatus.status_id);
+    const newStatusDb = await findStatus(newStatus);
+    if (newStatusDb) {
+        await updateStatus(topicUuid, newStatusDb.status_id);
     }
 }
