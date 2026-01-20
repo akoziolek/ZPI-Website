@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-  "test": "vitest",
+    "test": "vitest",
     "build": "npm install",
     "dev": "npx prisma generate && npx prisma migrate deploy && nodemon -r dotenv/config --legacy-watch src/server.js",
     "start": "npx prisma generate && npx prisma db seed && node src/server.js",
@@ -35,8 +35,8 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.2",
     "dotenv": "^17.2.3",
-  "prisma": "^7.1.0",
-  "vitest": "^1.0.0",
+    "prisma": "^7.1.0",
+    "vitest": "^1.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

@@ -59,6 +59,9 @@ docker-compose up --build
 **docker run --rm zpi-backend-test npm test -- --run**      - run tests once and exit
 
 ### Functional tests
+**docker compose exec backend npx vitest** - tests in already build container
+
+**docker compose exec backend npx vitest run --reporter=verbose** - runs with each test descriptions
 
 **docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm cypres** - run functional tests
 
