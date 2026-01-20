@@ -63,7 +63,7 @@ docker-compose up --build
 
 **docker compose exec backend npx vitest run --reporter=verbose** - runs with each test descriptions
 
-**docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm cypres** - run functional tests
+**docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm cypress** - run functional tests
 
 render...
 pre deploy command:npx prisma migrate deploy
