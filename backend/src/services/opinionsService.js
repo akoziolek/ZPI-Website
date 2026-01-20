@@ -15,7 +15,7 @@ export async function addOpinion(topicUuid, argumentation, isPositive, userId) {
     }
 
     if (topic.status.status_name !== STATUSES.SUBMITTED) {
-        throw new ValidationError("Topic must be in 'Złożony' status to be rejected");
+        throw new ValidationError("Topic must be in 'Złożony' status to add an opinion");
     }
 
     await prismaClient.opinion.create({
@@ -26,10 +26,9 @@ export async function addOpinion(topicUuid, argumentation, isPositive, userId) {
         }
     });
 
-    // Update status to rejected
     const newStatus = isPositive == true ? STATUSES.APPROVED : STATUSES.REJECTED;
-    const rejectedStatus = await findStatus(newStatus);
-    if (rejectedStatus) {
-        await updateStatus(topicUuid, rejectedStatus.status_id);
+    const newStatusDb = await findStatus(newStatus);
+    if (newStatusDb) {
+        await updateStatus(topicUuid, newStatusDb.status_id);
     }
 }

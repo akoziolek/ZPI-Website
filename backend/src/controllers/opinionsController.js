@@ -8,7 +8,7 @@ export async function addOpinionController(req, res) {
     const userId = req.user.user_id;
 
     await addOpinion(uuid, argumentation, isPositive, userId);
-    res.json({ success: true, message: isPositive ? "Topic rejected" : "Topic approved" });
+    res.json({ success: true, message: "Added an opinion" });
 }
 
 
