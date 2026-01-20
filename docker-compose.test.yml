@@ -1,0 +1,19 @@
+services:
+  cypress:
+    image: cypress/included:12.17.0
+    depends_on:
+      - frontend
+      - backend
+    working_dir: /e2e/frontend
+    volumes:
+      - ./:/e2e
+    command: ["cypress", "run", "--config-file", "cypress.config.cjs"]
+    environment:
+      CYPRESS_baseUrl: http://zpi.local:5173
+    extra_hosts:
+      - "zpi.local:host-gateway"
+    networks:
+      - internal
+
+networks:
+  internal: {}

@@ -5,6 +5,7 @@ import { useAuthContext } from "../contexts/AuthContext";
 
 async function verifyToken() {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  console.log(backendUrl);
   try {
     const data = await apiRequest(`${backendUrl}/auth/verify`);
     // data jest już parsowane, np. { success: true, user: {...} }
