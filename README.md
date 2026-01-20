@@ -52,13 +52,15 @@ docker-compose up --build
 
 ### Unit tests
 
-**docker build -t zpi-backend-test .**                      - build tests (run in backend)
+**docker build -t zpi-backend-test .**                      - build tests (do in backend)
 
 **docker run -it --rm zpi-backend-test npm test**           - run tests with attached stdin and allocated TTY
 
 **docker run --rm zpi-backend-test npm test -- --run**      - run tests once and exit
 
+### Functional tests
 
+**docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm cypres** - run functional tests
 
 render...
 pre deploy command:npx prisma migrate deploy

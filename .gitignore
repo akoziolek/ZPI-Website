@@ -28,3 +28,7 @@ node_modules/
 
 
 **/generated
+
+# test output
+/screenshots
+/videos
