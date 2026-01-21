@@ -58,6 +58,15 @@ const ACADEMIC_TITLES = [
   { full_name: "Profesor Inżynier", shortcut: "prof. dr hab. inż." }
 ];
 
+/**
+ * @typedef {Object} Student
+ * @property {string} name - Imię studenta
+ * @property {string} surname - Nazwisko studenta
+ * @property {string} index - Unikalny numer indeksu (6 cyfr)
+ * @property {number} ects - Liczba zdobytych punktów ECTS
+ */
+
+/** @type {Student[]} */
 const STUDENTS_DATA = [
   { name: 'Anna', surname: 'Nowak', index: '234567', ects: 5 },
   { name: 'Piotr', surname: 'Zieliński', index: '345678', ects: 0 },
@@ -81,18 +90,17 @@ const STUDENTS_DATA = [
   { name: 'Jakub', surname: 'Lis', index: '123460', ects: 0 },
   { name: 'Laura', surname: 'Sikora', index: '234570', ects: 0 },
   { name: 'Anna', surname: 'Sider', index: '204570', ects: 2 },
-
-  { name: 'Ola', surname: 'Kot', index: '232323', ects: 0},
-  { name: 'Olga', surname: 'Grzyb', index: '12242', ects: 0},
-  { name: 'Tomasz', surname: 'Nowy', index: '239123', ects: 4},
-  { name: 'Łukasz', surname: 'Szybki', index: '252003', ects: 0},
-  { name: 'Ignacy', surname: 'Maj', index: '212423', ects: 0},
+  { name: 'Ola', surname: 'Kot', index: '232323', ects: 0 },
+  { name: 'Olga', surname: 'Grzyb', index: '122420', ects: 0 },
+  { name: 'Tomasz', surname: 'Nowy', index: '239123', ects: 4 },
+  { name: 'Łukasz', surname: 'Szybki', index: '252003', ects: 0 },
+  { name: 'Ignacy', surname: 'Maj', index: '212423', ects: 0 },
   { name: 'Tomasz', surname: 'Nowy', index: '239823', ects: 4 },
   { name: 'Łukasz', surname: 'Szybki', index: '252023', ects: 0 },
   { name: 'Ignacy', surname: 'Maj', index: '212323', ects: 0 },
   { name: 'Karolina', surname: 'Pawlak', index: '323456', ects: 0 },
   { name: 'Mateusz', surname: 'Michalski', index: '334567', ects: 0 },
-  { name: 'Patrycja', surname: 'Kubiak', index: '345678', ects: 0 },
+  { name: 'Patrycja', surname: 'Kubiak', index: '345688', ects: 0 }, 
   { name: 'Adrian', surname: 'Bąk', index: '356789', ects: 0 },
   { name: 'Julia', surname: 'Ostrowska', index: '367890', ects: 0 },
   { name: 'Szymon', surname: 'Urbański', index: '378901', ects: 0 },
@@ -182,7 +190,7 @@ const TOPICS_TO_GENERATE = [
   name: 'Zastosowanie uczenia maszynowego w analizie obrazów',
   description: 'Projekt i wytrenowanie konwolucyjnej sieci neuronowej (CNN) do rozpoznawania i klasyfikacji obiektów w czasie rzeczywistym przy użyciu biblioteki TensorFlow.',
   status: STATUS.SUBMITTED,
-  studentCount: 1,
+  studentCount: 3,
   declaration_date: new Date("2026-01-10T10:21:45"),
   },
   {
@@ -210,7 +218,7 @@ const TOPICS_TO_GENERATE = [
     name: 'Automatyzacja testów aplikacji',
     description: 'Implementacja testów jednostkowych, integracyjnych i end-to-end oraz analiza ich wpływu na jakość oprogramowania.',
     status: STATUS.SUBMITTED,
-    studentCount: 2,
+    studentCount: 5,
     declaration_date: new Date("2025-11-19T19:34:51"),
   },
   {
@@ -247,14 +255,14 @@ const TOPICS_TO_GENERATE = [
     name: 'Bezpieczeństwo aplikacji webowych',
     description: 'Analiza podatności systemów CMS na ataki typu SQL Injection oraz XSS wraz z implementacją mechanizmów obronnych zgodnych ze standardami OWASP.',
     status: STATUS.PREPARING,
-    studentCount: 2,
+    studentCount: 3,
     declaration_date: new Date("2025-12-02T08:59:17"),
   },
   {
     name: 'Bezpieczeństwo aplikacji webowych',
     description: 'Analiza najczęstszych podatności aplikacji webowych (OWASP Top 10) oraz implementacja mechanizmów zabezpieczających.',
     status: STATUS.SUBMITTED,
-    studentCount: 2,
+    studentCount: 4,
     declaration_date: new Date("2025-11-10T12:12:06"),
   },
 

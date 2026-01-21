@@ -80,6 +80,8 @@ docker-compose up --build
 **npm run docs:serve** - serve the documentation locally at http://localhost:8080
 
 **npx jsdoc -c jsdoc.json** - run the generator with npx
+
+
 **docker compose logs backend** - logs
 
 **docker compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from cypress**
