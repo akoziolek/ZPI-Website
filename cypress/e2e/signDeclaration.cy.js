@@ -1,4 +1,4 @@
-import { STATUSES } from "../../src/config";
+import { STATUSES } from "../../frontend/src/config";
 
 describe('Sign Declaration use case (UI flow)', () => {
   const STUDENT_EMAILS = [

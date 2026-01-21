@@ -1,4 +1,4 @@
-import { STATUSES } from "../../src/config";
+import { STATUSES } from "../../frontend/src/config";
 
 describe('Add positive opinion to a topic use case (UI flow)', () => {
   const USER_EMAIL = 'adam.kot.2@pwr.edu.pl';
