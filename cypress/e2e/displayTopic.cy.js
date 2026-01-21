@@ -3,7 +3,7 @@ import { STATUSES } from "../../frontend/src/config";
 describe('Display topic use case (UI flow)', () => {
   const USER_EMAIL = 'adam.kot.2@pwr.edu.pl';
   const TOPIC_NAME = 'Analiza wydajności aplikacji webowych';
-  const PEOPLE = ['Natalia Michalska', 'Ewa Wasiak', 'Paweł Górski', 'Joanna Szymańska'];
+  const PEOPLE = ['Joanna Szymańska', 'Bartosz Woźniak', 'Alicja Dąbrowska'];
 
   it('logs in through UI, user displays a topic', () => {
     cy.visit('/');
