@@ -6,10 +6,6 @@ COPY package*.json .
 
 RUN npm install
 
-ARG VITE_BACKEND_URL
-ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
-
-
 COPY . .
 
 EXPOSE 5173

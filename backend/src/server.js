@@ -14,7 +14,7 @@ import signaturesRoutes from "./routes/signatures.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
-const PORT = process.env.PORT;
+const BACKEND_PORT = process.env.BACKEND_PORT;
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
@@ -43,6 +43,6 @@ app.get('/', (req, res) => {
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-app.listen(PORT, () =>{
-    console.log("Server is running on " + PORT);
+app.listen(BACKEND_PORT, () =>{
+    console.log("Server is running on " + BACKEND_PORT);
 });

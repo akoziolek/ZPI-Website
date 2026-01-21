@@ -7,14 +7,13 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - VITE_BACKEND_URL=http://zpi.local:3001
-      - REACT_APP_BACKEND_URL=http://zpi.local:3001
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
       - NODE_ENV=${development}
       - JWT_SECRET=${JWT_SECRET}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
       - FRONTEND_URL=${FRONTEND_URL}
-      - PORT=${PORT}
+      - BACKEND_PORT=${BACKEND_PORT}
 
     volumes:
       - ./frontend:/app
@@ -55,7 +54,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
       - ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
-      - PORT=${PORT}
+      - BACKEND_PORT=${BACKEND_PORT}
     depends_on:
       - postgres
     networks:

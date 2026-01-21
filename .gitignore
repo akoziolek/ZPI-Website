@@ -31,3 +31,6 @@ node_modules/
 
 # test output
 *.cy.js.mp4
+
+cypress/screenshots
+cypress/videos

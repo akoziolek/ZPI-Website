@@ -1,19 +1,43 @@
 services:
+  postgres-test: 
+    image: postgres:16
+    tmpfs:
+      - /var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB_TEST}
+      - POSTGRES_USER=${POSTGRES_USER_TEST}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_TEST}
+
+  backend:
+    environment:
+      - DATABASE_URL=${DATABASE_URL_TEST}
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL_TEST}
+      - FRONTEND_URL=${FRONTEND_URL_TEST}
+    depends_on:
+      - postgres-test
+    command: >
+      sh -c "npx prisma db push --accept-data-loss && 
+          npm run start"
+
+  frontend:
+    command: >
+      sh -c "npm run dev -- --host"
+    environment:
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL_TEST}
+      - FRONTEND_URL=${FRONTEND_URL_TEST}
+
   cypress:
-    image: cypress/included:12.17.0
+    image: cypress/included:latest 
+    container_name: ZPI-cypress
     depends_on:
       - frontend
       - backend
-    working_dir: /e2e/frontend
-    volumes:
-      - ./:/e2e
-    command: ["cypress", "run", "--config-file", "cypress.config.cjs"]
     environment:
-      CYPRESS_baseUrl: http://zpi.local:5173
-    extra_hosts:
-      - "zpi.local:host-gateway"
+      - CYPRESS_baseUrl=${FRONTEND_URL_TEST}
+    working_dir: /app
     networks:
       - internal
-
-networks:
-  internal: {}
+    volumes:
+      - .:/app
+    entrypoint: >
+      sh -c "npx wait-on ${FRONTEND_URL_TEST} ${VITE_BACKEND_URL_TEST} && cypress run"
