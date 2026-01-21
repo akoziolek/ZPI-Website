@@ -86,10 +86,10 @@ const TopicPage = () => {
           {!error && !loading && (
             <div className="w-full min-w-[320px] max-w-6xl p-10 border-2 border-gray-600 bg-gray-100">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
-              <div className="text-xl font-bold text-gray-900 line-clamp-2 min-w-[250px] flex-1">
+              <div data-testid="topic-name" className="text-xl font-bold text-gray-900 line-clamp-2 min-w-[250px] flex-1">
                 {topic.name}
               </div>
-              <span 
+              <span data-testid="topic-status"
                 className={`px-4 py-1 text-[13px] font-semibold rounded-full flex-shrink-0 whitespace-nowrap ${
                   getTopicColorClasses(topic.status_name)
                 }`}
@@ -100,7 +100,7 @@ const TopicPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 mb-2"> 
               <table className="w-full border-collapse table-fixed"> 
-                <tbody>
+                <tbody data-testid="people-table">
                   <tr>
                     <th className="w-[140px] text-left align-top font-semibold py-2 pr-4">
                       Opiekun

@@ -1,31 +1,40 @@
+import { STATUSES } from "../../src/config";
+
 describe('Sign Declaration use case (UI flow)', () => {
-  const STUDENT_EMAIL = 'anna.nowak.234567@pwr.edu.pl';
-  const PREPARING_STATUS_LABEL = 'W przygotowaniu do złożenia wniosku';
+  const STUDENT_EMAILS = [
+    'anna.nowak.234567@pwr.edu.pl',
+    'piotr.zieliński.345678@pwr.edu.pl',
+    'katarzyna.wójcik.456789@pwr.edu.pl'
+  ];
+  const TOPIC_NAME = 'Architektura mikroserwisów w chmurze';
 
-  it('logs in through UI, opens a PREPARING topic and signs its declaration', () => {
-    // Visit the app (root redirects to login when unauthenticated)
-    cy.visit('/');
+  it('logs in through UI, each student signs the declaration and final status becomes SUBMITTED', () => {
+    cy.wrap(STUDENT_EMAILS).each((email, index, list) => {
+      cy.visit('/');
 
-    // Wait for users list and select seeded student by email
-    cy.contains(STUDENT_EMAIL).click();
+      cy.contains(email).click();
+      cy.contains('button', /^Zaloguj/i).click();
 
-    // Click login button
-    cy.contains('button', /^Zaloguj/i).click();
+      cy.url().should('include', '/topics');
 
-    // After login we should be on /topics
-    cy.url().should('include', '/topics');
+      cy.contains(TOPIC_NAME)
+        .closest('tr')
+        .within(() => {
+          cy.contains('Wyświetl').click();
+        });
 
-    // Find a topic row that has PREPARING status and click its 'Wyświetl' link
-    cy.contains('span', PREPARING_STATUS_LABEL)
-      .closest('tr')
-      .within(() => {
-        cy.contains('Wyświetl').click();
-      });
+      cy.contains('button', 'Podpisz').click();
 
-    // On topic page, click the 'Podpisz' action button
-    cy.contains('button', 'Podpisz').click();
+      cy.contains('Podpisano deklarację!').should('be.visible');
 
-    // Assert success notification appears
-    cy.contains('Podpisano deklarację!').should('be.visible');
+      cy.contains('button', 'Zamknij').click();
+
+      if (index < list.length - 1) {
+        cy.contains('Wyloguj się').click();
+      }
+    }).then(() => {
+      cy.contains('span', STATUSES.SUBMITTED).should('be.visible');
+      cy.contains('Wyloguj się').click();
+    });
   });
 });

@@ -134,7 +134,7 @@ const OpinionFormPage = () => {
                       <th className="w-[140px] text-left align-top font-semibold py-2 px-4">
                         Uzasadnienie
                       </th>
-                      <td className="py-2 pr-6 align-top">
+                      <td data-testid="argumentation-box" className="py-2 pr-6 align-top">
                         <textarea
                           rows="4"
                           type="text"
