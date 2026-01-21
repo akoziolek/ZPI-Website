@@ -1,5 +1,28 @@
 import { useState, useMemo } from 'react';
 
+/**
+ * Hook that implements client-side filtering and sorting logic for a
+ * list of topics.
+ *
+ * - `topics` is the source array of topic DTOs.
+ * - `initialSearch` seeds the internal search field.
+ *
+ * Returns the filtered+sorted topics and handlers to control sorting and
+ * filtering state.
+ *
+ * @param {Array<Object>} topics - Array of topic objects to process.
+ * @param {string} [initialSearch=''] - Optional initial search string.
+ * @returns {{
+ *   filteredAndSortedTopics: Array<Object>,
+ *   sortConfig: Array<Object>,
+ *   handleSort: function(string): void,
+ *   filters: Object,
+ *   setFilters: function(Object): void,
+ *   clearFilters: function(): void,
+ *   activeSearch: string,
+ *   setActiveSearch: function(string): void
+ * }}
+ */
 export const useTopicsLogic = (topics, initialSearch = '') => {
   const [sortConfig, setSortConfig] = useState([
     { key: 'name', direction: 'asc' }

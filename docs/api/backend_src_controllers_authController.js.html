@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: backend/src/controllers/authController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: backend/src/controllers/authController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {  loginUser, refreshSession } from "../services/authService.js";
+import { updateUserLogin, formatUserResponse } from "../services/usersService.js";
+
+/**
+ * Controller: authenticate a user by email and set refresh cookie.
+ *
+ * Expects `req.body.mail`. On success sets a httpOnly cookie with the
+ * refresh token and returns the access token and user data in JSON.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise&lt;Object>} JSON response with tokens and user.
+ */
+export async function authenticateUser(req, res) {
+    const { mail } = req.body;
+    const { user, accessToken, refreshToken } = await loginUser(mail);
+    
+    const isProduction = process.env.NODE_ENV === 'production';
+    res.cookie('jwt', refreshToken, {
+        httpOnly: true,
+        sameSite: isProduction ? 'None' : 'Lax', 
+        secure: isProduction, 
+        maxAge: 24 * 60 * 60 * 1000
+    });
+
+    await updateUserLogin(user.user_id); // id na backendzie, jest ok
+
+    res.json({
+        success: true,
+        token: accessToken,
+        user: {
+            uuid: user.uuid,
+            name: user.name,
+            surname: user.surname,
+            mail: user.mail,
+            role: user.role.role_name
+        }
+    });
+}
+
+
+/**
+ * Controller: exchange refresh token (from cookie) for a new access token.
+ *
+ * Expects the refresh token cookie `jwt` to be present. If missing returns 401.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise&lt;Object>} JSON response with new access token.
+ */
+export const handleRefreshToken = async (req, res) => {
+    const cookies = req.cookies;
+
+    if (!cookies?.jwt) return res.sendStatus(401); // check if cookie exist
+    const refreshToken = cookies.jwt;
+
+    const accessToken = await refreshSession(refreshToken);
+    res.json({
+        success: true,
+        token: accessToken
+    });
+    
+};
+
+/**
+ * Controller: return basic info about the authenticated user.
+ *
+ * The authentication middleware must attach `req.user` before this handler.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise&lt;Object>} JSON response with user data.
+ */
+export async function verifyToken(req, res) {
+    // The authenticateToken middleware already verified the token
+    // and attached the user to req.user
+    const userData = formatUserResponse(req.user);
+    
+    res.json({
+        success: true,
+        user: userData
+    });
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

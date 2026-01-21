@@ -1,6 +1,16 @@
 import {  loginUser, refreshSession } from "../services/authService.js";
 import { updateUserLogin, formatUserResponse } from "../services/usersService.js";
 
+/**
+ * Controller: authenticate a user by email and set refresh cookie.
+ *
+ * Expects `req.body.mail`. On success sets a httpOnly cookie with the
+ * refresh token and returns the access token and user data in JSON.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<Object>} JSON response with tokens and user.
+ */
 export async function authenticateUser(req, res) {
     const { mail } = req.body;
     const { user, accessToken, refreshToken } = await loginUser(mail);
@@ -29,6 +39,15 @@ export async function authenticateUser(req, res) {
 }
 
 
+/**
+ * Controller: exchange refresh token (from cookie) for a new access token.
+ *
+ * Expects the refresh token cookie `jwt` to be present. If missing returns 401.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<Object>} JSON response with new access token.
+ */
 export const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
 
@@ -43,7 +62,15 @@ export const handleRefreshToken = async (req, res) => {
     
 };
 
-// who am i, after authentication
+/**
+ * Controller: return basic info about the authenticated user.
+ *
+ * The authentication middleware must attach `req.user` before this handler.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<Object>} JSON response with user data.
+ */
 export async function verifyToken(req, res) {
     // The authenticateToken middleware already verified the token
     // and attached the user to req.user

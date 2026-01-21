@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: backend/src/services/assignmentsService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: backend/src/services/assignmentsService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import prismaClient from "../lib/db.js";
+import { NotFoundError, ValidationError } from "../utils/errors.js";
+import { STATUSES, MAX_TOPIC_CAPACITY } from "../config.js";
+
+async function join(userId, topicId) {
+    await prismaClient.student.update({
+        where: { user_id: userId },
+        data: {
+            topic: {
+                connect: { topic_id: topicId }
+            }
+        }
+    });
+}
+
+async function withdraw(userId) {
+    await prismaClient.student.update({
+        where: { user_id: userId },
+        data: {
+            topic: { disconnect: true }
+        }
+    });
+}
+
+/**
+ * Join a topic by its UUID for a given user.
+ *
+ * Validates that the topic exists, is in an open status, and that the
+ * maximum student capacity hasn't been reached. On success the student's
+ * record is updated to reference the topic.
+ *
+ * @param {string} topicUuid - The UUID of the topic to join.
+ * @param {number} userId - The internal database id of the user (student).
+ * @throws {NotFoundError} If the topic does not exist.
+ * @throws {ValidationError} If the topic status is not open or the student limit is reached.
+ * @returns {Promise&lt;void>} Resolves when the join operation completes.
+ */
+export async function joinTopic(topicUuid, userId) {
+    const topic = await prismaClient.topic.findUnique({
+        where: { uuid: topicUuid },
+        include: { status: true, _count: { select: { students: true } } }
+    });
+
+    if (!topic) {
+        throw new NotFoundError("Topic not found");
+    }
+
+    if (topic.status.status_name !== STATUSES.OPEN) {
+        throw new ValidationError("Topic must be in 'Otwarty' status to be joined");
+    }
+
+    if (topic._count.students >= MAX_TOPIC_CAPACITY) {
+        throw new ValidationError("STUDENTS_LIMIT_REACHED")
+    }
+
+    await join(userId, topic.topic_id);
+}
+
+/**
+ * Withdraw a student from a topic by topic UUID.
+ *
+ * Validates that the topic exists and is in an open status, then
+ * removes the topic relation from the student's record.
+ *
+ * @param {string} topicUuid - The UUID of the topic to withdraw from.
+ * @param {number} userId - The internal database id of the user (student).
+ * @throws {NotFoundError} If the topic does not exist.
+ * @throws {ValidationError} If the topic status is not open.
+ * @returns {Promise&lt;void>} Resolves when the withdraw operation completes.
+ */
+export async function withdrawTopic(topicUuid, userId) {
+    const topic = await prismaClient.topic.findUnique({
+        where: { uuid: topicUuid },
+        include: { status: true }
+    });
+
+    if (!topic) {
+        throw new NotFoundError("Topic not found");
+    }
+
+    if (topic.status.status_name !== STATUSES.OPEN) {
+        throw new ValidationError("Topic must be in 'Otwarty' status to be joined");
+    }
+
+    await withdraw(userId);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -12,6 +12,12 @@ function mapStudentToDto(student) {
     };
 }
 
+/**
+ * Return all students mapped to a public DTO.
+ *
+ * Each DTO includes basic user information, index number and ECTS deficit.
+ * @returns {Promise<Array<Object>>} Array of student DTOs.
+ */
 export async function getAllStudents() {
     const students = await prismaClient.student.findMany({
         select: {
@@ -31,6 +37,13 @@ export async function getAllStudents() {
     return students.map(mapStudentToDto);
 }
 
+/**
+ * Get a single student by the user's UUID and map to a DTO.
+ *
+ * @param {string} userUuid - UUID of the user to fetch as a student.
+ * @throws {NotFoundError} When the student is not found.
+ * @returns {Promise<Object>} Student DTO.
+ */
 export async function getStudent(userUuid) {
     const student = await prismaClient.student.findUnique({
         where: {
@@ -58,6 +71,12 @@ export async function getStudent(userUuid) {
 }
 
 
+/**
+ * Check whether a student (identified by user UUID) currently has a topic assigned.
+ *
+ * @param {string} userUuid - The UUID of the user to check.
+ * @returns {Promise<boolean>} True if the student has a topic, otherwise false.
+ */
 export async function checkIfStudentHasTopic(userUuid) {
     const count = await prismaClient.student.count({
         where: {

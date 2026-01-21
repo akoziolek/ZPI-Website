@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: frontend/src/hooks/useTopicActionsHandlers.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: frontend/src/hooks/useTopicActionsHandlers.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useMemo } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from '../contexts/AuthContext.js';
+import { useActionRequest } from './useActionRequest.js'; 
+import { TOPIC_ACTIONS, ROLES, getAvailableActions } from "../config.js";
+
+/**
+ * Hook returning a map of topic action handlers.
+ *
+ * Each key in the returned object corresponds to a `TOPIC_ACTIONS` id and
+ * maps to a function that performs the requested action (API call or
+ * navigation). Handlers expect a topic UUID when invoked.
+ *
+ * @returns {Object} - An object containing functions:
+ *   - `genericRequest(endpoint: string): Promise&lt;any>`  
+ *   - `submitRejection(options): Promise&lt;any>` where options include `uuid`, `argumentation`, `actions`
+ */
+export const useTopicActionsHandlers = () => {
+  const request = useActionRequest();
+  const navigate = useNavigate();
+
+  return {
+    [TOPIC_ACTIONS.APPROVE]: (uuid) =>
+      request({
+        endpoint: `topics/${uuid}/opinion`,
+        method: "POST",
+        body: { argumentation: "", isPositive: true },
+        successMessage: "Zatwierdzono temat!",
+        failureMsg: "Wystąpił błąd podczas dodawania opinii!",
+      }),
+    [TOPIC_ACTIONS.REJECT]: (uuid) =>
+      navigate(`/topics/${uuid}/opinion`),
+    [TOPIC_ACTIONS.JOIN]: (uuid) =>
+      request({
+        endpoint: `topics/${uuid}/join`,
+        method: "POST",
+        successMessage: "Dopisano do tematu!",
+        failureMsg: "Wystąpił problem przy dopisywaniu do tematu!",
+      }),
+    [TOPIC_ACTIONS.WITHDRAW]: (uuid) => 
+      request({
+        endpoint: `topics/${uuid}/withdraw`,
+        method: "DELETE",
+        successMessage: "Wypisano się z tematu!",
+        failureMsg: "Wystąpił problem przy wypisywaniu z tematu!",
+      }),
+    [TOPIC_ACTIONS.SIGN]: (uuid) => 
+      request({
+        endpoint: `topics/${uuid}/sign`,
+        method: "POST",
+        successMessage: "Podpisano deklarację!",
+        failureMsg: "Podczas autoryzacji podpisu wystąpił błąd!",
+      }),
+    submitRejection: ({ uuid, argumentation, actions }) => 
+      request({
+        endpoint: `topics/${uuid}/opinion`,
+        method: "POST",
+        body: { argumentation: argumentation, isPositive: "false" },
+        successMessage: "Odrzucono temat!",
+        failureMsg: "Wystąpił błąd podczas dodawania opinii!",
+        refresh: false,
+        actions: actions 
+      }),
+  // ... reszta handlerów
+  };
+};
+
+/**
+ * Hook that resolves which topic actions are allowed for the current user
+ * and topic context. It returns an array of `{ id, handle }` objects where
+ * `handle` is a function invoking the respective action.
+ *
+ * @param {Object} topic - The topic DTO to evaluate actions for.
+ * @param {Array&lt;Object>} signatures - Array of signature DTOs for the topic.
+ * @param {boolean} isAssignedToAnyTopic - Whether the current student is already assigned to any topic.
+ * @returns {Array&lt;Object>} Allowed actions for rendering UI controls.
+ */
+export const useTopicActions = (topic, signatures, isAssignedToAnyTopic) => {
+  const { user } = useAuthContext();
+  const handlers = useTopicActionsHandlers(); 
+
+  const allowedActions = useMemo(() => {
+    if (!topic || !user) return [];
+
+    const baseActions = getAvailableActions(user.role, topic.status_name);
+
+    const hasSupervisor = !!topic.supervisor;
+    const isUserSupervisor = topic.supervisor?.uuid === user.uuid;
+    const isStudentTeamMember = topic.students?.some(s => s.uuid === user.uuid);
+    const isUserTeamMember = isUserSupervisor || isStudentTeamMember;
+    const hasSigned = signatures?.some(sig => sig.uuid === user.uuid);
+
+    const isActionAllowed = (actionId) => {
+      switch (actionId) {
+        case TOPIC_ACTIONS.JOIN:
+          return !isStudentTeamMember &amp;&amp; !isAssignedToAnyTopic;
+        case TOPIC_ACTIONS.WITHDRAW:
+          return isStudentTeamMember;
+        case TOPIC_ACTIONS.SIGN:
+          return isUserTeamMember &amp;&amp; !hasSigned;
+        case TOPIC_ACTIONS.VIEW_OPINION:
+          return user.role === ROLES.KPK_MEMBER || isUserTeamMember;
+        case TOPIC_ACTIONS.ADD_SUPERVISION:
+          return !hasSupervisor;
+        case TOPIC_ACTIONS.DEL_SUPERVISION:
+          return hasSupervisor &amp;&amp; isUserSupervisor;
+        case TOPIC_ACTIONS.ADD_STUDENT:
+          return isUserSupervisor || user.role === ROLES.STUDENTS_SUPERVISOR;
+        case TOPIC_ACTIONS.DEL_STUDENT:
+          return (isUserSupervisor || user.role === ROLES.STUDENTS_SUPERVISOR) &amp;&amp; topic.students?.length > 0;
+        default:
+          return true;
+      }
+    };
+
+    return baseActions
+      .filter(isActionAllowed)
+      .map(actionId => ({
+        id: actionId,
+        handle: () => handlers[actionId]?.(topic.uuid)
+      }));
+  }, [topic, user, signatures, isAssignedToAnyTopic, handlers]);
+
+  return allowedActions;
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

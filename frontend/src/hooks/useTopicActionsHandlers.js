@@ -4,6 +4,17 @@ import { useAuthContext } from '../contexts/AuthContext.js';
 import { useActionRequest } from './useActionRequest.js'; 
 import { TOPIC_ACTIONS, ROLES, getAvailableActions } from "../config.js";
 
+/**
+ * Hook returning a map of topic action handlers.
+ *
+ * Each key in the returned object corresponds to a `TOPIC_ACTIONS` id and
+ * maps to a function that performs the requested action (API call or
+ * navigation). Handlers expect a topic UUID when invoked.
+ *
+ * @returns {Object} - An object containing functions:
+ *   - `genericRequest(endpoint: string): Promise<any>`  
+ *   - `submitRejection(options): Promise<any>` where options include `uuid`, `argumentation`, `actions`
+ */
 export const useTopicActionsHandlers = () => {
   const request = useActionRequest();
   const navigate = useNavigate();
@@ -54,6 +65,16 @@ export const useTopicActionsHandlers = () => {
   };
 };
 
+/**
+ * Hook that resolves which topic actions are allowed for the current user
+ * and topic context. It returns an array of `{ id, handle }` objects where
+ * `handle` is a function invoking the respective action.
+ *
+ * @param {Object} topic - The topic DTO to evaluate actions for.
+ * @param {Array<Object>} signatures - Array of signature DTOs for the topic.
+ * @param {boolean} isAssignedToAnyTopic - Whether the current student is already assigned to any topic.
+ * @returns {Array<Object>} Allowed actions for rendering UI controls.
+ */
 export const useTopicActions = (topic, signatures, isAssignedToAnyTopic) => {
   const { user } = useAuthContext();
   const handlers = useTopicActionsHandlers(); 

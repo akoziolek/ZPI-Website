@@ -13,6 +13,21 @@ async function createSignature(userId, declarationId) {
     });
 }
 
+/**
+ * Sign the declaration attached to a topic on behalf of a student.
+ *
+ * Validates that the topic and its declaration exist and that the topic is
+ * in the PREPARING status. Ensures a student cannot sign more than once.
+ * After creating the signature, if the number of signatures reaches the
+ * required threshold (all signatures), the topic status is
+ * advanced to SUBMITTED.
+ *
+ * @param {string} topicUuid - UUID of the topic whose declaration will be signed.
+ * @param {number} userId - Internal database id of the student signing.
+ * @throws {NotFoundError} When the topic or declaration is missing.
+ * @throws {ValidationError} If the topic is not in PREPARING status or the user already signed.
+ * @returns {Promise<void>} Resolves when the signature (and any status update) completes.
+ */
 export async function signDeclaration(topicUuid, userId) {
     const topic = await prismaClient.topic.findUnique({
         where: { uuid: topicUuid },

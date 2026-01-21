@@ -12,6 +12,14 @@ function mapAcademicEmployeeToDto(academicEmployee) {
     };
 }
 
+/**
+ * Fetch all academic employees and map them to a lightweight DTO used by the API.
+ *
+ * The DTO contains public user information and academic title data. This function
+ * queries the database for academic employees and returns the mapped array.
+ *
+ * @returns {Promise<Array<Object>>} Array of academic employee DTOs.
+ */
 export async function getAllAcademicEmployees() {
     const employees = await prismaClient.academicEmployee.findMany({
         include: {
@@ -34,6 +42,13 @@ export async function getAllAcademicEmployees() {
     return employees.map(mapAcademicEmployeeToDto);
 }
 
+/**
+ * Fetch a single academic employee by the user's UUID and map to a DTO.
+ *
+ * @param {string} uuid - The UUID of the user linked to the academic employee.
+ * @throws {NotFoundError} When the employee is not found.
+ * @returns {Promise<Object>} Academic employee DTO.
+ */
 export async function getAcademicEmployee(uuid) {
     const employee = await prismaClient.academicEmployee.findUnique({
         where: {

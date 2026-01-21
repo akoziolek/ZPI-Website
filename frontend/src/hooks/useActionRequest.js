@@ -3,6 +3,15 @@ import { useAuthContext } from '../contexts/AuthContext.js';
 import { apiRequest } from '../api/apiFetch.js';
 import { ERROR_MESSAGES } from "../config.js";
 
+/**
+ * Hook that wraps API actions which trigger user-visible modals.
+ *
+ * `performRequest` performs an apiRequest to the provided `endpoint` and
+ * displays a modal on success or failure (using the ModalContext). It also
+ * accepts optional `actions` and messages to customize the modal.
+ *
+ * @returns {function(Object): Promise<any>} performRequest
+ */
 export const useActionRequest = () => {
   const { onTokenExpired } = useAuthContext(); 
   const { openModal } = useModal();

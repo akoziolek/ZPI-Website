@@ -16,6 +16,22 @@ async function verifyToken() {
   }
 }
 
+/**
+ * React hook that provides authentication state and helpers.
+ *
+ * Returns the current authenticated user (or null), a loading flag while
+ * the initial verification runs, and helper methods to login/logout and
+ * handle token expiry. The hook performs a token verification on mount
+ * when a token is present in localStorage.
+ *
+ * @returns {{
+ *   user: Object|null,
+ *   loading: boolean,
+ *   login: function(Object): void,
+ *   logout: function(): void,
+ *   handleTokenExpired: function(): void
+ * }}
+ */
 export const useAuth = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -80,6 +96,22 @@ export const useAuth = () => {
   };
 };
 
+/**
+ * Hook used on the login page to fetch available demo users and execute
+ * a login flow for a selected user.
+ *
+ * The hook fetches the list of users from the backend on mount and
+ * exposes `executeLogin(selectedUser)` which performs the POST /auth/login
+ * request, stores tokens in localStorage and updates the AuthContext.
+ *
+ * @returns {{
+ *   users: Array<Object>,
+ *   loadingUsers: boolean,
+ *   loggingIn: boolean,
+ *   error: string,
+ *   executeLogin: function(Object): Promise<boolean>
+ * }}
+ */
 export const useLogin = () => {
   const { login: setAuthContext } = useAuthContext();
   const [users, setUsers] = useState([]);

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: backend/src/services/topicsService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: backend/src/services/topicsService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import prismaClient from "../lib/db.js";
+import {
+    NotFoundError,
+} from "../utils/errors.js";
+
+/**
+ * Map a full topic entity from the database into a public DTO used by the API.
+ *
+ * The DTO intentionally flattens nested relations (student/user/employee/opinion)
+ * into an easy-to-consume shape for the frontend.
+ *
+ * @param {Object} topic - Topic record returned by Prisma with includes.
+ * @returns {Object} The topic DTO.
+ */
+export function mapTopicToDto(topic) {
+    return {
+       uuid: topic.uuid,
+        name: topic.name,
+        description: topic.description,
+        status_name: topic.status.status_name, // status_id ??
+
+        supervisor: topic.employee ? {
+           uuid: topic.employee.user.uuid,
+            name: topic.employee.user.name,
+            surname: topic.employee.user.surname,
+            full_academic_title: topic.employee.academic_title?.full_name,
+            shortcut_academic_title: topic.employee.academic_title?.shortcut,
+        } : null,
+
+        students: topic.students.map(student => ({
+           uuid: student.user.uuid,
+            index: student.index,
+            name: student.user.name,
+            surname: student.user.surname,
+        })),
+
+        opinion: topic.opinion ? {
+            argumentation: topic.opinion.argumentation,
+            author: {
+               uuid: topic.opinion.employee.user.uuid,
+                name: topic.opinion.employee.user.name,
+                surname: topic.opinion.employee.user.surname
+            },
+        } : null
+    };
+}
+
+/**
+ * Fetch all topics, optionally filtered by a search string.
+ *
+ * @param {string=} search - Optional case-insensitive substring to filter topic names.
+ * @returns {Promise&lt;Array&lt;Object>>} Array of topic DTOs.
+ */
+export const getAllTopics = async (search) => {
+    const topics = await prismaClient.topic.findMany({
+        where: search ? {
+            name: { contains: search, mode: 'insensitive' }
+        } : {},
+        include: {
+            status: true,
+            employee: { include: { user: true, academic_title: true } },
+            students: { include: { user: true } }
+        }
+    });
+    return topics.map(mapTopicToDto);
+};
+
+/**
+ * Fetch a single topic by UUID and return the mapped DTO.
+ *
+ * @param {string} topicUuid - UUID of the topic to fetch.
+ * @throws {NotFoundError} When the topic doesn't exist.
+ * @returns {Promise&lt;Object>} Topic DTO.
+ */
+export const getTopicByUuid = async (topicUuid) => {
+    const topic = await prismaClient.topic.findUnique({
+        where: { uuid: topicUuid },
+        include: {
+            status: true,
+            employee: { include: { user: true, academic_title: true } },
+            students: { include: { user: true } },
+            opinion: { include: { employee: { include: { user: true } } } }
+        }
+    });
+
+    if (!topic) {
+        throw new NotFoundError('Topic');
+    }
+
+    return mapTopicToDto(topic);
+};
+
+/**
+ * Update the status of a topic by its UUID.
+ *
+ * @param {string} topicId - UUID of the topic to update.
+ * @param {number} newStatusId - Internal status id to set on the topic.
+ * @returns {Promise&lt;void>} Resolves when the update completes.
+ */
+export const updateStatus = async (topicId, newStatusId) => {
+    await prismaClient.topic.update({
+        where: { uuid: topicId },
+        data: { status_id: newStatusId }
+    });
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

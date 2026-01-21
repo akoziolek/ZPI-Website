@@ -3,6 +3,13 @@ import {
     NotFoundError,
 } from "../utils/errors.js";
 
+/**
+ * Map a declaration record (with nested signatures) into a DTO containing
+ * an array of signature authors.
+ *
+ * @param {Object} declaration - Declaration record containing signatures.
+ * @returns {Object} Object with a `signatures` array of simplified user info.
+ */
 export function mapSignatureToDto(declaration) {
   return {
     signatures: declaration.signatures.map(({ user }) => ({
@@ -14,6 +21,13 @@ export function mapSignatureToDto(declaration) {
   };
 }
 
+/**
+ * Return signatures (users who signed a declaration) for a given topic UUID.
+ *
+ * @param {string} topicUuid - UUID of the topic whose declaration signatures to fetch.
+ * @throws {NotFoundError} When the topic or declaration is not found.
+ * @returns {Promise<Object>} DTO with `signatures` array.
+ */
 export const getTopicSignatures = async (topicUuid) => {
   const topic = await prismaClient.topic.findUnique({
     where: { uuid: topicUuid },

@@ -1,0 +1,15 @@
+{
+  "name": "zpi-website-docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "docs": "jsdoc -c jsdoc.json",
+    "docs:clean": "rimraf docs/api",
+    "docs:serve": "npx http-server docs/api -p 8080"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "jsdoc": "^4.0.5",
+    "rimraf": "^5.0.1"
+  }
+}

@@ -69,6 +69,18 @@ docker-compose up --build
 
 **docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm cypress --spec cypress/e2e/addOpinion.cy.js** - run one test file
 
+### Generating API documentation with JSDoc
+
+**npm install**
+
+**npm run docs** - generate documentation into ./docs/api
+
+**npm run docs:clean** - clean previously generated docs
+
+**npm run docs:serve** - serve the documentation locally at http://localhost:8080
+
+**npx jsdoc -c jsdoc.json** - run the generator with npx
+
 render...
 pre deploy command:npx prisma migrate deploy
 npx prisma db seed - run manually in render shell

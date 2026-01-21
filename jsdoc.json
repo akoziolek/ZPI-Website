@@ -1,0 +1,22 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": ["backend/src", "frontend/src"],
+    "exclude": ["node_modules", "backend/generated", "frontend/node_modules"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/)\\_.+"
+  },
+  "plugins": [],
+  "opts": {
+    "destination": "docs/api",
+    "recurse": true,
+    "template": "node_modules/jsdoc/templates/default",
+    "encoding": "utf8"
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  }
+}
