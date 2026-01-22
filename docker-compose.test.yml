@@ -7,6 +7,11 @@ services:
       - POSTGRES_DB=${POSTGRES_DB_TEST}
       - POSTGRES_USER=${POSTGRES_USER_TEST}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_TEST}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER_TEST} -d ${POSTGRES_DB_TEST}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     environment:
@@ -16,8 +21,16 @@ services:
     depends_on:
       - postgres-test
     command: >
-      sh -c "npx prisma db push --accept-data-loss && 
+      sh -c "npx prisma db push --force-reset && 
+          npx prisma db seed &&
+          echo ready > /tmp/seed-done &&
           npm run start"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"] # Lub po prostu "/"
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
 
   frontend:
     command: >

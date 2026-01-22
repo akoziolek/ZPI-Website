@@ -18,7 +18,7 @@ const TopicsTable = ({ topics, sortConfig, onSort }) => {
 
   return (
     <div className="w-full overflow-x-auto">
-      <table className="w-full divide-y divide-gray-200 border-separate border-spacing-y-4">
+      <table id="topics-table" className="w-full divide-y divide-gray-200 border-separate border-spacing-y-4">
         <thead>
           <tr>
             {[
@@ -40,7 +40,7 @@ const TopicsTable = ({ topics, sortConfig, onSort }) => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {topics.map((topic) => (
-            <tr key={topic.uuid} className="hover:bg-gray-200 bg-gray-100">
+            <tr key={topic.uuid} data-testid={`topic-row-${topic.name}`} className="hover:bg-gray-200 bg-gray-100">
               <td className="px-6 py-4 border-y border-l border-gray-600">
                 <div className="text-sm font-semibold text-gray-900 line-clamp-2 max-w-xs">
                   {topic.name}

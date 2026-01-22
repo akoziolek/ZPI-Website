@@ -59,7 +59,7 @@ docker-compose up --build
 **docker run --rm zpi-backend-test npm test -- --run**      - run tests once and exit
 
 
-**docker compose exec backend npx vitest** - tests in already build container
+**docker compose exec backend npx vitest** - tests in already build container !!!!!!!!!!
 
 **docker compose exec backend npx vitest run --reporter=verbose** - runs with each test descriptions
 
@@ -92,3 +92,6 @@ npx prisma db seed - run manually in render shell
 npm install && npx prisma generate && npm run build - w renderze
 
 vite ignoruje zmienne, które mają inny prefiks niż VITE_ !!!
+
+
+**docker compose -f docker-compose.yml -f docker-compose.test.yml up --force-recreate --renew-anon-volumes --exit-code-from cypress --abort-on-container-exit** - tests containers will be recreated everytime!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
