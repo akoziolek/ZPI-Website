@@ -81,6 +81,7 @@ docker-compose up --build
 
 **npx jsdoc -c jsdoc.json** - run the generator with npx
 
+**npx jsdoc2md "frontend/src/**/*.jsx" "backend/src/**/*.js" > DOKUMENTACJA.md** - generating documentation into a file
 
 **docker compose logs backend** - logs
 

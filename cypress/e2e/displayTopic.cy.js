@@ -77,14 +77,19 @@ describe('Display topic use case (UI flow)', () => {
       });
 
     cy.contains(TOPIC_NAME).should('be.visible'); 
-    cy.contains('button', 'Zatwierdź').should('not.exist');
-    cy.contains('button', 'Odrzuć').should('not.exist');
-    cy.contains('button', 'Edytuj').should('not.exist');
-    cy.contains('button', 'Podpisz').should('not.exist');
-    cy.contains('button', 'Zatwierdź').should('not.exist');
-    cy.contains('button', 'Odrzuć').should('not.exist');
-    // reszta...
     cy.contains('button', 'Zobacz opinię');
+
+    // wyniesc te funkce wyzej
+    const EXPECTED_BUTTONS = ['Wróć', 'Zobacz opinię'];
+
+    cy.get('[data-testid="action-bar"]')
+      .find('button') 
+      .should('have.length', EXPECTED_BUTTONS.length) 
+      .then(($buttons) => {
+        const buttonTexts = [...$buttons].map(btn => btn.innerText.trim());
+
+        expect(buttonTexts).to.deep.equal(EXPECTED_BUTTONS);
+      });
   
     cy.contains('Wyloguj się').click();
   });

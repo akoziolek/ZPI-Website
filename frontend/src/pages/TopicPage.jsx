@@ -177,7 +177,7 @@ const TopicPage = () => {
           )}
         </>
         
-        <div className="w-full max-w-6xl mx-auto flex items-start justify-between py-6">
+        <div data-testid="action-bar" className="w-full max-w-6xl mx-auto flex items-start justify-between py-6">
           <div className="flex-none ml-6">
             <BackButton />
           </div>
