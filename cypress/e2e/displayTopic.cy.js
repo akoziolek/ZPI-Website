@@ -36,9 +36,84 @@ describe('Display topic use case (UI flow)', () => {
 
     cy.contains('Wyloguj się').click();
   });
+ 
+  it('logs in through UI, student displays a topic in submision', () => {
+    const STUDENT_EMAIL = 'anna.nowak.234567@pwr.edu.pl';
+    const TOPIC_NAME = 'Architektura mikroserwisów w chmurze';
 
+    cy.visit('/');
 
-  it('logs in through UI, student joins a topic, student withdraws the topic', () => {
+    cy.contains(STUDENT_EMAIL).click();
+    cy.contains('button', /^Zaloguj/i).click();
+
+    cy.url().should('include', '/topics');
+
+    cy.contains(TOPIC_NAME)
+      .closest('tr')
+      .within(() => {
+        cy.contains('Wyświetl').click();
+      });
+
+    cy.contains('button', 'Podpisz');
+  
+    cy.contains('Wyloguj się').click();
+  });
+
+  it('logs in through UI, student displays a topic in submision', () => {
+    const STUDENT_EMAIL = 'patrycja.kubiak.345688@pwr.edu.pl';
+    const TOPIC_NAME = 'Machine Learning dla detekcji oszustw';
+
+    cy.visit('/');
+
+    cy.contains(STUDENT_EMAIL).click();
+    cy.contains('button', /^Zaloguj/i).click();
+
+    cy.url().should('include', '/topics');
+
+    cy.contains(TOPIC_NAME)
+      .closest('tr')
+      .within(() => {
+        cy.contains('Wyświetl').click();
+      });
+
+    cy.contains(TOPIC_NAME).should('be.visible'); 
+    cy.contains('button', 'Zatwierdź').should('not.exist');
+    cy.contains('button', 'Odrzuć').should('not.exist');
+    cy.contains('button', 'Edytuj').should('not.exist');
+    cy.contains('button', 'Podpisz').should('not.exist');
+    cy.contains('button', 'Zatwierdź').should('not.exist');
+    cy.contains('button', 'Odrzuć').should('not.exist');
+    // reszta...
+    cy.contains('button', 'Zobacz opinię');
+  
+    cy.contains('Wyloguj się').click();
+  });
+
+  
+  
+  it('logs in through UI, student displays a topic in submision', () => {
+    const STUDENT_EMAIL = 'damian.kruk.390123@pwr.edu.pl';
+    const TOPIC_NAME = 'Zastosowanie blockchain w logistyce';
+
+    cy.visit('/');
+
+    cy.contains(STUDENT_EMAIL).click();
+    cy.contains('button', /^Zaloguj/i).click();
+
+    cy.url().should('include', '/topics');
+
+    cy.contains(TOPIC_NAME)
+      .closest('tr')
+      .within(() => {
+        cy.contains('Wyświetl').click();
+      });
+
+    cy.contains('button', 'Zobacz opinię').click();
+  
+    cy.contains('Wyloguj się').click();
+  });
+
+    it('logs in through UI, student displays an open topic', () => {
     const STUDENT_EMAIL = 'milena.polańska.589014@pwr.edu.pl';
     const TOPIC_NAME = 'Wpływ AI na procesy rekrutacyjne';
     cy.visit('/');
@@ -68,6 +143,7 @@ describe('Display topic use case (UI flow)', () => {
 
     cy.contains('Wyloguj się').click();
   });
+
 });
 
 
