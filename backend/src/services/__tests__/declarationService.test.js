@@ -52,11 +52,23 @@ describe("declarationService - signDeclaration", () => {
     await expect(signDeclaration("uuid", 1)).rejects.toBeInstanceOf(ValidationError);
   });
 
+  it("throws ValidationError when student not assigned to the topic", async () => {
+    prismaMock.topic.findUnique.mockResolvedValue({
+      topic_id: 1,
+      declaration: { declaration_id: 2, signatures: [] },
+      status: { status_name: STATUSES.PREPARING },
+      students: [{ user_id: 99, name: "Test Student" }]
+    });
+
+    await expect(signDeclaration("uuid", 1)).rejects.toBeInstanceOf(ValidationError);
+  });
+
   it("throws ValidationError when user already signed", async () => {
     prismaMock.topic.findUnique.mockResolvedValue({
       topic_id: 1,
       declaration: { declaration_id: 2, signatures: [{ user_id: 5 }] },
-      status: { status_name: STATUSES.PREPARING }
+      status: { status_name: STATUSES.PREPARING },
+      students: [ { user_id: 5, name: "Test Student" } ]
     });
 
     await expect(signDeclaration("uuid", 5)).rejects.toBeInstanceOf(ValidationError);
@@ -68,7 +80,9 @@ describe("declarationService - signDeclaration", () => {
       topic_id: 1,
       declaration: { declaration_id: 2, signatures: [{ user_id: 9 }, { user_id: 8 }] },
       status: { status_name: STATUSES.PREPARING },
-      _count: { students: 5 }
+      students: [ { user_id: 8, name: "Test Student 1" }, { user_id: 9, name: "Test Student 2" },
+        { user_id: 7, name: "Test Student 3" }, { user_id: 6, name: "Test Student 4" }
+       ]
     });
 
     prismaMock.signature.create.mockResolvedValue({});
@@ -91,7 +105,9 @@ describe("declarationService - signDeclaration", () => {
       topic_id: 1,
       declaration: { declaration_id: 2, signatures: [{ user_id: 9 }, { user_id: 8 }] },
       status: { status_name: STATUSES.PREPARING },
-      _count: { students: 3 }
+      students: [ { user_id: 8, name: "Test Student 1" }, { user_id: 9, name: "Test Student 2" },
+        { user_id: 7, name: "Test Student 3" }
+       ]
     });
 
     prismaMock.signature.create.mockResolvedValue({});

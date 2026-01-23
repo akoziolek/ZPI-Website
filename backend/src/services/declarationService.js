@@ -33,7 +33,7 @@ export async function signDeclaration(topicUuid, userId) {
         where: { uuid: topicUuid },
         include: { 
             status: true, 
-            _count: { select: { students: true } }, 
+            students: true,
             declaration: { include: { signatures: true }, }, 
         },
     });
@@ -43,11 +43,17 @@ export async function signDeclaration(topicUuid, userId) {
     }
 
     if (!topic.declaration) {
-        throw new NotFoundError("Declaration not foundN")
+        throw new NotFoundError("Declaration not found")
     }
 
     if (topic.status.status_name !== STATUSES.PREPARING) {
         throw new ValidationError("Topic must be in 'W przygotowaniu do słożenia wniosku' status to be signed");
+    }
+
+    const assignedStudent = topic.students.some((student) => student.user_id === userId)
+
+    if (!assignedStudent) {
+        throw new ValidationError("Student must be assigned to topic to sign it");
     }
 
     const declarationId = topic.declaration.declaration_id
@@ -60,10 +66,10 @@ export async function signDeclaration(topicUuid, userId) {
 
     await createSignature(userId, declarationId);
 
-    const studentCount = topic._count.students
+    const studentCount = topic.students.length
     const signatureCount = topic.declaration.signatures.length // without just added signature
 
-    if ((studentCount-1) === signatureCount) {
+    if (studentCount === (signatureCount+1)) {
         const submittedStatus = await findStatus(STATUSES.SUBMITTED);
         if (submittedStatus) {
             await updateStatus(topicUuid, submittedStatus.status_id);

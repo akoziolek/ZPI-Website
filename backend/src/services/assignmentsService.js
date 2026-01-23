@@ -38,7 +38,10 @@ async function withdraw(userId) {
 export async function joinTopic(topicUuid, userId) {
     const topic = await prismaClient.topic.findUnique({
         where: { uuid: topicUuid },
-        include: { status: true, _count: { select: { students: true } } }
+        include: { 
+            status: true, 
+            students: true,
+        }
     });
 
     if (!topic) {
@@ -49,7 +52,16 @@ export async function joinTopic(topicUuid, userId) {
         throw new ValidationError("Topic must be in 'Otwarty' status to be joined");
     }
 
-    if (topic._count.students >= MAX_TOPIC_CAPACITY) {
+    const student = await prismaClient.student.findUnique({
+        where: { user_id: userId },
+    });
+    
+    if (student.topic_id != null) {
+        throw new ValidationError("Student must not be assigned to join a topic");
+    }
+
+    const studentCount = topic.students.length
+    if (studentCount >= MAX_TOPIC_CAPACITY) {
         throw new ValidationError("STUDENTS_LIMIT_REACHED")
     }
 
@@ -71,7 +83,10 @@ export async function joinTopic(topicUuid, userId) {
 export async function withdrawTopic(topicUuid, userId) {
     const topic = await prismaClient.topic.findUnique({
         where: { uuid: topicUuid },
-        include: { status: true }
+        include: { 
+            status: true,
+            students: true,
+        }
     });
 
     if (!topic) {
@@ -80,6 +95,12 @@ export async function withdrawTopic(topicUuid, userId) {
 
     if (topic.status.status_name !== STATUSES.OPEN) {
         throw new ValidationError("Topic must be in 'Otwarty' status to be joined");
+    }
+
+    const assignedStudent = topic.students.some((student) => student.user_id === userId)
+
+    if (!assignedStudent) {
+        throw new ValidationError("Student must be assigned to topic to withdraw from it");
     }
 
     await withdraw(userId);
