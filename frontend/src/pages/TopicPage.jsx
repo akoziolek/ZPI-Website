@@ -126,7 +126,7 @@ const TopicPage = () => {
 
               {topic.status_name === STATUSES.PREPARING && (
                 <div className="md:border-l md:border-gray-600 md:pl-12">
-                  <table className="w-full border-collapse table-fixed">
+                  <table data-testid="signatures-table" className="w-full border-collapse table-fixed">
                     <tbody>
                       <tr>
                         <th className="w-[140px] text-left align-top font-semibold py-2 pr-4 text-gray-600">
