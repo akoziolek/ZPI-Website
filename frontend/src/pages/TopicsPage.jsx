@@ -18,7 +18,6 @@ const TopicsPage = () => {
 
   const [navbarSearchInput, setNavbarSearchInput] = useState(searchParams.get('search') || '');
 
-  // Custom Hook z logiką
   const {
     filteredAndSortedTopics,
     sortConfig,
@@ -30,7 +29,6 @@ const TopicsPage = () => {
     setActiveSearch
   } = useTopicsLogic(topics, searchParams.get('search') || '');
 
-  // Pobieranie danych
   useEffect(() => {
     const loadTopics = async () => {
       try {
@@ -45,7 +43,6 @@ const TopicsPage = () => {
     loadTopics();
   }, [request]);
 
-  // Obsługa wyszukiwania w Navbarze
   const handleNavbarSearchSubmit = (searchTerm) => {
     setActiveSearch(searchTerm);
     if (searchTerm.trim()) {
@@ -73,7 +70,6 @@ const TopicsPage = () => {
       />
       
       <main className="flex flex-col py-6 sm:px-6 lg:px-8 flex-1">
-        {/* Nagłówek */}
         <div className="sm:mx-auto sm:w-full sm:max-w-6xl pl-4">
           <h2 className="mt-6 text-2xl font-extrabold text-gray-900">
             Tematy ZPI {ACADEMIC_YEAR} {activeSearch && (`- ${activeSearch}`)}
@@ -83,7 +79,6 @@ const TopicsPage = () => {
           </p>
         </div>
 
-        {/* Panel Filtrów */}
         <div className="flex flex-col items-end w-full mx-auto px-4 max-w-6xl"> 
           <TopicsFilterPanel 
             filters={filters}
@@ -92,7 +87,6 @@ const TopicsPage = () => {
           />
         </div>
 
-        {/* Tabela i Stany ładowania */}
         <div className="mx-auto max-w-6xl px-4 pl-8 w-full">
           {loading && (
             <div className="text-center text-gray-500 mt-8">Ładowanie tematów...</div>

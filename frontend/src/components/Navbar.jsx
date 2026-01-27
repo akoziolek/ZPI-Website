@@ -17,21 +17,18 @@ const Navbar = ({ searchValue, onSearchChange, onSearchSubmit, navigateOnSearch 
 
   const handleSearchChange = (value) => {
     if (searchValue !== undefined) {
-      // Controlled by parent
       if (onSearchChange) {
         onSearchChange(value);
       }
     } else {
-      // Local state for uncontrolled usage
       setLocalSearchValue(value);
     }
   };
 
   const handleSearchSubmit = (searchTerm) => {
     if (onSearchSubmit) {
-      onSearchSubmit(searchTerm); // custom search logic
+      onSearchSubmit(searchTerm); 
     } else if (navigateOnSearch) {
-      // Default behavior: navigate to topics page with search
       navigate(`/topics?search=${encodeURIComponent(searchTerm)}`);
     }
   };

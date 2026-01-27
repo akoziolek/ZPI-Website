@@ -17,7 +17,6 @@ export const authenticateToken = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        // Przekazujemy błąd do centralnego errorHandler
         next(error); 
     }
 };

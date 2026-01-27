@@ -8,12 +8,12 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    host: true,           // pozwala kontenerom na połączenie przez nazwę serwisu
-    hmr: true,           // wyłącz HMR dla testów Cypress
+    host: true,      
+    hmr: true,    
     cors: true,
     allowedHosts: [
-      'localhost',        // Dodaj konkretnie ten host
-      'frontend',         // Nazwa serwisu w dockerze
+      'localhost',     
+      'frontend',    
     ],
     
     watch: {

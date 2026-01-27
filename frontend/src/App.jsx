@@ -6,7 +6,6 @@ import {
   Outlet 
 } from 'react-router-dom';
 
-// Importy stron
 import LoginPage from './pages/LoginPage';
 import UserPage from './pages/UserPage';
 import ZPIPage from './pages/ZPIPage';
@@ -14,13 +13,11 @@ import TopicPage from './pages/TopicPage';
 import TopicsPage from './pages/TopicsPage';
 import OpinionFormPage from './pages/OpinionFormPage';
 
-// Importy komponentów i konfiguracji
 import ProtectedRoute from './components/ProtectedRoute';
 import NotificationContainer from './components/NotificationContainer';
 import AnnouncementModal from './components/AnnouncementModal';
 import { ROLES } from './config';
 
-// Importy Providerów i Contextu
 import { NotificationProvider } from './providers/NotificationProvider';
 import { ModalProvider } from './providers/ModalProvider';
 import { AuthProvider } from './providers/AuthProvider';
@@ -116,7 +113,6 @@ function App() {
     <NotificationProvider>
       <AuthProvider>
         <ModalProvider>
-            {/* Renderujemy AppContent, który ma dostęp do wszystkich contextów powyżej */}
             <AppContent />
         </ModalProvider>
       </AuthProvider>

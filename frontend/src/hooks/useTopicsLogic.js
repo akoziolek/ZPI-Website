@@ -34,7 +34,6 @@ export const useTopicsLogic = (topics, initialSearch = '') => {
     studentCount: { min: '', max: '' }
   });
 
-  // Stan dla wyszukiwania, który faktycznie filtruje listę
   const [activeSearch, setActiveSearch] = useState(initialSearch);
 
   const handleSort = (key) => {
@@ -69,14 +68,11 @@ export const useTopicsLogic = (topics, initialSearch = '') => {
   const filteredAndSortedTopics = useMemo(() => {
     if (!topics.length) return topics;
 
-    // 1. Filtrowanie
     let filtered = topics.filter(topic => {
-      // Status
       if (filters.status.length > 0 && !filters.status.includes(topic.status_name)) {
         return false;
       }
 
-      // Opiekun
       if (filters.supervisor.trim() !== "") {
         if (!topic.supervisor) return false;
         const searchLower = filters.supervisor.toLowerCase().trim();
@@ -84,7 +80,6 @@ export const useTopicsLogic = (topics, initialSearch = '') => {
         if (!supervisorFullName.includes(searchLower)) return false;
       }
 
-      // Wyszukiwarka tekstowa (Navbar)
       if (activeSearch) {
         const searchLower = activeSearch.toLowerCase();
         const nameMatch = topic.name?.toLowerCase().includes(searchLower);
@@ -96,7 +91,6 @@ export const useTopicsLogic = (topics, initialSearch = '') => {
         if (!nameMatch && !supervisorMatch && !statusMatch) return false;
       }
 
-      // Liczba studentów
       if (filters.studentCount.min || filters.studentCount.max) {
         const studentCount = topic.students?.length || 0;
         const minCount = filters.studentCount.min ? parseInt(filters.studentCount.min) : 0;
@@ -108,7 +102,6 @@ export const useTopicsLogic = (topics, initialSearch = '') => {
       return true;
     });
 
-    // 2. Sortowanie
     return filtered.sort((a, b) => {
       for (const config of sortConfig) {
         let aValue, bValue;

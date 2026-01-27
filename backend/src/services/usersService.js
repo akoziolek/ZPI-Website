@@ -87,6 +87,6 @@ export function formatUserResponse(user) {
         name: user.name,
         surname: user.surname,
         mail: user.mail,
-        role: user.role?.role_name || user.role // obsługa różnych formatów roli
+        role: user.role?.role_name || user.role
     };
 }

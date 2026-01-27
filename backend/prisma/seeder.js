@@ -307,7 +307,6 @@ async function main() {
 
   console.log('Seeded %d statuses', Object.keys(seededStatuses).length);
 
-  // czy usuwamy ?, czy tak jak wczesniej z upsert
   await prismaClient.$transaction([
     prismaClient.opinion.deleteMany(),
     prismaClient.signature.deleteMany(),
@@ -388,8 +387,8 @@ async function main() {
 
       await prismaClient.academicEmployee.create({
         data: {
-          user_id: user.user_id, // Zakładając, że user_id to @id w AcademicEmployee
-          academic_title_id: randomTitleId, // Po prostu przypisujesz ID lub null
+          user_id: user.user_id, 
+          academic_title_id: randomTitleId, 
         }
       });
       seededUsers.push(user);

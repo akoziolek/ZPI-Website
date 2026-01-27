@@ -11,7 +11,6 @@ export const useLogin = () => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // Ładowanie użytkowników do listy
   useEffect(() => {
     const loadUsers = async () => {
       try {
@@ -27,7 +26,6 @@ export const useLogin = () => {
     loadUsers();
   }, [backendUrl]);
 
-  // Funkcja logowania
   const executeLogin = async (selectedUser) => {
     try {
       setLoggingIn(true);
@@ -48,10 +46,10 @@ export const useLogin = () => {
       localStorage.setItem("user", JSON.stringify(data.user));
       setAuthContext(data.user);
       
-      return true; // Sukces
+      return true; 
     } catch (err) {
       setError(err.message);
-      return false; // Błąd
+      return false; 
     } finally {
       setLoggingIn(false);
     }

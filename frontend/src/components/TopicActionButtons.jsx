@@ -1,8 +1,6 @@
 import { TOPIC_ACTIONS_LABELS } from "../config";
 import { useTopicActions } from "../hooks/useTopicActionsHandlers.js";
 
-
-// DO SPRAWDZENIA + POPRAWIC UI
 const TopicActionButtons = ({ topic, signatures, isAssignedToAnyTopic }) => {
   const actions = useTopicActions(topic, signatures, isAssignedToAnyTopic);
   if (actions.length === 0) return null;

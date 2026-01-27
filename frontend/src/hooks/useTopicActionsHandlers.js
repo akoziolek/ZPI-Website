@@ -61,7 +61,7 @@ export const useTopicActionsHandlers = () => {
         refresh: false,
         actions: actions 
       }),
-  // ... reszta handlerów
+  // ... reszta handlerów (inne use-case)
   };
 };
 

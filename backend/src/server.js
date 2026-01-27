@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import studentRoutes from "./routes/students.js"  // import routera
+import studentRoutes from "./routes/students.js" 
 import topicRoutes from "./routes/topics.js";
 import academicEmployeesRoutes from "./routes/academicEmployees.js";
 import opinionsRoutes from "./routes/opinions.js";
@@ -19,7 +19,7 @@ const BACKEND_PORT = process.env.BACKEND_PORT;
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // Pozwala na przesyłanie ciasteczek/tokenów 
+  credentials: true 
 };
 
 app.use(express.json()); // parse HTTP body

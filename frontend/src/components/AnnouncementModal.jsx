@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
 import { TriangleAlert } from 'lucide-react'; 
 import { useNavigate } from 'react-router-dom';
-import { useModal } from '../contexts/ModalContext'; // Importujemy hook tutaj
+import { useModal } from '../contexts/ModalContext'; 
 
 const AnnouncementModal = () => {
-  // 1. Pobieramy stan z Contextu BEZPOŚREDNIO tutaj
   const { modalConfig, closeModal } = useModal();
   const { 
     isOpen, 
@@ -17,7 +16,6 @@ const AnnouncementModal = () => {
 
   const navigate = useNavigate();
 
-  // 2. Obsługa klawisza ESC
   useEffect(() => {
     const handleEsc = (e) => {
       if (!isBlocking && isOpen && e.key === 'Escape') {
@@ -30,12 +28,10 @@ const AnnouncementModal = () => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [isBlocking, isOpen, closeModal]);
 
-  // 3. Early return
   if (!isOpen) return null;
 
   const isWarning = type === 'warning';
 
-  // 4. Renderowanie UI
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-opacity"

@@ -8,7 +8,6 @@ async function verifyToken() {
   console.log(backendUrl);
   try {
     const data = await apiRequest(`${backendUrl}/auth/verify`);
-    // data jest już parsowane, np. { success: true, user: {...} }
     return data.user ?? null;
   } catch (error) {
     console.error("Token verification failed:", error);
@@ -37,19 +36,16 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const { showError, showInfo } = useNotification();
 
-  // Check authentication on app start
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
 
       if (token) {
         try {
-          // Verify token with backend
           const verifiedUser = await verifyToken();
           if (verifiedUser) {
             setUser(verifiedUser);
           } else {
-            // Token is invalid or expired
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             showError('Sesja wygasła. Zaloguj się ponownie.');
@@ -121,7 +117,6 @@ export const useLogin = () => {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // Ładowanie użytkowników do listy
   useEffect(() => {
     const loadUsers = async () => {
       try {
@@ -137,7 +132,6 @@ export const useLogin = () => {
     loadUsers();
   }, [backendUrl]);
 
-  // Funkcja logowania
   const executeLogin = async (selectedUser) => {
     try {
       setLoggingIn(true);
@@ -158,10 +152,10 @@ export const useLogin = () => {
       localStorage.setItem("user", JSON.stringify(data.user));
       setAuthContext(data.user);
       
-      return true; // Sukces
+      return true;
     } catch (err) {
       setError(err.message);
-      return false; // Błąd
+      return false; 
     } finally {
       setLoggingIn(false);
     }

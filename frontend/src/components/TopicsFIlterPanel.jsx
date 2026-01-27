@@ -6,7 +6,6 @@ const TopicsFilterPanel = ({ filters, setFilters, onClear }) => {
   const [showFilters, setShowFilters] = useState(false);
   const filterRef = useRef(null);
 
-  // Zamykanie przy kliknięciu na zewnątrz
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (filterRef.current && !filterRef.current.contains(e.target)) {
@@ -48,7 +47,6 @@ const TopicsFilterPanel = ({ filters, setFilters, onClear }) => {
           <div className="p-4">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Filtry</h3>
 
-            {/* Status */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
               <div className="space-y-2 max-h-34 overflow-y-auto">
@@ -66,7 +64,6 @@ const TopicsFilterPanel = ({ filters, setFilters, onClear }) => {
               </div>
             </div>
 
-            {/* Opiekun */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Opiekun</label>
               <input
@@ -78,7 +75,6 @@ const TopicsFilterPanel = ({ filters, setFilters, onClear }) => {
               />
             </div>
 
-            {/* Liczba studentów */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">Liczba studentów</label>
               <div className="flex gap-2">
