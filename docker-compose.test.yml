@@ -1,0 +1,56 @@
+services:
+  postgres-test: 
+    image: postgres:16
+    tmpfs:
+      - /var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB_TEST}
+      - POSTGRES_USER=${POSTGRES_USER_TEST}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_TEST}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER_TEST} -d ${POSTGRES_DB_TEST}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    environment:
+      - DATABASE_URL=${DATABASE_URL_TEST}
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL_TEST}
+      - FRONTEND_URL=${FRONTEND_URL_TEST}
+    depends_on:
+      - postgres-test
+    command: >
+      sh -c "npx prisma db push --force-reset && 
+          npx prisma db seed &&
+          echo ready > /tmp/seed-done &&
+          npm run start"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"] # Lub po prostu "/"
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+
+  frontend:
+    command: >
+      sh -c "npm run dev -- --host"
+    environment:
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL_TEST}
+      - FRONTEND_URL=${FRONTEND_URL_TEST}
+
+  cypress:
+    image: cypress/included:latest 
+    container_name: ZPI-cypress
+    depends_on:
+      - frontend
+      - backend
+    environment:
+      - CYPRESS_baseUrl=${FRONTEND_URL_TEST}
+    working_dir: /app
+    networks:
+      - internal
+    volumes:
+      - .:/app
+    entrypoint: >
+      sh -c "npx wait-on ${FRONTEND_URL_TEST} ${VITE_BACKEND_URL_TEST} && cypress run"

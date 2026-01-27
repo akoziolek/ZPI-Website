@@ -25,3 +25,12 @@ dist-ssr
 
 node_modules/
 .env
+
+
+**/generated
+
+# test output
+*.cy.js.mp4
+
+cypress/screenshots
+cypress/videos

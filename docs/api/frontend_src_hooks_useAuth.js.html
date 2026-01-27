@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: frontend/src/hooks/useAuth.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: frontend/src/hooks/useAuth.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState, useEffect, useCallback } from 'react';
+import { useNotification } from '../contexts/NotificationContext';
+import { apiRequest } from '../api/apiFetch';
+import { useAuthContext } from "../contexts/AuthContext";
+
+async function verifyToken() {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  console.log(backendUrl);
+  try {
+    const data = await apiRequest(`${backendUrl}/auth/verify`);
+    // data jest już parsowane, np. { success: true, user: {...} }
+    return data.user ?? null;
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return null;
+  }
+}
+
+/**
+ * React hook that provides authentication state and helpers.
+ *
+ * Returns the current authenticated user (or null), a loading flag while
+ * the initial verification runs, and helper methods to login/logout and
+ * handle token expiry. The hook performs a token verification on mount
+ * when a token is present in localStorage.
+ *
+ * @returns {{
+ *   user: Object|null,
+ *   loading: boolean,
+ *   login: function(Object): void,
+ *   logout: function(): void,
+ *   handleTokenExpired: function(): void
+ * }}
+ */
+export const useAuth = () => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { showError, showInfo } = useNotification();
+
+  // Check authentication on app start
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+
+      if (token) {
+        try {
+          // Verify token with backend
+          const verifiedUser = await verifyToken();
+          if (verifiedUser) {
+            setUser(verifiedUser);
+          } else {
+            // Token is invalid or expired
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showError('Sesja wygasła. Zaloguj się ponownie.');
+          }
+        } catch (error) {
+          console.error('Token verification failed:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          showError('Błąd weryfikacji sesji. Zaloguj się ponownie.');
+        }
+      }
+
+      setLoading(false);
+    };
+
+    checkAuth();
+  }, [showError]);
+
+  const login = useCallback((userData) => {
+    setUser(userData);
+    showInfo('Zalogowano pomyślnie!', 3000);
+  }, [showInfo]);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    showInfo('Wylogowano pomyślnie.', 3000);
+  }, [showInfo]);
+
+  const handleTokenExpired = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    showError('Sesja wygasła. Zaloguj się ponownie.');
+  }, [showError]);
+
+  return {
+    user,
+    loading,
+    login,
+    logout,
+    handleTokenExpired
+  };
+};
+
+/**
+ * Hook used on the login page to fetch available demo users and execute
+ * a login flow for a selected user.
+ *
+ * The hook fetches the list of users from the backend on mount and
+ * exposes `executeLogin(selectedUser)` which performs the POST /auth/login
+ * request, stores tokens in localStorage and updates the AuthContext.
+ *
+ * @returns {{
+ *   users: Array&lt;Object>,
+ *   loadingUsers: boolean,
+ *   loggingIn: boolean,
+ *   error: string,
+ *   executeLogin: function(Object): Promise&lt;boolean>
+ * }}
+ */
+export const useLogin = () => {
+  const { login: setAuthContext } = useAuthContext();
+  const [users, setUsers] = useState([]);
+  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [error, setError] = useState("");
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  // Ładowanie użytkowników do listy
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        const res = await fetch(`${backendUrl}/users`);
+        const json = await res.json();
+        setUsers(json.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+    loadUsers();
+  }, [backendUrl]);
+
+  // Funkcja logowania
+  const executeLogin = async (selectedUser) => {
+    try {
+      setLoggingIn(true);
+      setError("");
+      localStorage.removeItem("token");
+
+      const data = await apiRequest(
+        `${backendUrl}/auth/login`,
+        {
+          method: "POST",
+          body: JSON.stringify({ mail: selectedUser.mail }),
+          credentials: "include",
+        },
+        () => {}
+      );
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setAuthContext(data.user);
+      
+      return true; // Sukces
+    } catch (err) {
+      setError(err.message);
+      return false; // Błąd
+    } finally {
+      setLoggingIn(false);
+    }
+  };
+
+  return { users, loadingUsers, loggingIn, error, executeLogin };
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

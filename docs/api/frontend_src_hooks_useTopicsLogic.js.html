@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: frontend/src/hooks/useTopicsLogic.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: frontend/src/hooks/useTopicsLogic.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState, useMemo } from 'react';
+
+/**
+ * Hook that implements client-side filtering and sorting logic for a
+ * list of topics.
+ *
+ * - `topics` is the source array of topic DTOs.
+ * - `initialSearch` seeds the internal search field.
+ *
+ * Returns the filtered+sorted topics and handlers to control sorting and
+ * filtering state.
+ *
+ * @param {Array&lt;Object>} topics - Array of topic objects to process.
+ * @param {string} [initialSearch=''] - Optional initial search string.
+ * @returns {{
+ *   filteredAndSortedTopics: Array&lt;Object>,
+ *   sortConfig: Array&lt;Object>,
+ *   handleSort: function(string): void,
+ *   filters: Object,
+ *   setFilters: function(Object): void,
+ *   clearFilters: function(): void,
+ *   activeSearch: string,
+ *   setActiveSearch: function(string): void
+ * }}
+ */
+export const useTopicsLogic = (topics, initialSearch = '') => {
+  const [sortConfig, setSortConfig] = useState([
+    { key: 'name', direction: 'asc' }
+  ]);
+  
+  const [filters, setFilters] = useState({
+    status: [],
+    supervisor: '',
+    studentCount: { min: '', max: '' }
+  });
+
+  // Stan dla wyszukiwania, który faktycznie filtruje listę
+  const [activeSearch, setActiveSearch] = useState(initialSearch);
+
+  const handleSort = (key) => {
+    setSortConfig(prevConfig => {
+      const existingConfig = prevConfig.find(config => config.key === key);
+      
+      if (existingConfig) {
+        if (existingConfig.direction === 'asc') {
+          return prevConfig.map(config => 
+            config.key === key 
+              ? { ...config, direction: 'desc' }
+              : config
+          );
+        } else {
+          return prevConfig.filter(config => config.key !== key);
+        }
+      } else {
+        return [{ key, direction: 'asc' }];
+      }
+    });
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      status: [],
+      supervisor: '',
+      studentCount: { min: '', max: '' }
+    });
+    setActiveSearch('');
+  };
+
+  const filteredAndSortedTopics = useMemo(() => {
+    if (!topics.length) return topics;
+
+    // 1. Filtrowanie
+    let filtered = topics.filter(topic => {
+      // Status
+      if (filters.status.length > 0 &amp;&amp; !filters.status.includes(topic.status_name)) {
+        return false;
+      }
+
+      // Opiekun
+      if (filters.supervisor.trim() !== "") {
+        if (!topic.supervisor) return false;
+        const searchLower = filters.supervisor.toLowerCase().trim();
+        const supervisorFullName = `${topic.supervisor.name} ${topic.supervisor.surname}`.toLowerCase();
+        if (!supervisorFullName.includes(searchLower)) return false;
+      }
+
+      // Wyszukiwarka tekstowa (Navbar)
+      if (activeSearch) {
+        const searchLower = activeSearch.toLowerCase();
+        const nameMatch = topic.name?.toLowerCase().includes(searchLower);
+        const supervisorMatch = topic.supervisor 
+          ? `${topic.supervisor.name} ${topic.supervisor.surname}`.toLowerCase().includes(searchLower)
+          : false;
+        const statusMatch = topic.status_name?.toLowerCase().includes(searchLower);
+
+        if (!nameMatch &amp;&amp; !supervisorMatch &amp;&amp; !statusMatch) return false;
+      }
+
+      // Liczba studentów
+      if (filters.studentCount.min || filters.studentCount.max) {
+        const studentCount = topic.students?.length || 0;
+        const minCount = filters.studentCount.min ? parseInt(filters.studentCount.min) : 0;
+        const maxCount = filters.studentCount.max ? parseInt(filters.studentCount.max) : Infinity;
+        
+        if (studentCount &lt; minCount || studentCount > maxCount) return false;
+      }
+
+      return true;
+    });
+
+    // 2. Sortowanie
+    return filtered.sort((a, b) => {
+      for (const config of sortConfig) {
+        let aValue, bValue;
+
+        switch (config.key) {
+          case 'name':
+            aValue = a.name?.toLowerCase() || '';
+            bValue = b.name?.toLowerCase() || '';
+            break;
+          case 'status_name':
+            aValue = a.status_name?.toLowerCase() || '';
+            bValue = b.status_name?.toLowerCase() || '';
+            break;
+          case 'supervisor':
+            aValue = a.supervisor ? `${a.supervisor.name} ${a.supervisor.surname}`.toLowerCase() : '';
+            bValue = b.supervisor ? `${b.supervisor.name} ${b.supervisor.surname}`.toLowerCase() : '';
+            break;
+          case 'students':
+            aValue = a.students?.length || 0;
+            bValue = b.students?.length || 0;
+            break;
+          default:
+            aValue = '';
+            bValue = '';
+        }
+
+        if (aValue &lt; bValue) return config.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return config.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [topics, sortConfig, filters, activeSearch]);
+
+  return {
+    filteredAndSortedTopics,
+    sortConfig,
+    handleSort,
+    filters,
+    setFilters,
+    clearFilters,
+    activeSearch,
+    setActiveSearch
+  };
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
