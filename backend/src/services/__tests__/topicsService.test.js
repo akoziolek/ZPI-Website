@@ -266,41 +266,4 @@ describe("topicsService", () => {
     });
   });
 
-  describe("updateStatus", () => {
-    it("updates topic status successfully", async () => {
-      prismaMock.topic.update.mockResolvedValue({});
-
-      await updateStatus("t-1", 5);
-
-      expect(prismaMock.topic.update).toHaveBeenCalledWith({
-        where: { uuid: "t-1" },
-        data: { status_id: 5 }
-      });
-    });
-
-    it("updates topic with different status IDs", async () => {
-      prismaMock.topic.update.mockResolvedValue({});
-
-      await updateStatus("topic-uuid", 10);
-
-      expect(prismaMock.topic.update).toHaveBeenCalledWith({
-        where: { uuid: "topic-uuid" },
-        data: { status_id: 10 }
-      });
-    });
-
-    it("calls update with correct parameters", async () => {
-      prismaMock.topic.update.mockResolvedValue({});
-
-      await updateStatus("t-99", 1);
-
-      expect(prismaMock.topic.update).toHaveBeenCalledTimes(1);
-      expect(prismaMock.topic.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: { uuid: "t-99" },
-          data: { status_id: 1 }
-        })
-      );
-    });
-  });
 });

@@ -1,6 +1,17 @@
 import { STATUSES } from "../../frontend/src/config";
 
 describe('Display topic use case (UI flow)', () => {
+  const checkIfNoExtraButtons = (expectedButtons) => {
+    cy.get('[data-testid="action-bar"]')
+      .find('button') 
+      .should('have.length', expectedButtons.length) 
+      .then(($buttons) => {
+        const buttonTexts = [...$buttons].map(btn => btn.innerText.trim());
+
+        expect(buttonTexts).to.deep.equal(expectedButtons);
+      });
+  }
+
   it('logs in through UI, user displays a topic', () => {
     const USER_EMAIL = 'adam.kot.2@pwr.edu.pl';
     const TOPIC_NAME = 'Analiza wydajności aplikacji webowych';
@@ -33,6 +44,7 @@ describe('Display topic use case (UI flow)', () => {
     cy.contains('button', 'Zatwierdź').should('be.visible');
 
     cy.contains('button', 'Odrzuć').should('be.visible');
+    checkIfNoExtraButtons(['Wróć', 'Zatwierdź', 'Odrzuć']);
 
     cy.contains('Wyloguj się').click();
   });
@@ -55,11 +67,12 @@ describe('Display topic use case (UI flow)', () => {
       });
 
     cy.contains('button', 'Podpisz');
+    checkIfNoExtraButtons(['Wróć', 'Podpisz']);
   
     cy.contains('Wyloguj się').click();
   });
 
-  it('logs in through UI, student displays a topic in submision', () => {
+  it('logs in through UI, student displays an approved topic', () => {
     const STUDENT_EMAIL = 'patrycja.kubiak.345688@pwr.edu.pl';
     const TOPIC_NAME = 'Machine Learning dla detekcji oszustw';
 
@@ -79,24 +92,14 @@ describe('Display topic use case (UI flow)', () => {
     cy.contains(TOPIC_NAME).should('be.visible'); 
     cy.contains('button', 'Zobacz opinię');
 
-    // wyniesc te funkce wyzej
-    const EXPECTED_BUTTONS = ['Wróć', 'Zobacz opinię'];
-
-    cy.get('[data-testid="action-bar"]')
-      .find('button') 
-      .should('have.length', EXPECTED_BUTTONS.length) 
-      .then(($buttons) => {
-        const buttonTexts = [...$buttons].map(btn => btn.innerText.trim());
-
-        expect(buttonTexts).to.deep.equal(EXPECTED_BUTTONS);
-      });
+    checkIfNoExtraButtons(['Wróć', 'Zobacz opinię']);
   
     cy.contains('Wyloguj się').click();
   });
 
   
   
-  it('logs in through UI, student displays a topic in submision', () => {
+  it('logs in through UI, student displays a rejected topic', () => {
     const STUDENT_EMAIL = 'damian.kruk.390123@pwr.edu.pl';
     const TOPIC_NAME = 'Zastosowanie blockchain w logistyce';
 
@@ -114,6 +117,7 @@ describe('Display topic use case (UI flow)', () => {
       });
 
     cy.contains('button', 'Zobacz opinię').click();
+    checkIfNoExtraButtons(['Wróć', 'Zobacz opinię']);
   
     cy.contains('Wyloguj się').click();
   });
@@ -135,12 +139,14 @@ describe('Display topic use case (UI flow)', () => {
       });
 
     cy.contains('button', 'Zapisz się').click();
+    checkIfNoExtraButtons(['Wróć', 'Zapisz się']);
 
     cy.contains('Dopisano do tematu!').should('be.visible');
 
     cy.contains('button', 'Zamknij').click();
 
     cy.contains('button', 'Wypisz się').click();
+    checkIfNoExtraButtons(['Wróć', 'Wypisz się']);
 
     cy.contains('Wypisano się z tematu!').should('be.visible');
 
