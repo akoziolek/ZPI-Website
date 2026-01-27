@@ -66,7 +66,7 @@ export async function signDeclaration(topicUuid, userId) {
 
     await createSignature(userId, declarationId);
 
-    const studentCount = topic._count.students
+    const studentCount = topic.students.length
     const signatureCount = topic.declaration.signatures.length 
 
     if (studentCount === (signatureCount+1)) {
