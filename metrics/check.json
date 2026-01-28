@@ -1,0 +1,452 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "qlty",
+          "informationUri": "https://github.com/qlty/qlty",
+          "semanticVersion": "0.606.0",
+          "version": "0.606.0 linux-x64 (17e2172 2025-12-30)",
+          "releaseDateUtc": "2025-12-30",
+          "rules": [
+            {
+              "id": "radarlint-js:javascript:S1854"
+            },
+            {
+              "id": "radarlint-js:javascript:S1481"
+            },
+            {
+              "id": "radarlint-js:javascript:S6582"
+            },
+            {
+              "id": "radarlint-js:javascript:S1128"
+            },
+            {
+              "id": "radarlint-js:javascript:S1125"
+            },
+            {
+              "id": "radarlint-js:javascript:S1788"
+            },
+            {
+              "id": "radarlint-js:javascript:S905"
+            },
+            {
+              "id": "radarlint-js:javascript:S3776"
+            }
+          ],
+          "notifications": [
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran trivy in 1.95s [Gml296]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran trivy in 1.95s [Gml296]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "radarlint-js:javascript:S1854",
+          "level": "warning",
+          "message": {
+            "text": "Remove this useless assignment to variable \"teachingSupervisors\"."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/prisma/seeder.js"
+                },
+                "region": {
+                  "startLine": 402,
+                  "startColumn": 9,
+                  "endLine": 402,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S1481",
+          "level": "note",
+          "message": {
+            "text": "Remove the declaration of the unused 'teachingSupervisors' variable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/prisma/seeder.js"
+                },
+                "region": {
+                  "startLine": 402,
+                  "startColumn": 9,
+                  "endLine": 402,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S1854",
+          "level": "warning",
+          "message": {
+            "text": "Remove this useless assignment to variable \"studentsSupervisors\"."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/prisma/seeder.js"
+                },
+                "region": {
+                  "startLine": 403,
+                  "startColumn": 9,
+                  "endLine": 403,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S1481",
+          "level": "note",
+          "message": {
+            "text": "Remove the declaration of the unused 'studentsSupervisors' variable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/prisma/seeder.js"
+                },
+                "region": {
+                  "startLine": 403,
+                  "startColumn": 9,
+                  "endLine": 403,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S6582",
+          "level": "note",
+          "message": {
+            "text": "Prefer using an optional chain expression instead, as it's more concise and easier to read."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/middleware/auth.js"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 23,
+                  "endLine": 8,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S1128",
+          "level": "note",
+          "message": {
+            "text": "Remove this unused import of 'MAX_TOPIC_CAPACITY'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/services/__tests__/assignmentsService.test.js"
+                },
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 20,
+                  "endLine": 15,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S1128",
+          "level": "note",
+          "message": {
+            "text": "Remove this unused import of 'updateStatus'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/services/__tests__/topicsService.test.js"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 55,
+                  "endLine": 12,
+                  "endColumn": 67
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S1125",
+          "level": "note",
+          "message": {
+            "text": "Refactor the code to avoid using this boolean literal."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/services/opinionsService.js"
+                },
+                "region": {
+                  "startLine": 44,
+                  "startColumn": 37,
+                  "endLine": 44,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S6582",
+          "level": "note",
+          "message": {
+            "text": "Prefer using an optional chain expression instead, as it's more concise and easier to read."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/services/signaturesService.js"
+                },
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 7,
+                  "endLine": 56,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S6582",
+          "level": "note",
+          "message": {
+            "text": "Prefer using an optional chain expression instead, as it's more concise and easier to read."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "docs/api/scripts/linenumber.js"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 9,
+                  "endLine": 11,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S1788",
+          "level": "warning",
+          "message": {
+            "text": "Default parameters should be last."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/api/apiFetch.js"
+                },
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 39,
+                  "endLine": 16,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S905",
+          "level": "warning",
+          "message": {
+            "text": "Expected an assignment or function call and instead saw an expression."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/config.js"
+                },
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 7,
+                  "endLine": 34,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S3776",
+          "level": "error",
+          "message": {
+            "text": "Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicsLogic.js"
+                },
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 40,
+                  "endLine": 71,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        },
+        {
+          "ruleId": "radarlint-js:javascript:S3776",
+          "level": "error",
+          "message": {
+            "text": "Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicsLogic.js"
+                },
+                "region": {
+                  "startLine": 105,
+                  "startColumn": 33,
+                  "endLine": 105,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

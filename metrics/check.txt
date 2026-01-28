@@ -1,0 +1,42 @@
+
+ ISSUES: 17 
+
+backend/Dockerfile:1:1
+    1:1  high    Specify at least 1 USER command in Dockerfile with non-root user as argument  trivy:DS002
+    1:1  low     Add HEALTHCHECK instruction in your Dockerfile                                trivy:DS026
+
+backend/prisma/seeder.js:402:402
+402:402  medium  Remove this useless assignment to variable "teachingSupervisors".     radarlint-js:javascript:S1854
+402:402  low     Remove the declaration of the unused 'teachingSupervisors' variable.  radarlint-js:javascript:S1481
+403:403  medium  Remove this useless assignment to variable "studentsSupervisors".     radarlint-js:javascript:S1854
+403:403  low     Remove the declaration of the unused 'studentsSupervisors' variable.  radarlint-js:javascript:S1481
+
+backend/src/middleware/auth.js:8:8
+    8:8  low     Prefer using an optional chain expression instead, as it's more concise and easier to read.  radarlint-js:javascript:S6582
+
+backend/src/services/__tests__/assignmentsService.test.js:15:15
+  15:15  low     Remove this unused import of 'MAX_TOPIC_CAPACITY'.  radarlint-js:javascript:S1128
+
+backend/src/services/__tests__/topicsService.test.js:12:12
+  12:12  low     Remove this unused import of 'updateStatus'.  radarlint-js:javascript:S1128
+
+backend/src/services/opinionsService.js:44:44
+  44:44  low     Refactor the code to avoid using this boolean literal.  radarlint-js:javascript:S1125
+
+backend/src/services/signaturesService.js:56:56
+  56:56  low     Prefer using an optional chain expression instead, as it's more concise and easier to read.  radarlint-js:javascript:S6582
+
+frontend/Dockerfile:1:1
+    1:1  high    Specify at least 1 USER command in Dockerfile with non-root user as argument  trivy:DS002
+    1:1  low     Add HEALTHCHECK instruction in your Dockerfile                                trivy:DS026
+
+frontend/src/api/apiFetch.js:16:16
+  16:16  medium  Default parameters should be last.  radarlint-js:javascript:S1788
+
+frontend/src/config.js:34:34
+  34:34  medium  Expected an assignment or function call and instead saw an expression.  radarlint-js:javascript:S905
+
+frontend/src/hooks/useTopicsLogic.js:71:71
+  71:71  high    Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.  radarlint-js:javascript:S3776
+105:105  high    Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.  radarlint-js:javascript:S3776
+

@@ -1,0 +1,343 @@
+
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "qlty",
+          "informationUri": "https://github.com/qlty/qlty",
+          "semanticVersion": "0.606.0",
+          "version": "0.606.0 linux-x64 (17e2172 2025-12-30)",
+          "releaseDateUtc": "2025-12-30",
+          "rules": [
+            {
+              "id": "qlty:return-statements"
+            },
+            {
+              "id": "qlty:file-complexity"
+            },
+            {
+              "id": "qlty:function-complexity"
+            },
+            {
+              "id": "qlty:similar-code"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "qlty:return-statements",
+          "level": "warning",
+          "message": {
+            "text": "Function with many returns (count = 9): NotificationItem"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/components/NotificationContainer.jsx"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 1,
+                  "endLine": 48,
+                  "endColumn": 3,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        },
+        {
+          "ruleId": "qlty:return-statements",
+          "level": "warning",
+          "message": {
+            "text": "Function with many returns (count = 12): useTopicsLogic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicsLogic.js"
+                },
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 8,
+                  "endLine": 148,
+                  "endColumn": 3,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        },
+        {
+          "ruleId": "qlty:file-complexity",
+          "level": "warning",
+          "message": {
+            "text": "High total complexity (count = 52)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicsLogic.js"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 149,
+                  "endColumn": 1,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "file.path": "frontend/src/hooks/useTopicsLogic.js"
+          },
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        },
+        {
+          "ruleId": "qlty:function-complexity",
+          "level": "warning",
+          "message": {
+            "text": "Function with high complexity (count = 52): useTopicsLogic"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicsLogic.js"
+                },
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 8,
+                  "endLine": 148,
+                  "endColumn": 3,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "function.name": "useTopicsLogic"
+          },
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        },
+        {
+          "ruleId": "qlty:return-statements",
+          "level": "warning",
+          "message": {
+            "text": "Function with many returns (count = 12): useTopicActions"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicActionsHandlers.js"
+                },
+                "region": {
+                  "startLine": 78,
+                  "startColumn": 8,
+                  "endLine": 125,
+                  "endColumn": 3,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        },
+        {
+          "ruleId": "qlty:return-statements",
+          "level": "warning",
+          "message": {
+            "text": "Function with many returns (count = 9): isActionAllowed"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicActionsHandlers.js"
+                },
+                "region": {
+                  "startLine": 93,
+                  "startColumn": 5,
+                  "endLine": 114,
+                  "endColumn": 7,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        },
+        {
+          "ruleId": "qlty:return-statements",
+          "level": "warning",
+          "message": {
+            "text": "Function with many returns (count = 8): errorHandler"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/middleware/errorHandler.js"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 8,
+                  "endLine": 86,
+                  "endColumn": 3,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        },
+        {
+          "ruleId": "qlty:similar-code",
+          "level": "warning",
+          "message": {
+            "text": "Found 55 lines of similar code in 2 locations (mass = 252)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useAuth.js"
+                },
+                "region": {
+                  "startLine": 111,
+                  "startColumn": 0,
+                  "endLine": 165,
+                  "endColumn": 0,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useLogin.js"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 0,
+                  "endLine": 59,
+                  "endColumn": 0
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "duplication",
+              "name": "duplication"
+            }
+          ],
+          "properties": {
+            "identical": false,
+            "mass": 252.0,
+            "structural_hash": "0015bdf77515e53934a56ef7386469cb",
+            "node_kind": "export_statement"
+          }
+        },
+        {
+          "ruleId": "qlty:similar-code",
+          "level": "warning",
+          "message": {
+            "text": "Found 55 lines of similar code in 2 locations (mass = 252)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useLogin.js"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 0,
+                  "endLine": 59,
+                  "endColumn": 0,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useAuth.js"
+                },
+                "region": {
+                  "startLine": 111,
+                  "startColumn": 0,
+                  "endLine": 165,
+                  "endColumn": 0
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "duplication",
+              "name": "duplication"
+            }
+          ],
+          "properties": {
+            "mass": 252.0,
+            "node_kind": "export_statement",
+            "identical": false,
+            "structural_hash": "0015bdf77515e53934a56ef7386469cb"
+          }
+        }
+      ]
+    }
+  ]
+}

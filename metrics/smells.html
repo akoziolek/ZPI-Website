@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- This file was created with the aha Ansi HTML Adapter. https://github.com/theZiz/aha -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="application/xml+xhtml; charset=UTF-8"/>
+<title>aaa</title>
+<style type="text/css">
+.reset       {color: black;}
+body         {background-color: black; color: white;}
+.bg-reset    {background-color: white;}
+.inverted    {color: white;}
+.bg-inverted {background-color: black;}
+.dimgray     {color: dimgray;}
+.red         {color: red;}
+.green       {color: green;}
+.yellow      {color: olive;}
+.blue        {color: blue;}
+.purple      {color: purple;}
+.cyan        {color: teal;}
+.white       {color: gray;}
+.bg-black    {background-color: black;}
+.bg-red      {background-color: red;}
+.bg-green    {background-color: green;}
+.bg-yellow   {background-color: olive;}
+.bg-blue     {background-color: blue;}
+.bg-purple   {background-color: purple;}
+.bg-cyan     {background-color: teal;}
+.bg-white    {background-color: gray;}
+.underline   {text-decoration: underline;}
+.bold        {font-weight: bold;}
+.italic      {font-style: italic;}
+.blink       {text-decoration: blink;}
+.crossed-out {text-decoration: line-through;}
+.highlighted {filter: contrast(70%) brightness(190%);}
+</style>
+</head>
+<body>
+<pre>
+
+
+backend/src/middleware/errorHandler.js
+    Function with many returns (count = 8): errorHandler
+
+           3  <span class="" style="background-color:#000000;"></span><span class="" style="color:#cc99cc;background-color:#000000;">export</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">errorHandler</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = (err, req, res, next) </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+           4      console.</span><span class="" style="color:#66cccc;background-color:#000000;">error</span><span class="" style="color:#d3d0c8;background-color:#000000;">(</span><span class="" style="color:#f2777a;background-color:#000000;">err</span><span class="" style="color:#d3d0c8;background-color:#000000;">.stack);
+           5  
+           6      </span><span class="" style="color:#747369;background-color:#000000;">// custom AppError instances
+           7  </span><span class="" style="color:#d3d0c8;background-color:#000000;">    </span><span class="" style="color:#cc99cc;background-color:#000000;">if</span><span class="" style="color:#d3d0c8;background-color:#000000;"> (</span><span class="" style="color:#f2777a;background-color:#000000;">err</span><span class="" style="color:#d3d0c8;background-color:#000000;"> instanceof </span><span class="" style="color:#f2777a;background-color:#000000;">AppError</span><span class="" style="color:#d3d0c8;background-color:#000000;">) {
+           8          </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#f2777a;background-color:#000000;">statusCode</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = </span><span class="" style="color:#f2777a;background-color:#000000;">err</span><span class="" style="color:#d3d0c8;background-color:#000000;">.statusCode || </span><span class="" style="color:#f99157;background-color:#000000;">500</span><span class="" style="color:#d3d0c8;background-color:#000000;">;
+              [hid 78 additional lines]
+
+
+frontend/src/components/NotificationContainer.jsx
+    Function with many returns (count = 9): NotificationItem
+
+           5  const NotificationItem = ({ notification, onRemove }) =&gt; {
+           6    const getIcon = (type) =&gt; {
+           7      switch (type) {
+           8        case 'success':
+           9          return &lt;CheckCircle className=&quot;w-5 h-5 text-green-500&quot; /&gt;;
+          10        case 'error':
+              [hid 38 additional lines]
+
+
+frontend/src/hooks/useAuth.js
+    Found 55 lines of similar code in 2 locations (mass = 252)
+
+         111  </span><span class="" style="color:#cc99cc;background-color:#000000;">export</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">useLogin</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = () </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+         112    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> { login: </span><span class="" style="color:#f2777a;background-color:#000000;">setAuthContext</span><span class="" style="color:#d3d0c8;background-color:#000000;"> } = </span><span class="" style="color:#6699cc;background-color:#000000;">useAuthContext</span><span class="" style="color:#d3d0c8;background-color:#000000;">();
+         113    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">users</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setUsers</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">([]);
+         114    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">loadingUsers</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setLoadingUsers</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">(</span><span class="" style="color:#f99157;background-color:#000000;">true</span><span class="" style="color:#d3d0c8;background-color:#000000;">);
+         115    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">loggingIn</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setLoggingIn</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">(</span><span class="" style="color:#f99157;background-color:#000000;">false</span><span class="" style="color:#d3d0c8;background-color:#000000;">);
+         116    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">error</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setError</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">(&quot;&quot;);
+              [hid 49 additional lines]
+        also found at frontend/src/hooks/useLogin.js
+
+
+frontend/src/hooks/useLogin.js
+    Found 55 lines of similar code in 2 locations (mass = 252)
+
+           5  </span><span class="" style="color:#cc99cc;background-color:#000000;">export</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">useLogin</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = () </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+           6    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> { login: </span><span class="" style="color:#f2777a;background-color:#000000;">setAuthContext</span><span class="" style="color:#d3d0c8;background-color:#000000;"> } = </span><span class="" style="color:#6699cc;background-color:#000000;">useAuthContext</span><span class="" style="color:#d3d0c8;background-color:#000000;">();
+           7    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">users</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setUsers</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">([]);
+           8    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">loadingUsers</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setLoadingUsers</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">(</span><span class="" style="color:#f99157;background-color:#000000;">true</span><span class="" style="color:#d3d0c8;background-color:#000000;">);
+           9    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">loggingIn</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setLoggingIn</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">(</span><span class="" style="color:#f99157;background-color:#000000;">false</span><span class="" style="color:#d3d0c8;background-color:#000000;">);
+          10    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">error</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setError</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">(&quot;&quot;);
+              [hid 49 additional lines]
+        also found at frontend/src/hooks/useAuth.js
+
+
+frontend/src/hooks/useTopicActionsHandlers.js
+    Function with many returns (count = 12): useTopicActions
+
+          78  </span><span class="" style="color:#cc99cc;background-color:#000000;">export</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">useTopicActions</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = (topic, signatures, isAssignedToAnyTopic) </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+          79    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> { </span><span class="" style="color:#f2777a;background-color:#000000;">user</span><span class="" style="color:#d3d0c8;background-color:#000000;"> } = </span><span class="" style="color:#6699cc;background-color:#000000;">useAuthContext</span><span class="" style="color:#d3d0c8;background-color:#000000;">();
+          80    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#f2777a;background-color:#000000;">handlers</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = </span><span class="" style="color:#6699cc;background-color:#000000;">useTopicActionsHandlers</span><span class="" style="color:#d3d0c8;background-color:#000000;">(); 
+          81  
+          82    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#f2777a;background-color:#000000;">allowedActions</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = </span><span class="" style="color:#6699cc;background-color:#000000;">useMemo</span><span class="" style="color:#d3d0c8;background-color:#000000;">(() </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+          83      </span><span class="" style="color:#cc99cc;background-color:#000000;">if</span><span class="" style="color:#d3d0c8;background-color:#000000;"> (!</span><span class="" style="color:#f2777a;background-color:#000000;">topic</span><span class="" style="color:#d3d0c8;background-color:#000000;"> || !</span><span class="" style="color:#f2777a;background-color:#000000;">user</span><span class="" style="color:#d3d0c8;background-color:#000000;">) </span><span class="" style="color:#cc99cc;background-color:#000000;">return</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [];
+              [hid 42 additional lines]
+
+    Function with many returns (count = 9): isActionAllowed
+
+          93      </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">isActionAllowed</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = (actionId) </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+          94        </span><span class="" style="color:#cc99cc;background-color:#000000;">switch</span><span class="" style="color:#d3d0c8;background-color:#000000;"> (</span><span class="" style="color:#f2777a;background-color:#000000;">actionId</span><span class="" style="color:#d3d0c8;background-color:#000000;">) {
+          95          </span><span class="" style="color:#cc99cc;background-color:#000000;">case</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#ffcc66;background-color:#000000;">TOPIC_ACTIONS</span><span class="" style="color:#d3d0c8;background-color:#000000;">.JOIN:
+          96            </span><span class="" style="color:#cc99cc;background-color:#000000;">return</span><span class="" style="color:#d3d0c8;background-color:#000000;"> !</span><span class="" style="color:#f2777a;background-color:#000000;">isStudentTeamMember</span><span class="" style="color:#d3d0c8;background-color:#000000;"> &amp;&amp; !</span><span class="" style="color:#f2777a;background-color:#000000;">isAssignedToAnyTopic</span><span class="" style="color:#d3d0c8;background-color:#000000;">;
+          97          </span><span class="" style="color:#cc99cc;background-color:#000000;">case</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#ffcc66;background-color:#000000;">TOPIC_ACTIONS</span><span class="" style="color:#d3d0c8;background-color:#000000;">.WITHDRAW:
+          98            </span><span class="" style="color:#cc99cc;background-color:#000000;">return</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#f2777a;background-color:#000000;">isStudentTeamMember</span><span class="" style="color:#d3d0c8;background-color:#000000;">;
+              [hid 16 additional lines]
+
+
+frontend/src/hooks/useTopicsLogic.js
+    Function with many returns (count = 12): useTopicsLogic
+
+          26  </span><span class="" style="color:#cc99cc;background-color:#000000;">export</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">useTopicsLogic</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = (topics, initialSearch = '') </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+          27    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">sortConfig</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setSortConfig</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">([
+          28      { key: '</span><span class="" style="color:#99cc99;background-color:#000000;">name</span><span class="" style="color:#d3d0c8;background-color:#000000;">', direction: '</span><span class="" style="color:#99cc99;background-color:#000000;">asc</span><span class="" style="color:#d3d0c8;background-color:#000000;">' }
+          29    ]);
+          30    
+          31    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">filters</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setFilters</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">({
+              [hid 117 additional lines]
+
+    High total complexity (count = 52)
+
+           1  </span><span class="" style="color:#cc99cc;background-color:#000000;">import</span><span class="" style="color:#d3d0c8;background-color:#000000;"> { </span><span class="" style="color:#f2777a;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">useMemo</span><span class="" style="color:#d3d0c8;background-color:#000000;"> } </span><span class="" style="color:#cc99cc;background-color:#000000;">from</span><span class="" style="color:#d3d0c8;background-color:#000000;"> '</span><span class="" style="color:#99cc99;background-color:#000000;">react</span><span class="" style="color:#d3d0c8;background-color:#000000;">';
+           2  
+           3  </span><span class="" style="color:#747369;background-color:#000000;">/**
+           4   * Hook that implements client-side filtering and sorting logic for a
+           5   * list of topics.
+           6   *
+              [hid 143 additional lines]
+
+    Function with high complexity (count = 52): useTopicsLogic
+
+          26  </span><span class="" style="color:#cc99cc;background-color:#000000;">export</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">useTopicsLogic</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = (topics, initialSearch = '') </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+          27    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">sortConfig</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setSortConfig</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">([
+          28      { key: '</span><span class="" style="color:#99cc99;background-color:#000000;">name</span><span class="" style="color:#d3d0c8;background-color:#000000;">', direction: '</span><span class="" style="color:#99cc99;background-color:#000000;">asc</span><span class="" style="color:#d3d0c8;background-color:#000000;">' }
+          29    ]);
+          30    
+          31    </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> [</span><span class="" style="color:#f2777a;background-color:#000000;">filters</span><span class="" style="color:#d3d0c8;background-color:#000000;">, </span><span class="" style="color:#f2777a;background-color:#000000;">setFilters</span><span class="" style="color:#d3d0c8;background-color:#000000;">] = </span><span class="" style="color:#6699cc;background-color:#000000;">useState</span><span class="" style="color:#d3d0c8;background-color:#000000;">({
+              [hid 117 additional lines]
+
+
+</span></pre>
+</body>
+</html>
