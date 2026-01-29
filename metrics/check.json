@@ -363,34 +363,6 @@
           ]
         },
         {
-          "ruleId": "radarlint-js:javascript:S905",
-          "level": "warning",
-          "message": {
-            "text": "Expected an assignment or function call and instead saw an expression."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "frontend/src/config.js"
-                },
-                "region": {
-                  "startLine": 34,
-                  "startColumn": 7,
-                  "endLine": 34,
-                  "endColumn": 34
-                }
-              }
-            }
-          ],
-          "taxa": [
-            {
-              "id": "lint",
-              "name": "lint"
-            }
-          ]
-        },
-        {
           "ruleId": "radarlint-js:javascript:S3776",
           "level": "error",
           "message": {
