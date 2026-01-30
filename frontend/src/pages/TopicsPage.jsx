@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import TopicsTable from "../components/TopicsTable";
 import TopicsFilterPanel from "../components/TopicsFIlterPanel";
 import { useApi } from "../hooks/useApi";
-import { useTopicsLogic } from "../hooks/useTopicsFiltering";
+import { useTopicsLogic } from "../hooks/useTopicsLogic";
 import { ACADEMIC_YEAR } from "../config";
 
 const TopicsPage = () => {
