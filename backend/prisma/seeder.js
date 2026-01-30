@@ -399,8 +399,8 @@ async function main() {
   }
 
   const teamLeaders = await seedWorkersByRole(TEAM_LEADERS_DATA, ROLES.TEAM_LEADER);
-  const teachingSupervisors = await seedWorkersByRole(TEACHING_SUPERVISORS_DATA, ROLES.TEACHING_SUPERVISOR);
-  const studentsSupervisors = await seedWorkersByRole(STUDENTS_SUPERVISORS_DATA, ROLES.STUDENTS_SUPERVISOR);
+  await seedWorkersByRole(TEACHING_SUPERVISORS_DATA, ROLES.TEACHING_SUPERVISOR);
+  await seedWorkersByRole(STUDENTS_SUPERVISORS_DATA, ROLES.STUDENTS_SUPERVISOR);
   const kpkMembers = await seedWorkersByRole(KPK_MEMBER_DATA, ROLES.KPK_MEMBER);
   const teamLeadersPool = [...teamLeaders];
   const getTeamLeader = () => teamLeadersPool.shift();
