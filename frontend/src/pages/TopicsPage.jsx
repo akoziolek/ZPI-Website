@@ -18,16 +18,16 @@ const TopicsPage = () => {
 
   const [navbarSearchInput, setNavbarSearchInput] = useState(searchParams.get('search') || '');
 
-  const {
-    filteredAndSortedTopics,
-    sortConfig,
-    handleSort,
-    filters,
-    setFilters,
-    clearFilters,
-    activeSearch,
-    setActiveSearch
-  } = useTopicsLogic(topics, searchParams.get('search') || '');
+    const {
+      filteredAndSortedTopics,
+      sortConfig,
+      handleSort,
+      filters,
+      setFilters,
+      clearFilters,
+      activeSearch,
+      setActiveSearch
+    } = useTopicsLogic(topics, searchParams.get('search') || '');
 
   useEffect(() => {
     const loadTopics = async () => {

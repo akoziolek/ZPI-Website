@@ -1,0 +1,54 @@
+
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "qlty",
+          "informationUri": "https://github.com/qlty/qlty",
+          "semanticVersion": "0.606.0",
+          "version": "0.606.0 linux-x64 (17e2172 2025-12-30)",
+          "releaseDateUtc": "2025-12-30",
+          "rules": [
+            {
+              "id": "qlty:return-statements"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "qlty:return-statements",
+          "level": "warning",
+          "message": {
+            "text": "Function with many returns (count = 8): errorHandler"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "backend/src/middleware/errorHandler.js"
+                },
+                "region": {
+                  "startLine": 3,
+                  "startColumn": 8,
+                  "endLine": 86,
+                  "endColumn": 3,
+                  "sourceLanguage": "javascript"
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "structure",
+              "name": "structure"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

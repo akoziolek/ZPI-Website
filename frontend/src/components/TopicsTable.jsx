@@ -29,10 +29,15 @@ const TopicsTable = ({ topics, sortConfig, onSort }) => {
             ].map((col) => (
               <th
                 key={col.id}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
+                className="px-5 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-50"
                 onClick={() => onSort(col.id)}
               >
-                {col.label} {getSortIcon(col.id)}
+                <div className="flex items-center gap-1">
+                  {col.label}
+                  <span className="shrink-0">
+                    {getSortIcon(col.id)}
+                  </span>
+                </div>
               </th>
             ))}
             <th className="px-6 py-3"></th>
@@ -67,7 +72,7 @@ const TopicsTable = ({ topics, sortConfig, onSort }) => {
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium border-y border-r border-gray-600">
                 <Link
                   to={`/topics/${topic.uuid}`}
-                  className="text-gray-800 bg-gray-300 hover:text-gray-900 px-3 py-1 border border-gray-600 rounded hover:bg-gray-400 transition-colors"
+                  className="text-gray-800 bg-gray-300 hover:text-gray-900 px-2 py-1 border border-gray-600 rounded hover:bg-gray-400 transition-colors"
                 >
                   Wyświetl
                 </Link>

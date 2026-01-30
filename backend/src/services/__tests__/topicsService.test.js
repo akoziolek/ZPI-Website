@@ -9,7 +9,7 @@ vi.mock("../../lib/db.js", () => ({
 import prismaClient from "../../lib/db.js";
 const prismaMock = prismaClient;
 
-import { getAllTopics, getTopicByUuid, mapTopicToDto, updateStatus } from "../topicsService.js";
+import { getAllTopics, getTopicByUuid, mapTopicToDto } from "../topicsService.js";
 import { NotFoundError } from "../../utils/errors.js";
 import { STATUSES } from "../../config.js";
 

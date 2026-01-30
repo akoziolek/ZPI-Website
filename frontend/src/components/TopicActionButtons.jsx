@@ -1,8 +1,8 @@
 import { TOPIC_ACTIONS_LABELS } from "../config";
 import { useTopicActions } from "../hooks/useTopicActionsHandlers.js";
 
-const TopicActionButtons = ({ topic, signatures, isAssignedToAnyTopic }) => {
-  const actions = useTopicActions(topic, signatures, isAssignedToAnyTopic);
+const TopicActionButtons = ({ topic, signatures }) => {
+  const actions = useTopicActions(topic, signatures);
   if (actions.length === 0) return null;
   
   return (

@@ -41,7 +41,7 @@ export async function addOpinion(topicUuid, argumentation, isPositive, userId) {
         }
     });
 
-    const newStatus = isPositive == true ? STATUSES.APPROVED : STATUSES.REJECTED;
+    const newStatus = isPositive === true ? STATUSES.APPROVED : STATUSES.REJECTED;
     const newStatusDb = await findStatus(newStatus);
     if (newStatusDb) {
         await updateStatus(topicUuid, newStatusDb.status_id);

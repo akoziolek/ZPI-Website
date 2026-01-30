@@ -12,7 +12,7 @@ const prismaMock = prismaClient;
 
 import { joinTopic, withdrawTopic } from "../assignmentsService.js";
 import { NotFoundError, ValidationError } from "../../utils/errors.js";
-import { STATUSES, MAX_TOPIC_CAPACITY } from "../../config.js";
+import { STATUSES } from "../../config.js";
 
 describe("assignmentsService - joinTopic", () => {
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe("assignmentsService - joinTopic", () => {
     it("throws ValidationError when student is already assigned to a topic", async () => {
       prismaMock.topic.findUnique.mockResolvedValue({
         topic_id: 10,
-        status: { status_name: STATUSES.REJECTED },
+        status: { status_name: STATUSES.OPEN },
         students: []
       });
 
@@ -51,6 +51,7 @@ describe("assignmentsService - joinTopic", () => {
       })
 
       await expect(joinTopic("some-uuid", 1)).rejects.toBeInstanceOf(ValidationError);
+      expect(prismaMock.student.findUnique).toHaveBeenCalledWith({ where: { user_id: 1 } });
     });
 
     it("throws STUDENTS_LIMIT_REACHED when capacity reached", async () => {
@@ -70,19 +71,6 @@ describe("assignmentsService - joinTopic", () => {
 
       await expect(joinTopic("some-uuid", 1)).rejects.toBeInstanceOf(ValidationError);
       await expect(joinTopic("some-uuid", 1)).rejects.toMatchObject({ message: "STUDENTS_LIMIT_REACHED" });
-    });
-
-    it("looks up student before joining and throws when already assigned", async () => {
-      prismaMock.topic.findUnique.mockResolvedValue({
-        topic_id: 10,
-        status: { status_name: STATUSES.OPEN },
-        students: []
-      });
-
-      prismaMock.student.findUnique.mockResolvedValue({ user_id: 1, topic_id: 2 });
-
-      await expect(joinTopic("some-uuid", 1)).rejects.toBeInstanceOf(ValidationError);
-      expect(prismaMock.student.findUnique).toHaveBeenCalledWith({ where: { user_id: 1 } });
     });
   });
 
@@ -153,7 +141,7 @@ describe("assignmentsService - withdrawTopic", () => {
       await expect(withdrawTopic("some-uuid", 1)).rejects.toBeInstanceOf(ValidationError);
     });
 
-    it("throws ValidationError when student to assigned to the topic", async () => {
+    it("throws ValidationError when student not assigned to the topic", async () => {
       prismaMock.topic.findUnique.mockResolvedValue({
         topic_id: 10,
         status: { status_name: STATUSES.OPEN },

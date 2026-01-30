@@ -1,0 +1,93 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "qlty",
+          "informationUri": "https://github.com/qlty/qlty",
+          "semanticVersion": "0.606.0",
+          "version": "0.606.0 linux-x64 (17e2172 2025-12-30)",
+          "releaseDateUtc": "2025-12-30",
+          "rules": [
+            {
+              "id": "radarlint-js:javascript:S3782"
+            }
+          ],
+          "notifications": [
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran trufflehog in 7.25s [DFqa2A]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran trufflehog in 7.25s [DFqa2A]"
+                }
+              }
+            },
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran ripgrep in 0.42s [9OOZi0]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran ripgrep in 0.42s [9OOZi0]"
+                }
+              }
+            },
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran trivy in 6.28s [iAktL1]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran trivy in 6.28s [iAktL1]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "radarlint-js:javascript:S3782",
+          "level": "warning",
+          "message": {
+            "text": "Verify that argument is of correct type: expected 'string' instead of 'string | number'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "frontend/src/hooks/useTopicsFiltering.js"
+                },
+                "region": {
+                  "startLine": 82,
+                  "startColumn": 30,
+                  "endLine": 82,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "taxa": [
+            {
+              "id": "lint",
+              "name": "lint"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

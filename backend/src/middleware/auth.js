@@ -5,7 +5,7 @@ import { AuthenticationError, ForbiddenError } from '../utils/errors.js';
 export const authenticateToken = async (req, res, next) => {
     try {
         const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
+        const token = authHeader?.split(' ')[1];
 
         if (!token) throw new AuthenticationError('Access token required');
 

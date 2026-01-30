@@ -29,10 +29,13 @@ describe('Join and withdraw topic use case (UI flow)', () => {
 
     cy.get(`[data-testid="people-table"]`).contains(STUDENT_NAME).should('be.visible')
 
+    cy.get('[data-testid="action-bar"]').should('not.contain', "Zapisz się");
+    cy.get('[data-testid="action-bar"]').contains("Wypisz się");
+
     cy.contains('Wyloguj się').click();
   });
 
-  it('logs in through UI, student joins a topic, student withdraws the topic', () => {
+  it('logs in through UI, student withdraws the topic', () => {
     cy.visit('/');
 
     cy.contains(STUDENT_EMAIL).click();
@@ -54,7 +57,10 @@ describe('Join and withdraw topic use case (UI flow)', () => {
 
     cy.contains('button', 'Zamknij').click();
 
-    cy.get(`[data-testid="people-table"]`).should('not.contain', STUDENT_NAME)
+    cy.get(`[data-testid="people-table"]`).should('not.contain', STUDENT_NAME);
+
+    cy.get('[data-testid="action-bar"]').should('not.contain', "Wypisz się");
+    cy.get('[data-testid="action-bar"]').contains("Zapisz się");
 
     cy.contains('Wyloguj się').click();
   });

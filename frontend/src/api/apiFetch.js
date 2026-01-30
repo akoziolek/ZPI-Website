@@ -13,7 +13,7 @@ export async function apiFetch(url, options = {}) {
   return res;
 }
 
-export async function apiRequest(url, options = {}, onTokenExpired) {
+export async function apiRequest(url, options = {}, onTokenExpired = () => {}) {
   let res = await apiFetch(url, options);
 
   if (res.status === 401 || res.status === 403) {

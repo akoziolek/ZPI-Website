@@ -61,9 +61,9 @@ export const useTopicActionsHandlers = () => {
         refresh: false,
         actions: actions 
       }),
-  // ... reszta handlerów (inne use-case)
   };
 };
+
 
 /**
  * Hook that resolves which topic actions are allowed for the current user
@@ -72,10 +72,9 @@ export const useTopicActionsHandlers = () => {
  *
  * @param {Object} topic - The topic DTO to evaluate actions for.
  * @param {Array<Object>} signatures - Array of signature DTOs for the topic.
- * @param {boolean} isAssignedToAnyTopic - Whether the current student is already assigned to any topic.
  * @returns {Array<Object>} Allowed actions for rendering UI controls.
  */
-export const useTopicActions = (topic, signatures, isAssignedToAnyTopic) => {
+export const useTopicActions = (topic, signatures) => {
   const { user } = useAuthContext();
   const handlers = useTopicActionsHandlers(); 
 
@@ -90,28 +89,22 @@ export const useTopicActions = (topic, signatures, isAssignedToAnyTopic) => {
     const isUserTeamMember = isUserSupervisor || isStudentTeamMember;
     const hasSigned = signatures?.some(sig => sig.uuid === user.uuid);
 
-    const isActionAllowed = (actionId) => {
-      switch (actionId) {
-        case TOPIC_ACTIONS.JOIN:
-          return !isStudentTeamMember && !isAssignedToAnyTopic;
-        case TOPIC_ACTIONS.WITHDRAW:
-          return isStudentTeamMember;
-        case TOPIC_ACTIONS.SIGN:
-          return isUserTeamMember && !hasSigned;
-        case TOPIC_ACTIONS.VIEW_OPINION:
-          return user.role === ROLES.KPK_MEMBER || isUserTeamMember;
-        case TOPIC_ACTIONS.ADD_SUPERVISION:
-          return !hasSupervisor;
-        case TOPIC_ACTIONS.DEL_SUPERVISION:
-          return hasSupervisor && isUserSupervisor;
-        case TOPIC_ACTIONS.ADD_STUDENT:
-          return isUserSupervisor || user.role === ROLES.STUDENTS_SUPERVISOR;
-        case TOPIC_ACTIONS.DEL_STUDENT:
-          return (isUserSupervisor || user.role === ROLES.STUDENTS_SUPERVISOR) && topic.students?.length > 0;
-        default:
-          return true;
-      }
+    const actionPermissions = {
+      [TOPIC_ACTIONS.JOIN]: () => !isStudentTeamMember,
+      [TOPIC_ACTIONS.WITHDRAW]: () => isStudentTeamMember,
+      [TOPIC_ACTIONS.SIGN]: () => isUserTeamMember && !hasSigned,
+      [TOPIC_ACTIONS.VIEW_OPINION]: () => user.role === ROLES.KPK_MEMBER || isUserTeamMember,
+      [TOPIC_ACTIONS.ADD_SUPERVISION]: () => !hasSupervisor,
+      [TOPIC_ACTIONS.DEL_SUPERVISION]: () => hasSupervisor && isUserSupervisor,
+      [TOPIC_ACTIONS.ADD_STUDENT]: () => isUserSupervisor || user.role === ROLES.STUDENTS_SUPERVISOR,
+      [TOPIC_ACTIONS.DEL_STUDENT]: () =>
+        (isUserSupervisor || user.role === ROLES.STUDENTS_SUPERVISOR) &&
+        topic.students?.length > 0,
     };
+
+    const isActionAllowed = (actionId) =>
+      actionPermissions[actionId]?.() ?? true;
+
 
     return baseActions
       .filter(isActionAllowed)
@@ -119,7 +112,7 @@ export const useTopicActions = (topic, signatures, isAssignedToAnyTopic) => {
         id: actionId,
         handle: () => handlers[actionId]?.(topic.uuid)
       }));
-  }, [topic, user, signatures, isAssignedToAnyTopic, handlers]);
+  }, [topic, user, signatures,  handlers]);
 
   return allowedActions;
 };
