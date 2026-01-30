@@ -1,5 +1,5 @@
 
- ISSUES: 12 
+ISSUES: 12 
 
 
 backend/prisma/seeder.js:402:402
@@ -29,4 +29,6 @@ frontend/src/api/apiFetch.js:16:16
 frontend/src/hooks/useTopicsLogic.js:71:71
   71:71  high    Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.  radarlint-js:javascript:S3776
 105:105  high    Refactor this function to reduce its Cognitive Complexity from 19 to the 15 allowed.  radarlint-js:javascript:S3776
+
+
 
