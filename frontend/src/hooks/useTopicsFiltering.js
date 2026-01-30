@@ -52,9 +52,7 @@ const filterTopics = (topics, filters, search) => {
     const count = topic.students?.length || 0;
     const min = parseInt(filters.studentCount.min) || 0;
     const max = parseInt(filters.studentCount.max) || Infinity;
-    if (count < min || count > max) return false;
-
-    return true;
+    return (count >= min && count <= max);
   });
 };
 
