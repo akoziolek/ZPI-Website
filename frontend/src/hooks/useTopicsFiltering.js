@@ -79,7 +79,7 @@ const sortTopics = (topics, sortConfig) => {
 
       const multiplier = direction === 'asc' ? 1 : -1;
       return typeof aVal === 'string' 
-        ? aVal.localeCompare(bVal) * multiplier
+        ? aVal.localeCompare(String(bVal)) * multiplier
         : (aVal - bVal) * multiplier;
     }
     return 0;
