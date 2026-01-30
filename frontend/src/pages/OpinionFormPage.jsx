@@ -114,7 +114,7 @@ const OpinionFormPage = () => {
                         Opiekun
                       </th>
                       <td className="py-2 align-top pr-4">
-                        {topic.supervisor ? `${topic.supervisor.name} ${topic.supervisor.surname}` : '-'}
+                        {topic.supervisor ? `${topic.supervisor?.shortcut_academic_title || ""} ${topic.supervisor.name} ${topic.supervisor.surname}` : '-'}
                       </td>
                     </tr>
                   </tbody>
@@ -154,7 +154,7 @@ const OpinionFormPage = () => {
     
           {!error && !loading && !topic && (
               <div className="text-center py-8 text-gray-500">
-                Brak tematów do wyświetlenia
+                Brak tematu do wyświetlenia
               </div>
           )}
       
