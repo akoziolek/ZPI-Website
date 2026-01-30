@@ -47,7 +47,7 @@ async function createSignature(userId, declarationId) {
  * Validates that the topic and its declaration exist and that the topic is
  * in the PREPARING status. Ensures a student cannot sign more than once.
  * After creating the signature, if the number of signatures reaches the
- * required threshold (all students except the signer), the topic status is
+ * required threshold (all signatures), the topic status is
  * advanced to SUBMITTED.
  *
  * @param {string} topicUuid - UUID of the topic whose declaration will be signed.
@@ -61,7 +61,7 @@ export async function signDeclaration(topicUuid, userId) {
         where: { uuid: topicUuid },
         include: { 
             status: true, 
-            _count: { select: { students: true } }, 
+            students: true,
             declaration: { include: { signatures: true }, }, 
         },
     });
@@ -71,11 +71,17 @@ export async function signDeclaration(topicUuid, userId) {
     }
 
     if (!topic.declaration) {
-        throw new NotFoundError("Declaration not foundN")
+        throw new NotFoundError("Declaration not found")
     }
 
     if (topic.status.status_name !== STATUSES.PREPARING) {
         throw new ValidationError("Topic must be in 'W przygotowaniu do słożenia wniosku' status to be signed");
+    }
+
+    const assignedStudent = topic.students.some((student) => student.user_id === userId)
+
+    if (!assignedStudent) {
+        throw new ValidationError("Student must be assigned to topic to sign it");
     }
 
     const declarationId = topic.declaration.declaration_id
@@ -88,10 +94,10 @@ export async function signDeclaration(topicUuid, userId) {
 
     await createSignature(userId, declarationId);
 
-    const studentCount = topic._count.students
-    const signatureCount = topic.declaration.signatures.length // without just added signature
+    const studentCount = topic.students.length
+    const signatureCount = topic.declaration.signatures.length 
 
-    if ((studentCount-1) === signatureCount) {
+    if (studentCount === (signatureCount+1)) {
         const submittedStatus = await findStatus(STATUSES.SUBMITTED);
         if (submittedStatus) {
             await updateStatus(topicUuid, submittedStatus.status_id);
@@ -107,13 +113,13 @@ export async function signDeclaration(topicUuid, userId) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#GET_VALUE">GET_VALUE</a></li><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#filterTopics">filterTopics</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#sortTopics">sortTopics</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Jan 30 2026 10:36:25 GMT+0100 (czas środkowoeuropejski standardowy)
 </footer>
 
 <script> prettyPrint(); </script>

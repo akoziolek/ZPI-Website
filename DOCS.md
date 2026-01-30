@@ -185,9 +185,7 @@ into an easy-to-consume shape for the frontend.</p>
 <a name="handleRefreshToken"></a>
 
 ## handleRefreshToken ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: exchange refresh token (from cookie) for a new access token.
-
-Expects the refresh token cookie `jwt` to be present. If missing returns 401.
+Controller: exchange refresh token (from cookie) for a new access token.Expects the refresh token cookie `jwt` to be present. If missing returns 401.
 
 **Kind**: global constant  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with new access token.  
@@ -200,10 +198,7 @@ Expects the refresh token cookie `jwt` to be present. If missing returns 401.
 <a name="generateAccessToken"></a>
 
 ## generateAccessToken ⇒ <code>string</code>
-Generate a short-lived access token for a user.
-
-The token payload contains uuid, role and email and is signed with
-the ACCESS_TOKEN_SECRET environment variable.
+Generate a short-lived access token for a user.The token payload contains uuid, role and email and is signed withthe ACCESS_TOKEN_SECRET environment variable.
 
 **Kind**: global constant  
 **Returns**: <code>string</code> - Signed JWT access token.  
@@ -215,9 +210,7 @@ the ACCESS_TOKEN_SECRET environment variable.
 <a name="generateRefreshToken"></a>
 
 ## generateRefreshToken ⇒ <code>string</code>
-Generate a refresh token used to obtain new access tokens.
-
-The refresh token is short-lived and only contains the user's uuid.
+Generate a refresh token used to obtain new access tokens.The refresh token is short-lived and only contains the user's uuid.
 
 **Kind**: global constant  
 **Returns**: <code>string</code> - Signed JWT refresh token.  
@@ -342,9 +335,7 @@ Controller: return all academic employees.
 <a name="getAcademicEmployeeController"></a>
 
 ## getAcademicEmployeeController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: return a single academic employee by user UUID.
-
-Expects `req.params.uuid`.
+Controller: return a single academic employee by user UUID.Expects `req.params.uuid`.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with employee data.  
@@ -357,11 +348,7 @@ Expects `req.params.uuid`.
 <a name="joinTopicController"></a>
 
 ## joinTopicController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: join a topic for the authenticated student.
-
-Expects `req.params.uuid` to contain the topic UUID and `req.user.user_id`
-to hold the authenticated user's internal id (middleware should attach it).
-Responds with JSON success message on completion.
+Controller: join a topic for the authenticated student.Expects `req.params.uuid` to contain the topic UUID and `req.user.user_id`to hold the authenticated user's internal id (middleware should attach it).Responds with JSON success message on completion.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with success message.  
@@ -374,10 +361,7 @@ Responds with JSON success message on completion.
 <a name="withdrawTopicController"></a>
 
 ## withdrawTopicController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: withdraw the authenticated student from the given topic.
-
-Expects `req.params.uuid` and `req.user.user_id` to be present. Returns
-a JSON success message after the withdraw completes.
+Controller: withdraw the authenticated student from the given topic.Expects `req.params.uuid` and `req.user.user_id` to be present. Returnsa JSON success message after the withdraw completes.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with success message.  
@@ -390,10 +374,7 @@ a JSON success message after the withdraw completes.
 <a name="authenticateUser"></a>
 
 ## authenticateUser(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: authenticate a user by email and set refresh cookie.
-
-Expects `req.body.mail`. On success sets a httpOnly cookie with the
-refresh token and returns the access token and user data in JSON.
+Controller: authenticate a user by email and set refresh cookie.Expects `req.body.mail`. On success sets a httpOnly cookie with therefresh token and returns the access token and user data in JSON.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with tokens and user.  
@@ -406,9 +387,7 @@ refresh token and returns the access token and user data in JSON.
 <a name="verifyToken"></a>
 
 ## verifyToken(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: return basic info about the authenticated user.
-
-The authentication middleware must attach `req.user` before this handler.
+Controller: return basic info about the authenticated user.The authentication middleware must attach `req.user` before this handler.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with user data.  
@@ -421,11 +400,7 @@ The authentication middleware must attach `req.user` before this handler.
 <a name="signDeclarationController"></a>
 
 ## signDeclarationController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: sign the declaration for the authenticated student.
-
-Expects `req.params.uuid` (topic UUID) and `req.user.user_id` (authenticated student id).
-Calls the service which performs validation and signature creation. Returns
-a JSON success message when complete.
+Controller: sign the declaration for the authenticated student.Expects `req.params.uuid` (topic UUID) and `req.user.user_id` (authenticated student id).Calls the service which performs validation and signature creation. Returnsa JSON success message when complete.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with success message.  
@@ -438,11 +413,7 @@ a JSON success message when complete.
 <a name="addOpinionController"></a>
 
 ## addOpinionController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: add an opinion for a given topic.
-
-Expects `req.params.uuid` (topic UUID), `req.body.argumentation` and
-`req.body.isPositive`, and `req.user.user_id` (authenticated employee id).
-Returns a success message when the opinion is created and status updated.
+Controller: add an opinion for a given topic.Expects `req.params.uuid` (topic UUID), `req.body.argumentation` and`req.body.isPositive`, and `req.user.user_id` (authenticated employee id).Returns a success message when the opinion is created and status updated.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with success message.  
@@ -455,9 +426,7 @@ Returns a success message when the opinion is created and status updated.
 <a name="getTopicSignaturesController"></a>
 
 ## getTopicSignaturesController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: return the signatures for a topic's declaration.
-
-Expects `req.params.uuid` (topic UUID). Returns a DTO with `signatures` array.
+Controller: return the signatures for a topic's declaration.Expects `req.params.uuid` (topic UUID). Returns a DTO with `signatures` array.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with signatures data.  
@@ -483,9 +452,7 @@ Controller: return all students.
 <a name="getStudentController"></a>
 
 ## getStudentController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: return a single student by user UUID.
-
-Expects `req.params.userUuid` with the student's user UUID.
+Controller: return a single student by user UUID.Expects `req.params.userUuid` with the student's user UUID.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with student data.  
@@ -498,9 +465,7 @@ Expects `req.params.userUuid` with the student's user UUID.
 <a name="getStudentAssignmentController"></a>
 
 ## getStudentAssignmentController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: check whether the given student has an assigned topic.
-
-Expects `req.params.userUuid` and returns a boolean in the `data` field.
+Controller: check whether the given student has an assigned topic.Expects `req.params.userUuid` and returns a boolean in the `data` field.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with boolean result.  
@@ -513,10 +478,7 @@ Expects `req.params.userUuid` and returns a boolean in the `data` field.
 <a name="getAllTopicsController"></a>
 
 ## getAllTopicsController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: get a list of topics, optionally filtered by a `search` query string.
-
-Query params:
-- `search` (optional): case-insensitive substring to match topic names.
+Controller: get a list of topics, optionally filtered by a `search` query string.Query params:- `search` (optional): case-insensitive substring to match topic names.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with topics data.  
@@ -529,9 +491,7 @@ Query params:
 <a name="getTopicController"></a>
 
 ## getTopicController(req, res) ⇒ <code>Promise.&lt;Object&gt;</code>
-Controller: return a single topic by UUID.
-
-Expects `req.params.uuid` to contain the topic UUID.
+Controller: return a single topic by UUID.Expects `req.params.uuid` to contain the topic UUID.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - JSON response with topic data.  
@@ -557,10 +517,7 @@ Controller: return all users in the system.
 <a name="getAllAcademicEmployees"></a>
 
 ## getAllAcademicEmployees() ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-Fetch all academic employees and map them to a lightweight DTO used by the API.
-
-The DTO contains public user information and academic title data. This function
-queries the database for academic employees and returns the mapped array.
+Fetch all academic employees and map them to a lightweight DTO used by the API.The DTO contains public user information and academic title data. This functionqueries the database for academic employees and returns the mapped array.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code> - Array of academic employee DTOs.  
@@ -583,11 +540,7 @@ Fetch a single academic employee by the user's UUID and map to a DTO.
 <a name="joinTopic"></a>
 
 ## joinTopic(topicUuid, userId) ⇒ <code>Promise.&lt;void&gt;</code>
-Join a topic by its UUID for a given user.
-
-Validates that the topic exists, is in an open status, and that the
-maximum student capacity hasn't been reached. On success the student's
-record is updated to reference the topic.
+Join a topic by its UUID for a given user.Validates that the topic exists, is in an open status, and that themaximum student capacity hasn't been reached. On success the student'srecord is updated to reference the topic.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;void&gt;</code> - Resolves when the join operation completes.  
@@ -605,10 +558,7 @@ record is updated to reference the topic.
 <a name="withdrawTopic"></a>
 
 ## withdrawTopic(topicUuid, userId) ⇒ <code>Promise.&lt;void&gt;</code>
-Withdraw a student from a topic by topic UUID.
-
-Validates that the topic exists and is in an open status, then
-removes the topic relation from the student's record.
+Withdraw a student from a topic by topic UUID.Validates that the topic exists and is in an open status, thenremoves the topic relation from the student's record.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;void&gt;</code> - Resolves when the withdraw operation completes.  
@@ -626,10 +576,7 @@ removes the topic relation from the student's record.
 <a name="loginUser"></a>
 
 ## loginUser(mail) ⇒ <code>Promise.&lt;{user: Object, accessToken: string, refreshToken: string}&gt;</code>
-Authenticate a user by email and return access/refresh tokens.
-
-This function looks up the user by email, throws if not found, generates
-JWT tokens and updates the user's last_login timestamp.
+Authenticate a user by email and return access/refresh tokens.This function looks up the user by email, throws if not found, generatesJWT tokens and updates the user's last_login timestamp.
 
 **Kind**: global function  
 **Throws**:
@@ -645,9 +592,7 @@ JWT tokens and updates the user's last_login timestamp.
 <a name="refreshSession"></a>
 
 ## refreshSession(refreshToken) ⇒ <code>Promise.&lt;string&gt;</code>
-Refresh an access token using a valid refresh token.
-
-Verifies the supplied refresh token and returns a newly signed access token.
+Refresh an access token using a valid refresh token.Verifies the supplied refresh token and returns a newly signed access token.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;string&gt;</code> - Newly issued access token.  
@@ -663,13 +608,7 @@ Verifies the supplied refresh token and returns a newly signed access token.
 <a name="signDeclaration"></a>
 
 ## signDeclaration(topicUuid, userId) ⇒ <code>Promise.&lt;void&gt;</code>
-Sign the declaration attached to a topic on behalf of a student.
-
-Validates that the topic and its declaration exist and that the topic is
-in the PREPARING status. Ensures a student cannot sign more than once.
-After creating the signature, if the number of signatures reaches the
-required threshold (all signatures), the topic status is
-advanced to SUBMITTED.
+Sign the declaration attached to a topic on behalf of a student.Validates that the topic and its declaration exist and that the topic isin the PREPARING status. Ensures a student cannot sign more than once.After creating the signature, if the number of signatures reaches therequired threshold (all signatures), the topic status isadvanced to SUBMITTED.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;void&gt;</code> - Resolves when the signature (and any status update) completes.  
@@ -687,11 +626,7 @@ advanced to SUBMITTED.
 <a name="addOpinion"></a>
 
 ## addOpinion(topicUuid, argumentation, isPositive, userId) ⇒ <code>Promise.&lt;void&gt;</code>
-Add an opinion for a topic and update the topic status according to the opinion.
-
-Validates that the topic exists and is in the 'SUBMITTED' status, then
-creates an opinion record and updates the topic status to APPROVED or REJECTED
-based on the `isPositive` flag.
+Add an opinion for a topic and update the topic status according to the opinion.Validates that the topic exists and is in the 'SUBMITTED' status, thencreates an opinion record and updates the topic status to APPROVED or REJECTEDbased on the `isPositive` flag.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;void&gt;</code> - Resolves when the opinion is created and status is updated.  
@@ -711,8 +646,7 @@ based on the `isPositive` flag.
 <a name="mapSignatureToDto"></a>
 
 ## mapSignatureToDto(declaration) ⇒ <code>Object</code>
-Map a declaration record (with nested signatures) into a DTO containing
-an array of signature authors.
+Map a declaration record (with nested signatures) into a DTO containingan array of signature authors.
 
 **Kind**: global function  
 **Returns**: <code>Object</code> - Object with a `signatures` array of simplified user info.  
@@ -724,9 +658,7 @@ an array of signature authors.
 <a name="findStatus"></a>
 
 ## findStatus(statusName) ⇒ <code>Promise.&lt;(Object\|null)&gt;</code>
-Find a status record by its status name.
-
-This is a thin helper around the Prisma client.
+Find a status record by its status name.This is a thin helper around the Prisma client.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;(Object\|null)&gt;</code> - The status record or null if not found.  
@@ -738,9 +670,7 @@ This is a thin helper around the Prisma client.
 <a name="getAllStudents"></a>
 
 ## getAllStudents() ⇒ <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code>
-Return all students mapped to a public DTO.
-
-Each DTO includes basic user information, index number and ECTS deficit.
+Return all students mapped to a public DTO.Each DTO includes basic user information, index number and ECTS deficit.
 
 **Kind**: global function  
 **Returns**: <code>Promise.&lt;Array.&lt;Object&gt;&gt;</code> - Array of student DTOs.  
@@ -775,10 +705,7 @@ Check whether a student (identified by user UUID) currently has a topic assigned
 <a name="mapTopicToDto"></a>
 
 ## mapTopicToDto(topic) ⇒ <code>Object</code>
-Map a full topic entity from the database into a public DTO used by the API.
-
-The DTO intentionally flattens nested relations (student/user/employee/opinion)
-into an easy-to-consume shape for the frontend.
+Map a full topic entity from the database into a public DTO used by the API.The DTO intentionally flattens nested relations (student/user/employee/opinion)into an easy-to-consume shape for the frontend.
 
 **Kind**: global function  
 **Returns**: <code>Object</code> - The topic DTO.  
@@ -790,9 +717,7 @@ into an easy-to-consume shape for the frontend.
 <a name="formatUserResponse"></a>
 
 ## formatUserResponse(user) ⇒ <code>Object</code>
-Format an internal user record to the response shape used by controllers.
-
-This normalizes different role representations and returns only public fields.
+Format an internal user record to the response shape used by controllers.This normalizes different role representations and returns only public fields.
 
 **Kind**: global function  
 **Returns**: <code>Object</code> - Formatted user response.  

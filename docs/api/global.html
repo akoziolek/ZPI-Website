@@ -98,6 +98,78 @@
 
         
             
+<h4 class="name" id="GET_VALUE"><span class="type-signature">(constant) </span>GET_VALUE<span class="type-signature"> :Object.&lt;string, function(Object): (string|number)></span></h4>
+
+
+
+
+<div class="description">
+    Accessor functions to extract and normalize comparable values from topic objects.Each function returns a lowercase string or number for consistent comparison.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object.&lt;string, function(Object): (string|number)></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="frontend_src_hooks_useTopicsFiltering.js.html">frontend/src/hooks/useTopicsFiltering.js</a>, <a href="frontend_src_hooks_useTopicsFiltering.js.html#line14">line 14</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="findUserByMail"><span class="type-signature">(constant) </span>findUserByMail<span class="type-signature"></span></h4>
 
 
@@ -948,7 +1020,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="frontend_src_hooks_useAuth.js.html">frontend/src/hooks/useAuth.js</a>, <a href="frontend_src_hooks_useAuth.js.html#line35">line 35</a>
+        <a href="frontend_src_hooks_useAuth.js.html">frontend/src/hooks/useAuth.js</a>, <a href="frontend_src_hooks_useAuth.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -1010,7 +1082,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="frontend_src_hooks_useAuth.js.html">frontend/src/hooks/useAuth.js</a>, <a href="frontend_src_hooks_useAuth.js.html#line115">line 115</a>
+        <a href="frontend_src_hooks_useAuth.js.html">frontend/src/hooks/useAuth.js</a>, <a href="frontend_src_hooks_useAuth.js.html#line111">line 111</a>
     </li></ul></dd>
     
 
@@ -1158,7 +1230,7 @@
 
 
 <div class="description">
-    Hook that implements client-side filtering and sorting logic for alist of topics.- `topics` is the source array of topic DTOs.- `initialSearch` seeds the internal search field.Returns the filtered+sorted topics and handlers to control sorting andfiltering state.
+    Custom React hook that manages filtering and sorting state for topics.Provides comprehensive filtering by status, supervisor, search term, and student count.Supports single-column sorting with toggle functionality.
 </div>
 
 
@@ -1196,7 +1268,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="frontend_src_hooks_useTopicsLogic.js.html">frontend/src/hooks/useTopicsLogic.js</a>, <a href="frontend_src_hooks_useTopicsLogic.js.html#line26">line 26</a>
+        <a href="frontend_src_hooks_useTopicsFiltering.js.html">frontend/src/hooks/useTopicsFiltering.js</a>, <a href="frontend_src_hooks_useTopicsFiltering.js.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -2014,6 +2086,378 @@
     <dd>
         
 <span class="param-type">Promise.&lt;boolean></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="filterTopics"><span class="type-signature"></span>filterTopics<span class="signature">(topics, filters, search)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Filters an array of topics based on provided criteria.Applies filters for status, supervisor name, search term, and student count range.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>topics</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of topic objects to filter.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>filters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Filter criteria object.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>status</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;string></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of status names to include (empty = no filter).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>supervisor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Supervisor name to filter by.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>studentCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Student count range filter.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>min</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Minimum student count.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Maximum student count.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>search</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Search string to match against topic name, supervisor, and status.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="frontend_src_hooks_useTopicsFiltering.js.html">frontend/src/hooks/useTopicsFiltering.js</a>, <a href="frontend_src_hooks_useTopicsFiltering.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Filtered array of topics.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
 
 
     </dd>
@@ -5728,7 +6172,7 @@
 
 
 <div class="description">
-    Sign the declaration attached to a topic on behalf of a student.Validates that the topic and its declaration exist and that the topic isin the PREPARING status. Ensures a student cannot sign more than once.After creating the signature, if the number of signatures reaches therequired threshold (all students except the signer), the topic status isadvanced to SUBMITTED.
+    Sign the declaration attached to a topic on behalf of a student.Validates that the topic and its declaration exist and that the topic isin the PREPARING status. Ensures a student cannot sign more than once.After creating the signature, if the number of signatures reaches therequired threshold (all signatures), the topic status isadvanced to SUBMITTED.
 </div>
 
 
@@ -6140,6 +6584,260 @@
     
 
     
+    <h4 class="name" id="sortTopics"><span class="type-signature"></span>sortTopics<span class="signature">(topics, sortConfig)</span><span class="type-signature"> &rarr; {Array.&lt;Object>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sorts an array of topics according to a sort configuration.Supports multi-column sorting with ascending/descending direction.Uses locale-aware string comparison for string values.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>topics</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of topic objects to sort.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sortConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of sort specifications.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The key in GET_VALUE to sort by ('name', 'status_name', etc.).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>direction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Sort direction: 'asc' or 'desc'.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="frontend_src_hooks_useTopicsFiltering.js.html">frontend/src/hooks/useTopicsFiltering.js</a>, <a href="frontend_src_hooks_useTopicsFiltering.js.html#line72">line 72</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Sorted copy of the topics array.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="verifyToken"><span class="type-signature"></span>verifyToken<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
     
 
@@ -6446,7 +7144,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="backend_src_services_assignmentsService.js.html">backend/src/services/assignmentsService.js</a>, <a href="backend_src_services_assignmentsService.js.html#line71">line 71</a>
+        <a href="backend_src_services_assignmentsService.js.html">backend/src/services/assignmentsService.js</a>, <a href="backend_src_services_assignmentsService.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -6752,13 +7450,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#GET_VALUE">GET_VALUE</a></li><li><a href="global.html#addOpinion">addOpinion</a></li><li><a href="global.html#addOpinionController">addOpinionController</a></li><li><a href="global.html#authenticateUser">authenticateUser</a></li><li><a href="global.html#checkIfStudentHasTopic">checkIfStudentHasTopic</a></li><li><a href="global.html#filterTopics">filterTopics</a></li><li><a href="global.html#findStatus">findStatus</a></li><li><a href="global.html#findUserByMail">findUserByMail</a></li><li><a href="global.html#findUserByUuid">findUserByUuid</a></li><li><a href="global.html#formatUserResponse">formatUserResponse</a></li><li><a href="global.html#generateAccessToken">generateAccessToken</a></li><li><a href="global.html#generateRefreshToken">generateRefreshToken</a></li><li><a href="global.html#getAcademicEmployee">getAcademicEmployee</a></li><li><a href="global.html#getAcademicEmployeeController">getAcademicEmployeeController</a></li><li><a href="global.html#getAllAcademicEmployees">getAllAcademicEmployees</a></li><li><a href="global.html#getAllAcademicEmployeesController">getAllAcademicEmployeesController</a></li><li><a href="global.html#getAllStudents">getAllStudents</a></li><li><a href="global.html#getAllStudentsController">getAllStudentsController</a></li><li><a href="global.html#getAllTopics">getAllTopics</a></li><li><a href="global.html#getAllTopicsController">getAllTopicsController</a></li><li><a href="global.html#getAllUsers">getAllUsers</a></li><li><a href="global.html#getAllUsersController">getAllUsersController</a></li><li><a href="global.html#getStudent">getStudent</a></li><li><a href="global.html#getStudentAssignmentController">getStudentAssignmentController</a></li><li><a href="global.html#getStudentController">getStudentController</a></li><li><a href="global.html#getTopicByUuid">getTopicByUuid</a></li><li><a href="global.html#getTopicController">getTopicController</a></li><li><a href="global.html#getTopicSignatures">getTopicSignatures</a></li><li><a href="global.html#getTopicSignaturesController">getTopicSignaturesController</a></li><li><a href="global.html#handleRefreshToken">handleRefreshToken</a></li><li><a href="global.html#joinTopic">joinTopic</a></li><li><a href="global.html#joinTopicController">joinTopicController</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#mapSignatureToDto">mapSignatureToDto</a></li><li><a href="global.html#mapTopicToDto">mapTopicToDto</a></li><li><a href="global.html#refreshSession">refreshSession</a></li><li><a href="global.html#signDeclaration">signDeclaration</a></li><li><a href="global.html#signDeclarationController">signDeclarationController</a></li><li><a href="global.html#sortTopics">sortTopics</a></li><li><a href="global.html#updateStatus">updateStatus</a></li><li><a href="global.html#updateUserLogin">updateUserLogin</a></li><li><a href="global.html#useActionRequest">useActionRequest</a></li><li><a href="global.html#useApi">useApi</a></li><li><a href="global.html#useAuth">useAuth</a></li><li><a href="global.html#useLogin">useLogin</a></li><li><a href="global.html#useTopicActions">useTopicActions</a></li><li><a href="global.html#useTopicActionsHandlers">useTopicActionsHandlers</a></li><li><a href="global.html#useTopicsLogic">useTopicsLogic</a></li><li><a href="global.html#verifyToken">verifyToken</a></li><li><a href="global.html#withdrawTopic">withdrawTopic</a></li><li><a href="global.html#withdrawTopicController">withdrawTopicController</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Wed Jan 21 2026 22:03:55 GMT+0100 (czas środkowoeuropejski standardowy)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Jan 30 2026 10:36:25 GMT+0100 (czas środkowoeuropejski standardowy)
 </footer>
 
 <script> prettyPrint(); </script>
