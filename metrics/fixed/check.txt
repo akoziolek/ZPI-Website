@@ -1,0 +1,6 @@
+
+ ISSUES: 1 
+
+frontend/src/hooks/useTopicsFiltering.js:82:82
+  82:82  medium  Verify that argument is of correct type: expected 'string' instead of 'string | number'.  radarlint-js:javascript:S3782
+

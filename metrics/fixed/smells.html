@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- This file was created with the aha Ansi HTML Adapter. https://github.com/theZiz/aha -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="application/xml+xhtml; charset=UTF-8"/>
+<title>stdin</title>
+<style type="text/css">
+.reset       {color: black;}
+body         {background-color: black; color: white;}
+.bg-reset    {background-color: white;}
+.inverted    {color: white;}
+.bg-inverted {background-color: black;}
+.dimgray     {color: dimgray;}
+.red         {color: red;}
+.green       {color: green;}
+.yellow      {color: olive;}
+.blue        {color: blue;}
+.purple      {color: purple;}
+.cyan        {color: teal;}
+.white       {color: gray;}
+.bg-black    {background-color: black;}
+.bg-red      {background-color: red;}
+.bg-green    {background-color: green;}
+.bg-yellow   {background-color: olive;}
+.bg-blue     {background-color: blue;}
+.bg-purple   {background-color: purple;}
+.bg-cyan     {background-color: teal;}
+.bg-white    {background-color: gray;}
+.underline   {text-decoration: underline;}
+.bold        {font-weight: bold;}
+.italic      {font-style: italic;}
+.blink       {text-decoration: blink;}
+.crossed-out {text-decoration: line-through;}
+.highlighted {filter: contrast(70%) brightness(190%);}
+</style>
+</head>
+<body>
+<pre>
+
+
+backend/src/middleware/errorHandler.js
+    Function with many returns (count = 8): errorHandler
+
+           3  <span class="" style="background-color:#000000;"></span><span class="" style="color:#cc99cc;background-color:#000000;">export</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#6699cc;background-color:#000000;">errorHandler</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = (err, req, res, next) </span><span class="" style="color:#cc99cc;background-color:#000000;">=&gt;</span><span class="" style="color:#d3d0c8;background-color:#000000;"> {
+           4      console.</span><span class="" style="color:#66cccc;background-color:#000000;">error</span><span class="" style="color:#d3d0c8;background-color:#000000;">(</span><span class="" style="color:#f2777a;background-color:#000000;">err</span><span class="" style="color:#d3d0c8;background-color:#000000;">.stack);
+           5  
+           6      </span><span class="" style="color:#747369;background-color:#000000;">// custom AppError instances
+           7  </span><span class="" style="color:#d3d0c8;background-color:#000000;">    </span><span class="" style="color:#cc99cc;background-color:#000000;">if</span><span class="" style="color:#d3d0c8;background-color:#000000;"> (</span><span class="" style="color:#f2777a;background-color:#000000;">err</span><span class="" style="color:#d3d0c8;background-color:#000000;"> instanceof </span><span class="" style="color:#f2777a;background-color:#000000;">AppError</span><span class="" style="color:#d3d0c8;background-color:#000000;">) {
+           8          </span><span class="" style="color:#cc99cc;background-color:#000000;">const</span><span class="" style="color:#d3d0c8;background-color:#000000;"> </span><span class="" style="color:#f2777a;background-color:#000000;">statusCode</span><span class="" style="color:#d3d0c8;background-color:#000000;"> = </span><span class="" style="color:#f2777a;background-color:#000000;">err</span><span class="" style="color:#d3d0c8;background-color:#000000;">.statusCode || </span><span class="" style="color:#f99157;background-color:#000000;">500</span><span class="" style="color:#d3d0c8;background-color:#000000;">;
+              [hid 78 additional lines]
+
+
+</span></pre>
+</body>
+</html>
