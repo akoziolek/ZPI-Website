@@ -53,7 +53,7 @@ export const getTopicSignatures = async (topicUuid) => {
     },
   });
 
-  if (!topic || !topic.declaration) {
+  if (!topic?.declaration) {
     throw new NotFoundError('Signatures');
   }
 

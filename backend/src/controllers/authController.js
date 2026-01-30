@@ -22,8 +22,8 @@ export async function authenticateUser(req, res) {
         secure: isProduction, 
         maxAge: 24 * 60 * 60 * 1000
     });
-
-    await updateUserLogin(user.user_id); // id na backendzie, jest ok
+    
+    await updateUserLogin(user.user_id); 
 
     res.json({
         success: true,

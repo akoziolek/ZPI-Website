@@ -5,69 +5,36 @@ import TopicActionButtons from "../components/TopicActionButtons";
 import BackButton from "../components/BackButton";
 
 import { ROLES, STATUSES, getTopicColorClasses } from "../config";
-import { useAuthContext } from "../contexts/AuthContext";
 import { useApi } from "../hooks/useApi";
 
 const TopicPage = () => {
-  const { user } = useAuthContext();
   const [topic, setTopic] = useState([]);
   const [signatures, setSignatures] = useState([]);
-  const [isAssignedToAnyTopic, setIsAssignedToAnyTopic] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { uuid } = useParams();
   const  request  = useApi();
 
   useEffect(() => {
-    const loadTopic = async () => {
+    const loadAllData = async () => {
       setLoading(true);
-
       try {
-        const topicPromise = request({
-          endpoint: `topics/${uuid}`
-        });
-
-        const assignmentPromise =
-          user.role === ROLES.STUDENT
-            ? request({
-                endpoint: `students/${user.uuid}/assignment`
-              })
-            : Promise.resolve(false);
-
-        const [topicData, isAssignedData] = await Promise.all([
-          topicPromise,
-          assignmentPromise
-        ]);
-
+        const topicData = await request({ endpoint: `topics/${uuid}` });
         setTopic(topicData);
-        setIsAssignedToAnyTopic(isAssignedData);
-      } catch  {
-        setError("Nie można załadować tematu");
+
+        if (topicData.status_name === STATUSES.PREPARING) {
+          const sigData = await request({ endpoint: `topics/${uuid}/signatures` });
+          setSignatures(sigData.signatures);
+        }
+      } catch {
+        setError("Błąd ładowania danych");
       } finally {
         setLoading(false);
       }
     };
 
-    loadTopic();
-  }, [request, uuid, user.role, user.uuid]);
-
-  useEffect(() => {
-    if (!topic || topic.status_name !== STATUSES.PREPARING) return;
-
-    const loadSignatures = async () => {
-      try {
-        const data = await request({
-          endpoint: `topics/${uuid}/signatures`
-        });
-
-        setSignatures(data.signatures);
-      } catch  {
-        console.error("Nie można załadować podpisów");
-      }
-    };
-
-    loadSignatures();
-  }, [request, topic, uuid]);
+    loadAllData();
+  }, [request, uuid]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -184,10 +151,8 @@ const TopicPage = () => {
 
           <div className="flex-none">
             <TopicActionButtons 
-              user={user} 
               topic={topic} 
               signatures={signatures} 
-              isAssignedToAnyTopic={isAssignedToAnyTopic}
             />
           </div>
         </div>

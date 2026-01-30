@@ -38,8 +38,7 @@ export const useLogin = () => {
           method: "POST",
           body: JSON.stringify({ mail: selectedUser.mail }),
           credentials: "include",
-        },
-        () => {}
+        }
       );
 
       localStorage.setItem("token", data.token);

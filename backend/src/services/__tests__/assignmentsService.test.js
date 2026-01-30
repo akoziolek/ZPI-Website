@@ -12,7 +12,7 @@ const prismaMock = prismaClient;
 
 import { joinTopic, withdrawTopic } from "../assignmentsService.js";
 import { NotFoundError, ValidationError } from "../../utils/errors.js";
-import { STATUSES, MAX_TOPIC_CAPACITY } from "../../config.js";
+import { STATUSES } from "../../config.js";
 
 describe("assignmentsService - joinTopic", () => {
   beforeEach(() => {

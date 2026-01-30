@@ -17,10 +17,10 @@ export function mapTopicToDto(topic) {
        uuid: topic.uuid,
         name: topic.name,
         description: topic.description,
-        status_name: topic.status.status_name, // status_id ??
+        status_name: topic.status.status_name, 
 
         supervisor: topic.employee ? {
-           uuid: topic.employee.user.uuid,
+            uuid: topic.employee.user.uuid,
             name: topic.employee.user.name,
             surname: topic.employee.user.surname,
             full_academic_title: topic.employee.academic_title?.full_name,
@@ -28,7 +28,7 @@ export function mapTopicToDto(topic) {
         } : null,
 
         students: topic.students.map(student => ({
-           uuid: student.user.uuid,
+            uuid: student.user.uuid,
             index: student.index,
             name: student.user.name,
             surname: student.user.surname,
@@ -37,7 +37,7 @@ export function mapTopicToDto(topic) {
         opinion: topic.opinion ? {
             argumentation: topic.opinion.argumentation,
             author: {
-               uuid: topic.opinion.employee.user.uuid,
+                uuid: topic.opinion.employee.user.uuid,
                 name: topic.opinion.employee.user.name,
                 surname: topic.opinion.employee.user.surname
             },
@@ -45,7 +45,7 @@ export function mapTopicToDto(topic) {
     };
 }
 
-/**
+/** 
  * Fetch all topics, optionally filtered by a search string.
  *
  * @param {string=} search - Optional case-insensitive substring to filter topic names.
