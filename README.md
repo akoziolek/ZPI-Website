@@ -1,98 +1,140 @@
-## Running the Application
+# ZPI-Website
 
-### With Docker (Full Stack)
-```bash
-docker-compose up --build
-```
+## Project Overview
 
-### Manual Setup
-1. **Backend** (Terminal 1):
-   ```bash
-   cd backend
-   npm install
-   npm run dev
+**Name:** ZPI-Website
+
+**Goal:** A web platform that helps students and faculty manage final engineering project topics, assignments, opinions, and required declarations. 
+
+**Tech Stack:** React, Node.js, PostgreSQL, Prisma, Docker, Vite, TailwindCSS, Cypress
+
+## Core Features
+
+- **User Authentication:** Secure login and registration system for students and academic staff with role-based access control.
+- **Topic Management:** Creation, joining, and withdrawal from academic topics with capacity limits and status tracking.
+- **Declaration Signing:** Digital signing of declarations related to academic processes and approvals.
+- **Opinion Submission:** Submission and management of opinions on topics and assignments.
+- **Assignment Handling:** Management of assignments linked to topics, including status updates and approvals.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (version 18 or higher)
+- Docker
+- Docker Compose
+
+### Installation
+
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd ZPI-Website
    ```
 
-2. **Frontend** (Terminal 2):
-   ```bash
+2. Start the application using Docker Compose:
+   ```
+   docker-compose up --build
+   ```
+
+3. The application will be available at:
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:3001
+
+### Usage
+
+To run the application in development mode:
+
+1. Ensure Docker Compose is running as described in Installation.
+
+2. For frontend development (if running outside Docker):
+   ```
    cd frontend
    npm install
    npm run dev
    ```
 
-3. **Database** (if not using Docker):
-   - Make sure PostgreSQL is running
-   - Run migrations: `npx prisma migrate dev --name init`
-   - Generate client: `npx prisma generate`
-   - Seed database: `npx prisma db seed`
+3. For backend development (if running outside Docker):
+   ```
+   cd backend
+   npm install
+   npm run dev
+   ```
 
-### Access Points
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:3001
-- Database GUI: http://localhost:51212 (Prisma Studio)
+Example API call to get topics:
+```
+curl -X GET http://localhost:3001/api/topics
+```
 
----
+## Technical Details
 
-## Docker Commands
+### Project Structure
 
-**docker-compose up --build**                               - start docker frontend, backend, postgres [docker has to be opened]
+```
+ZPI-Website/
+├── backend/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── prisma/
+│   │   ├── schema.prisma
+│   │   ├── seeder.js
+│   │   └── migrations/
+│   └── src/
+│       ├── config.js
+│       ├── server.js
+│       ├── controllers/
+│       ├── lib/
+│       ├── middleware/
+│       ├── routes/
+│       ├── services/
+│       └── utils/
+├── frontend/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── vite.config.js
+│   └── src/
+│       ├── App.jsx
+│       ├── config.js
+│       ├── index.css
+│       ├── main.jsx
+│       ├── api/
+│       ├── components/
+│       ├── contexts/
+│       ├── hooks/
+│       ├── pages/
+│       ├── providers/
+│       └── public/
+├── cypress/
+│   ├── e2e/
+│   └── screenshots/
+├── docs/
+│   └── api/
+│   └── system/
+├── docker-compose.yml
+├── docker-compose.test.yml
+├── package.json
+└── jsdoc.json
+```
 
-**docker exec -it ZPI-postgres psql -U postgres -d appdb**  - entering the postgres database in container
-**\dt**                                                     - listing tables
+### Environment Variables
 
-**docker exec -it ZPI-backend npx prisma migrate dev --name init** - execute new database migration
+Create a `.env` file in the root directory with the following variables:
 
-**docker compose exec backend npx prisma studio --browser none  --port 51212** - gui for databse (for render url add '?sslmode=require' at the end)
-
-**docker compose exec backend npx prisma generate** - generate client, do it after migrations
-
-**docker compose exec backend npx prisma db seed** - seeding docker database
-
-**docker compose exec backend npx prisma migrate reset** - reset the database, and apply migrations again
-
-### Unit tests
-
-**docker build -t zpi-backend-test .**                      - build tests (do in backend)
-
-**docker run -it --rm zpi-backend-test npm test**           - run tests with attached stdin and allocated TTY
-
-**docker run --rm zpi-backend-test npm test -- --run**      - run tests once and exit
-
-
-**docker compose exec backend npx vitest** - tests in already build container !!!!!!!!!!
-
-**docker compose exec backend npx vitest run --reporter=verbose** - runs with each test descriptions
-
-### Functional tests
-
-**docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm cypress** - run functional tests
-
-**docker compose -f docker-compose.yml -f docker-compose.test.yml run --rm cypress --spec cypress/e2e/addOpinion.cy.js** - run one test file
-
-### Generating API documentation with JSDoc
-
-**npm install**
-
-**npm run docs** - generate documentation into ./docs/api
-
-**npm run docs:clean** - clean previously generated docs
-
-**npm run docs:serve** - serve the documentation locally at http://localhost:8080
-
-**npx jsdoc -c jsdoc.json** - run the generator with npx
-
-**npx jsdoc2md "frontend/src/**/*.jsx" "backend/src/**/*.js" > DOKUMENTACJA.md** - generating documentation into a file
-
-**docker compose logs backend** - logs
-
-**docker compose -f docker-compose.yml -f docker-compose.test.yml up --exit-code-from cypress**
-
-render...
-pre deploy command:npx prisma migrate deploy
-npx prisma db seed - run manually in render shell
-npm install && npx prisma generate && npm run build - w renderze
-
-vite ignoruje zmienne, które mają inny prefiks niż VITE_ !!!
-
-
-**docker compose -f docker-compose.yml -f docker-compose.test.yml up --force-recreate --renew-anon-volumes --exit-code-from cypress --abort-on-container-exit** - tests containers will be recreated everytime!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- `DATABASE_URL`: PostgreSQL connection string (e.g., `postgresql://user:password@host:port/dbname`)
+- `POSTGRES_USER`: PostgreSQL username
+- `POSTGRES_PASSWORD`: PostgreSQL password
+- `POSTGRES_DB`: PostgreSQL database name
+- `NODE_ENV`: Environment (development/production)
+- `JWT_SECRET`: Secret key for JWT tokens
+- `REFRESH_TOKEN_SECRET`: Secret key for refresh tokens
+- `ACCESS_TOKEN_SECRET`: Secret key for access tokens
+- `FRONTEND_URL`: URL of the frontend application
+- `VITE_BACKEND_URL`: Backend URL for Vite
+- `BACKEND_PORT`: Port for the backend server
+- `FRONTEND_PORT`: Port for the frontend server
+- `POSTGRES_DB_TEST`: Test database name
+- `POSTGRES_USER_TEST`: Test database username
+- `POSTGRES_PASSWORD_TEST`: Test database password
+- `DATABASE_URL_TEST`: Test database connection string
+- `VITE_BACKEND_URL_TEST`: Test backend URL for Vite
+- `FRONTEND_URL_TEST`: Test frontend URL
