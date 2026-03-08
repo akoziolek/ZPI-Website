@@ -10,84 +10,103 @@
           "semanticVersion": "0.606.0",
           "version": "0.606.0 linux-x64 (17e2172 2025-12-30)",
           "releaseDateUtc": "2025-12-30",
-          "rules": [
-            {
-              "id": "radarlint-js:javascript:S3782"
-            }
-          ],
+          "rules": [],
           "notifications": [
             {
               "level": "note",
               "message": {
-                "text": "Successfully ran trufflehog in 7.25s [DFqa2A]"
+                "text": "Successfully ran ripgrep in 3.74s [ezu6JH]"
               },
               "descriptor": {
                 "id": "qlty:message:invocation.concluded.success",
                 "name": "qlty_check::executor",
                 "shortDescription": {
-                  "text": "Successfully ran trufflehog in 7.25s [DFqa2A]"
+                  "text": "Successfully ran ripgrep in 3.74s [ezu6JH]"
                 }
               }
             },
             {
               "level": "note",
               "message": {
-                "text": "Successfully ran ripgrep in 0.42s [9OOZi0]"
+                "text": "Successfully ran trufflehog in 136.96s [7cI4pc]"
               },
               "descriptor": {
                 "id": "qlty:message:invocation.concluded.success",
                 "name": "qlty_check::executor",
                 "shortDescription": {
-                  "text": "Successfully ran ripgrep in 0.42s [9OOZi0]"
+                  "text": "Successfully ran trufflehog in 136.96s [7cI4pc]"
                 }
               }
             },
             {
               "level": "note",
               "message": {
-                "text": "Successfully ran trivy in 6.28s [iAktL1]"
+                "text": "Successfully ran trivy in 104.83s [FXvFFP]"
               },
               "descriptor": {
                 "id": "qlty:message:invocation.concluded.success",
                 "name": "qlty_check::executor",
                 "shortDescription": {
-                  "text": "Successfully ran trivy in 6.28s [iAktL1]"
+                  "text": "Successfully ran trivy in 104.83s [FXvFFP]"
+                }
+              }
+            },
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran trufflehog in 140.02s [qiEAT5]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran trufflehog in 140.02s [qiEAT5]"
+                }
+              }
+            },
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran ripgrep in 5.61s [GsbcrT]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran ripgrep in 5.61s [GsbcrT]"
+                }
+              }
+            },
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran radarlint-js in 168.98s [xi6s0i]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran radarlint-js in 168.98s [xi6s0i]"
+                }
+              }
+            },
+            {
+              "level": "note",
+              "message": {
+                "text": "Successfully ran eslint in 120.91s [cUChi1]"
+              },
+              "descriptor": {
+                "id": "qlty:message:invocation.concluded.success",
+                "name": "qlty_check::executor",
+                "shortDescription": {
+                  "text": "Successfully ran eslint in 120.91s [cUChi1]"
                 }
               }
             }
           ]
         }
       },
-      "results": [
-        {
-          "ruleId": "radarlint-js:javascript:S3782",
-          "level": "warning",
-          "message": {
-            "text": "Verify that argument is of correct type: expected 'string' instead of 'string | number'."
-          },
-          "locations": [
-            {
-              "physicalLocation": {
-                "artifactLocation": {
-                  "uri": "frontend/src/hooks/useTopicsFiltering.js"
-                },
-                "region": {
-                  "startLine": 82,
-                  "startColumn": 30,
-                  "endLine": 82,
-                  "endColumn": 34
-                }
-              }
-            }
-          ],
-          "taxa": [
-            {
-              "id": "lint",
-              "name": "lint"
-            }
-          ]
-        }
-      ]
+      "results": []
     }
   ]
 }
